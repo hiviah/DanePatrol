@@ -1,3 +1,4 @@
+.PHONY: all submodules libs-build
 all: libs-build
 
 LIBS_SOURCE = libs-source
@@ -45,7 +46,10 @@ $(UNBOUND_DIR): $(UNBOUND_TARBALL)
 	tar xzf $< -C libs
 
 unbound-test: unbound-test.c libs-build
-	$(CC) -g $< -o $@ -L$(UNBOUND_LIB)/lib -L$(OPENSSL_LIB)/lib -L$(LDNS_LIB)/lib -I$(OPENSSL_LIB)/include -I$(LDNS_LIB)/include -I$(UNBOUND_LIB)/include -lunbound -lldns -lssl -lcrypto -lpthread -ldl
+	$(CC) -Wall -pedantic -std=c99 -g $< -o $@ -L$(UNBOUND_LIB)/lib -L$(OPENSSL_LIB)/lib -L$(LDNS_LIB)/lib -I$(OPENSSL_LIB)/include -I$(LDNS_LIB)/include -I$(UNBOUND_LIB)/include -lunbound -lldns -lssl -lcrypto -lpthread -ldl
+
+test: unbound-test
+	./unbound-test
 
 distclean:
 	rm -rf libs

@@ -1,0 +1,3 @@
+[submodule "libs-source"]
+	path = libs-source
+	url = /home/ondro/work/cz.nic/DANE-libs

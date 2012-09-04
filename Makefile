@@ -16,10 +16,14 @@ OPENSSL_LIB := $(BASEDIR)/libs/openssl
 LDNS_LIB := $(BASEDIR)/libs/ldns
 UNBOUND_LIB := $(BASEDIR)/libs/unbound
 
+FIREBREATH_DIR = $(BASEDIR)/FireBreath
+FIREBREATH_TAG = firebreath-1.6.0
+
 libs-build: submodules libs $(OPENSSL_LIB) $(LDNS_LIB) $(UNBOUND_LIB)
 
 submodules:
 	git submodule update --init --recursive
+	(cd $(FIREBREATH_DIR) && git checkout $(FIREBREATH_TAG))
 
 libs:
 	mkdir libs

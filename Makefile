@@ -1,4 +1,4 @@
-all: libs
+all: libs-build
 
 OPENSSL_TARBALL = libs-source/openssl-1.0.1c.tar.gz
 LDNS_TARBALL = libs-source/ldns-1.6.13.tar.gz
@@ -14,7 +14,13 @@ OPENSSL_LIB := $(BASEDIR)/libs/openssl
 LDNS_LIB := $(BASEDIR)/libs/ldns
 UNBOUND_LIB := $(BASEDIR)/libs/unbound
 
-libs: $(OPENSSL_LIB) $(LDNS_LIB) $(UNBOUND_LIB)
+libs-build: libs-source libs $(OPENSSL_LIB) $(LDNS_LIB) $(UNBOUND_LIB)
+
+libs-source:
+	git submodule update --init --recursive
+
+libs:
+	mkdir libs
 
 ## openssl
 $(OPENSSL_LIB): $(OPENSSL_DIR)

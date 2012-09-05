@@ -43,7 +43,7 @@ libs:
 
 ## openssl
 $(OPENSSL_LIB): $(OPENSSL_DIR)
-	(cd $< && ./config no-shared no-krb5 --prefix=$@ -fPIC && make && make install)
+	(cd $< && ./config no-shared no-krb5 --prefix=$@ -fPIC && make -j1 && make -j1 install)
 
 $(OPENSSL_DIR): $(OPENSSL_TARBALL)
 	tar xzf $< -C libs
@@ -63,7 +63,7 @@ $(UNBOUND_DIR): $(UNBOUND_TARBALL)
 	tar xzf $< -C libs
 
 ## plugin
-plugin: $(PLUGIN_BUILD_DIR)
+plugin: $(PLUGIN_BUILD_DIR) $(UNBOUND_LIB)
 	make -j4 $(PLUGIN_VERBOSE_BUILD) -C $<
 
 prepmake:
@@ -76,7 +76,7 @@ $(PLUGIN_BUILD_DIR): $(PLUGIN_SOURCE_DIR)/CMakeLists.txt $(PLUGIN_SOURCE_DIR)/Pl
 
 
 ## tests
-unbound-test: unbound-test.c
+unbound-test: unbound-test.c $(UNBOUND_LIB)
 	$(CC) -Wall -pedantic -std=c99 -g $< -o $@ -L$(UNBOUND_LIB)/lib -L$(OPENSSL_LIB)/lib -L$(LDNS_LIB)/lib -I$(OPENSSL_LIB)/include -I$(LDNS_LIB)/include -I$(UNBOUND_LIB)/include -lunbound -lldns -lssl -lcrypto -lpthread -ldl
 
 test: unbound-test

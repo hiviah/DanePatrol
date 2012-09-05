@@ -24,8 +24,13 @@ FIREBREATH_TAG = firebreath-1.6.0
 
 PLUGIN_SOURCE_DIR = $(BASEDIR)/plugin-source/TLSAfetcher
 PLUGIN_BUILD_DIR = $(FIREBREATH_DIR)/build
-#uncomment to make plugin build verbose - shows gcc invocations etc.
+
+## uncomment to make plugin build verbose - shows gcc invocations etc.
 #PLUGIN_VERBOSE_BUILD = VERBOSE=1
+
+## Configuration is one of Debug, Release, MinSizeRel and RelWithDebInfo.
+## You need to run 'make prepmake' after changing.
+PLUGIN_CONFIGURATION = Debug
 
 libs-build: submodules libs $(OPENSSL_LIB) $(LDNS_LIB) $(UNBOUND_LIB)
 
@@ -59,12 +64,15 @@ $(UNBOUND_DIR): $(UNBOUND_TARBALL)
 
 ## plugin
 plugin: $(PLUGIN_BUILD_DIR)
-	make $(PLUGIN_VERBOSE_BUILD) -C $<
+	make -j4 $(PLUGIN_VERBOSE_BUILD) -C $<
+
+prepmake:
+	$(FIREBREATH_DIR)/prepmake.sh $(PLUGIN_SOURCE_DIR) -D CMAKE_BUILD_TYPE=$(PLUGIN_CONFIGURATION)
 
 $(PLUGIN_BUILD_DIR): $(PLUGIN_SOURCE_DIR)/CMakeLists.txt $(PLUGIN_SOURCE_DIR)/PluginConfig.cmake \
 		$(PLUGIN_SOURCE_DIR)/X11/projectDef.cmake $(PLUGIN_SOURCE_DIR)/Mac/projectDef.cmake $(PLUGIN_SOURCE_DIR)/Win/projectDef.cmake \
 		#dependencies end
-	$(FIREBREATH_DIR)/prepmake.sh $(PLUGIN_SOURCE_DIR)
+		make prepmake
 
 
 ## tests

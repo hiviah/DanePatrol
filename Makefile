@@ -1,6 +1,9 @@
 .PHONY: all submodules libs-build
 all: libs-build
 
+CFLAGS=-fPIC
+export CFLAGS
+
 LIBS_SOURCE = libs-source
 OPENSSL_TARBALL = $(LIBS_SOURCE)/openssl-1.0.1c.tar.gz
 LDNS_TARBALL = $(LIBS_SOURCE)/ldns-1.6.13.tar.gz
@@ -30,21 +33,21 @@ libs:
 
 ## openssl
 $(OPENSSL_LIB): $(OPENSSL_DIR)
-	(cd $< && ./config no-shared no-krb5 --prefix=$@ && make && make install)
+	(cd $< && ./config no-shared no-krb5 --prefix=$@ -fPIC && make && make install)
 
 $(OPENSSL_DIR): $(OPENSSL_TARBALL)
 	tar xzf $< -C libs
 
 ## ldns
 $(LDNS_LIB): $(LDNS_DIR) $(OPENSSL_LIB)
-	(cd $< && ./configure --disable-shared --with-ssl=$(OPENSSL_LIB) --prefix=$@ && make && make install)
+	(cd $< && ./configure --disable-shared --with-ssl=$(OPENSSL_LIB) --with-pic --prefix=$@ && make && make install)
 
 $(LDNS_DIR): $(LDNS_TARBALL)
 	tar xzf $< -C libs
 
 ## unbound
 $(UNBOUND_LIB): $(UNBOUND_DIR) $(LDNS_LIB) $(OPENSSL_LIB)
-	(cd $< && ./configure --disable-shared --with-ssl=$(OPENSSL_LIB) --with-ldns=$(LDNS_LIB) --without-libevent --prefix=$@ && make && make install)
+	(cd $< && ./configure --disable-shared --with-ssl=$(OPENSSL_LIB) --with-ldns=$(LDNS_LIB) --without-libevent --with-pic --prefix=$@ && make && make install)
 
 $(UNBOUND_DIR): $(UNBOUND_TARBALL)
 	tar xzf $< -C libs

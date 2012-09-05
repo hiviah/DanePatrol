@@ -7,9 +7,16 @@
 
 \**********************************************************/
 
+#include "logging.h"
+
 #include "TLSAfetcherAPI.h"
 
 #include "TLSAfetcher.h"
+
+#include "unbound.h"
+
+/*! Shared global resolver structure. It should be thread-safe. */
+struct ub_ctx* unboundResolver=NULL;
 
 ///////////////////////////////////////////////////////////////////////////////
 /// @fn TLSAfetcher::StaticInitialize()
@@ -20,8 +27,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 void TLSAfetcher::StaticInitialize()
 {
-    // Place one-time initialization stuff here; As of FireBreath 1.4 this should only
-    // be called once per process
+    FB::Log::initLogging();
+    FBLOG_FATAL("aaa", "init");
+    unboundResolver = ub_ctx_create();
+    ub_ctx_add_ta(unboundResolver, ".   IN DS   19036 8 2 49AAC11D7B6F6446702E54A1607371607A1A41855200FD2CE1CDDE32F24E8FB5");
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -33,8 +42,7 @@ void TLSAfetcher::StaticInitialize()
 ///////////////////////////////////////////////////////////////////////////////
 void TLSAfetcher::StaticDeinitialize()
 {
-    // Place one-time deinitialization stuff here. As of FireBreath 1.4 this should
-    // always be called just before the plugin library is unloaded
+    FBLOG_FATAL("aaa", "deinit");
 }
 
 ///////////////////////////////////////////////////////////////////////////////

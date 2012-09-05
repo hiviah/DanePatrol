@@ -1,5 +1,5 @@
-.PHONY: all submodules libs-build
-all: libs-build
+.PHONY: all submodules libs-build plugin prepmake
+all: libs-build plugin
 
 CFLAGS=-fPIC
 export CFLAGS
@@ -21,6 +21,11 @@ UNBOUND_LIB := $(BASEDIR)/libs/unbound
 
 FIREBREATH_DIR = $(BASEDIR)/FireBreath
 FIREBREATH_TAG = firebreath-1.6.0
+
+PLUGIN_SOURCE_DIR = $(BASEDIR)/plugin-source/TLSAfetcher
+PLUGIN_BUILD_DIR = $(FIREBREATH_DIR)/build
+#uncomment to make plugin build verbose - shows gcc invocations etc.
+#PLUGIN_VERBOSE_BUILD = VERBOSE=1
 
 libs-build: submodules libs $(OPENSSL_LIB) $(LDNS_LIB) $(UNBOUND_LIB)
 
@@ -52,11 +57,28 @@ $(UNBOUND_LIB): $(UNBOUND_DIR) $(LDNS_LIB) $(OPENSSL_LIB)
 $(UNBOUND_DIR): $(UNBOUND_TARBALL)
 	tar xzf $< -C libs
 
-unbound-test: unbound-test.c libs-build
+## plugin
+plugin: $(PLUGIN_BUILD_DIR)
+	make $(PLUGIN_VERBOSE_BUILD) -C $<
+
+$(PLUGIN_BUILD_DIR): $(PLUGIN_SOURCE_DIR)/CMakeLists.txt $(PLUGIN_SOURCE_DIR)/PluginConfig.cmake \
+		$(PLUGIN_SOURCE_DIR)/X11/projectDef.cmake $(PLUGIN_SOURCE_DIR)/Mac/projectDef.cmake $(PLUGIN_SOURCE_DIR)/Win/projectDef.cmake \
+		#dependencies end
+	$(FIREBREATH_DIR)/prepmake.sh $(PLUGIN_SOURCE_DIR)
+
+
+## tests
+unbound-test: unbound-test.c
 	$(CC) -Wall -pedantic -std=c99 -g $< -o $@ -L$(UNBOUND_LIB)/lib -L$(OPENSSL_LIB)/lib -L$(LDNS_LIB)/lib -I$(OPENSSL_LIB)/include -I$(LDNS_LIB)/include -I$(UNBOUND_LIB)/include -lunbound -lldns -lssl -lcrypto -lpthread -ldl
 
 test: unbound-test
 	./unbound-test
 
+
+## cleaning
+clean:
+	[ -d "$(PLUGIN_BUILD_DIR)" ] && make -C "$(PLUGIN_BUILD_DIR)" clean
+
 distclean:
 	rm -rf libs
+	rm -rf $(PLUGIN_BUILD_DIR)

@@ -35,9 +35,15 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../libs/openssl/include
 add_library(unbound STATIC IMPORTED)
 set_property(TARGET unbound PROPERTY IMPORTED_LOCATION
              ${CMAKE_CURRENT_SOURCE_DIR}/../../libs/unbound/lib/libunbound.a)
+
 add_library(ldns STATIC IMPORTED)
 set_property(TARGET ldns PROPERTY IMPORTED_LOCATION
              ${CMAKE_CURRENT_SOURCE_DIR}/../../libs/ldns/lib/libldns.a)
+
+add_library(ssl STATIC IMPORTED)
+set_property(TARGET ssl PROPERTY IMPORTED_LOCATION
+             ${CMAKE_CURRENT_SOURCE_DIR}/../../libs/openssl/lib/libssl.a)
+
 add_library(crypto STATIC IMPORTED)
 set_property(TARGET crypto PROPERTY IMPORTED_LOCATION
              ${CMAKE_CURRENT_SOURCE_DIR}/../../libs/openssl/lib/libcrypto.a)
@@ -47,5 +53,6 @@ target_link_libraries(${PROJNAME}
     ${PLUGIN_INTERNAL_DEPS}
     unbound
     ldns
+    ssl
     crypto
     )

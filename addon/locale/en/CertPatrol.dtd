@@ -1,0 +1,77 @@
+<!ENTITY updateMsg		"Certificate Patrol has been updated to version [_version], click [_button] to see what changed.">
+
+<!ENTITY newEvent		"Certificate accepted and stored.">
+<!ENTITY wildEvent		"Wildcard certificate accepted for a new host.">
+<!ENTITY changeEvent		"Certificate exchanged.">
+
+<!ENTITY threat0		"Everything fine.">
+<!ENTITY threat1		"Mostly harmless.">
+<!ENTITY threat2		"Suspicious change?">
+<!ENTITY threat3		"Reason to be careful!">
+
+<!ENTITY daysPast		"[_days] days ago">
+<!ENTITY daysFuture		"[_days] days ahead">
+
+<!ENTITY issuedTo		"Issued To:">
+<!ENTITY issuedBy		"Apparently Issued By:">
+<!ENTITY validity		"Validity:">
+<!ENTITY fingerprints		"Fingerprints:">
+<!ENTITY commonName		"Common Name (CN):">
+<!ENTITY organization		"Organization (O):">
+<!ENTITY organizationalUnit	"Organizational Unit (OU):">
+<!ENTITY serialNumber		"Serial Number:">
+<!ENTITY emailAddress		"Contact:">
+<!ENTITY notBefore		"Issued On:">
+<!ENTITY notAfter		"Expires On:">
+<!ENTITY stored			"Stored Since:">
+<!ENTITY md5Fingerprint		"MD5 Fingerprint:">
+<!ENTITY sha1Fingerprint	"SHA1 Fingerprint:">
+
+<!ENTITY oldCert		"Old Certificate:">
+<!ENTITY newCert		"New Certificate:">
+<!ENTITY oldCertHier		"Old Certification Hierarchy:">
+<!ENTITY newCertHier		"New Certification Hierarchy:">
+<!ENTITY hierarchy		"Certification Hierarchy:">
+<!ENTITY viewHierarchy		"View Certification Hierarchy">
+
+<!ENTITY viewOldCert		"View Old Certificate">
+<!ENTITY viewOldCert_key	"O">
+<!ENTITY viewNewCert		"View New Certificate">
+<!ENTITY viewNewCert_key	"N">
+<!ENTITY viewDetails		"View Details">
+<!ENTITY viewDetails_key	"V">
+
+<!ENTITY accept			"Accept">
+<!ENTITY accept_key		"A">
+<!ENTITY reject			"Reject">
+<!ENTITY reject_key		"R">
+<!ENTITY issuerOnly		"Too many pop-ups? Try checking authority only for this domain">
+<!ENTITY issuerOnly_key		"C">
+<!ENTITY ignoreHost		"Ignore this website">
+<!ENTITY ignoreHost_key		"I">
+
+<!ENTITY warn_wildcard		"Info: This certificate has a wildcard for several hostnames.">
+<!ENTITY warn_commonName	"Alert: Hostname has changed. Take a look if that's okay.">
+<!ENTITY warn_issuerCommonName	"Caution: Certification Authority has changed.">
+<!ENTITY warn_notBefore		"Alert: This certificate isn't valid yet!">
+<!ENTITY warn_notAfter_expired	"Info: Old certificate had expired. It needed to be replaced.">
+<!ENTITY warn_notAfter_notdue	"Warning: This certificate wasn't due yet. If this site regularely uses more than one certificate, you may want to activate the 'CA only' option in the details.">
+<!ENTITY warn_notAfter_due	"Info: This certificate will expire soon. It is normal to replace it now.">
+
+<!ENTITY sanitizer.itemLabel	"Certificates stored by CertPatrol">
+
+<!ENTITY certManager.description	"Certificate Patrol has stored the following certificates for you:">
+<!ENTITY certManager.confirmDelete	"Are you sure you want to delete the selected certificates from the CertPatrol database?">
+
+<!ENTITY certManager.sha1		"SHA1 Fingerprint">
+<!ENTITY certManager.md5		"MD5 Fingerprint">
+<!ENTITY certManager.stored		"Stored Since">
+
+<!ENTITY certManager.groupByCA		"Group by Root Authority">
+<!ENTITY certManager.groupByCA.key	"G">
+
+<!ENTITY certManager.issuerOnly			"Check CA only">
+<!ENTITY certManager.issuerOnly.set		"Set CA-only checking">
+<!ENTITY certManager.issuerOnly.set.key		"S">
+<!ENTITY certManager.issuerOnly.unset		"Unset CA-only checking">
+<!ENTITY certManager.issuerOnly.unset.key	"U">

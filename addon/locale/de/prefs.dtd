@@ -1,0 +1,22 @@
+<!ENTITY _title		"Einstellungen für Certificate Patrol">
+<!ENTITY _title_notify	"Nachrichtenleiste">
+<!ENTITY _title_popup	"Details-Popup">
+<!ENTITY _title_options	"Optionen">
+<!ENTITY _title_ignore	"Zu ignorierende Adressen">
+<!ENTITY _notify_new	"Annahme neuer Zertifikate melden">
+<!ENTITY _notify_wild	"Details erneut anzeigen für mehrfach eingesetzte Wildcardzertifikate">
+<!ENTITY _notify_timeout_1	"Unkritische Meldungen werden nach">
+<!ENTITY _notify_timeout_2	"Sekunden automatisch angenommen (0 = niemals)">
+<!ENTITY _popup_new	"Immer Details anzeigen für neu angenommene Zertifikate">
+<!ENTITY _popup_change	"Immer Details anzeigen auch bei harmlosen Zertifikatsänderungen">
+<!ENTITY _popup_wild	"Details erneut anzeigen für mehrfach eingesetzte Wildcardzertifikate">
+<!ENTITY _privatebrowsing_save	"Speichere Zertifikate auch wenn Private Browsing Mode aktiv ist">
+<!ENTITY _hosts_ignore_1	"Zertifikate für diese Adressen werden weder überprüft noch gespeichert.">
+<!ENTITY _hosts_ignore_2	"Nützlich wenn eine Adresse planlos Zertifikate unterschiedlicher Anbieter verwendet.">
+<!ENTITY _hosts_ignore_3	"Sollte die Zertifizierungsstelle immer gleich sein, setze lieber den '&issuerOnly;' Haken im Details-Popup.">
+<!ENTITY _home		"Homepage">
+<!ENTITY _close		"Passt">
+<!ENTITY _certmgr	"Betrachte gespeicherte Zertifikate">
+<!ENTITY _certmgr_key	"Z">
+<!ENTITY _sanitizer	"Chronik bearbeiten">
+<!ENTITY _sanitizer_key	"C">

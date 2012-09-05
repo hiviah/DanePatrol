@@ -1,0 +1,45 @@
+@import url("chrome://global/skin/global.css");
+
+.warning {
+	padding: 1em 2em 1em 4em;
+	font-weight: bold;
+}
+
+.warnCP {
+	outline: 2px dashed yellow;
+	outline-offset: 1px;
+	-moz-outline-radius: 12px;
+}
+.panicCP {
+	outline: 2px dashed red;
+	outline-offset: 1px;
+	-moz-outline-radius: 12px;
+}
+.infoCP {
+	font-size: 140%;
+	border: none;
+}
+
+.old {
+  color: rgb(205,0,0);
+}
+.old.plain:before {
+  width: 12px;
+  float: left;
+  text-align: center;
+  content: "\002013";
+}
+.new {
+  color: rgb(0,205,0);
+}
+.new.plain:before {
+  width: 12px;
+  float: left;
+  text-align: center;
+  content: "+";
+}
+
+.threat-0 { }
+.threat-1 { background-color: darkgreen; }
+.threat-2 { background-color: darkorange; }
+.threat-3 { background-color: darkred; }

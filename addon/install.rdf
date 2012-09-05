@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- http://developer.mozilla.org/en/docs/Building_an_Extension
+     https://developer.mozilla.org/en/Install_Manifests -->
+<RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:em="http://www.mozilla.org/2004/em-rdf#">
+  <Description about="urn:mozilla:install-manifest">
+    <em:id>CertPatrol@PSYC.EU</em:id>
+    <em:type>2</em:type>    <!-- Extension -->
+    <em:name>Certificate Patrol</em:name>
+    <em:version>2.0.14</em:version>
+    <em:unpack>false</em:unpack>
+    <em:creator>Aiko Barz, tg, 20after4 and symlynX</em:creator>
+    <em:developer>Aiko Barz</em:developer>
+    <em:developer>Mukunda Modell</em:developer>
+    <em:developer>Carlo v. Loesch</em:developer>
+    <em:developer>Gabor Adam Toth</em:developer>
+    <!-- em:translator>French? Spanish? anyone?</em:translator -->
+    <!-- em:contributor>...</em:contributor -->
+    <em:homepageURL>http://patrol.psyced.org</em:homepageURL>
+    <em:optionsURL>chrome://certpatrol/content/prefs.xul</em:optionsURL>
+    <!-- em:updateURL>http://www.foo.com/update.cgi?id=%ITEM_ID%&amp;version=%ITEM_VERSION%</em:updateURL -->
+    <em:iconURL>chrome://certpatrol/content/icon.png</em:iconURL>
+    <em:aboutURL>http://patrol.psyced.org</em:aboutURL>
+
+    <em:description>Monitor and compare certificates your application adopts for encrypted HTTPS web sites.</em:description>
+    <em:localized>
+      <Description>
+        <em:locale>de-DE</em:locale>
+        <em:description>Überwache und vergleiche Zertifikatsänderungen komfortabel.</em:description>
+      </Description>
+    </em:localized>
+    <em:localized>
+      <Description>
+        <em:locale>it-IT</em:locale>
+        <em:description>Osserva come il tuo web browser adotta ed aggiorna certificati di tutti i siti HTTPS.</em:description>
+      </Description>
+    </em:localized>
+
+    <!-- check https://addons.mozilla.org/en-US/firefox/pages/appversions -->
+    <em:targetApplication>
+      <Description>
+        <em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id> <!-- Firefox, Iceweasel, Flock -->
+        <em:minVersion>3.5</em:minVersion>
+        <em:maxVersion>10.0a1</em:maxVersion>
+      </Description>
+    </em:targetApplication>
+
+    <em:targetApplication>
+      <Description>
+        <em:id>{86c18b42-e466-45a9-ae7a-9b95ba6f5640}</em:id> <!-- Mozilla -->
+        <em:minVersion>1.5</em:minVersion>
+        <em:maxVersion>1.8+</em:maxVersion>
+      </Description>
+    </em:targetApplication>
+
+    <em:targetApplication>
+      <Description>
+	<em:id>{3550f703-e582-4d05-9a08-453d09bdfdc6}</em:id> <!-- Thunderbird -->
+	<em:minVersion>3.0</em:minVersion>
+	<em:maxVersion>10.0a1</em:maxVersion>
+      </Description>
+    </em:targetApplication>
+
+ <!-- Mobile (formerly known as Fennec)
+    <em:targetApplication>
+      <Description>
+        <em:id>{a23983c0-fd0e-11dc-95ff-0800200c9a66}</em:id>
+        <em:minVersion>0.1</em:minVersion>
+        <em:maxVersion>7.0a1</em:maxVersion>
+      </Description>
+    </em:targetApplication>
+ -->
+
+    <em:targetApplication>
+      <Description>
+        <em:id>{92650c4d-4b8e-4d2a-b7eb-24ecf4f6b63a}</em:id> <!-- SeaMonkey -->
+        <em:minVersion>2.0</em:minVersion>
+        <em:maxVersion>2.7a1</em:maxVersion>
+      </Description>
+    </em:targetApplication>
+
+    <em:targetApplication>
+      <Description>
+        <em:id>{718e30fb-e89b-41dd-9da7-e25a45638b28}</em:id> <!-- Sunbird -->
+        <em:minVersion>0.5</em:minVersion>
+        <em:maxVersion>5.0b2pre</em:maxVersion>
+      </Description>
+    </em:targetApplication>
+
+  </Description>
+</RDF>

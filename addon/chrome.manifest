@@ -1,0 +1,29 @@
+content	certpatrol	content/
+
+# L10n validator doesn't like English. It has to be American English. *shrug*
+#ocale	certpatrol	en	locale/en/
+locale	certpatrol	en-US	locale/en/
+locale	certpatrol	de	locale/de/
+locale	certpatrol	de-DE	locale/de/
+locale	certpatrol	it	locale/it/
+locale	certpatrol	it-IT	locale/it/
+
+# Firefox, Iceweasel, Flock
+overlay	chrome://browser/content/browser.xul chrome://certpatrol/content/overlay.xul
+overlay	chrome://browser/content/sanitize.xul chrome://certpatrol/content/sanitize.xul
+overlay chrome://pippki/content/certManager.xul chrome://certpatrol/content/certManager.xul
+
+# Mobile (Fennec)
+override chrome://certpatrol/content/prefs.xul chrome://certpatrol/content/prefs-mobile.xul application={a23983c0-fd0e-11dc-95ff-0800200c9a66}
+
+# Thunderbird, Mozilla Mail
+overlay chrome://messenger/content/messenger.xul chrome://certpatrol/content/overlay.xul
+
+# SeaMonkey
+overlay chrome://navigator/content/navigator.xul chrome://certpatrol/content/overlay.xul
+
+# Songbird
+overlay chrome://songbird/content/xul/mainScriptsOverlay.xul chrome://certpatrol/content/overlay.xul
+
+# chrome://chatzilla/content/chatzilla.xul and
+# chrome://calendar/content/calendar.xul maybe?

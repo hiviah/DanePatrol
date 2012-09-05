@@ -1,0 +1,77 @@
+<!ENTITY updateMsg		"Version [_version] von Certificate Patrol wurde installiert, klicke [_button] für detaillierte Informationen.">
+
+<!ENTITY newEvent		"Zertifikat eingespeichert.">
+<!ENTITY wildEvent		"Wildcard-Zertifikat akzeptiert.">
+<!ENTITY changeEvent		"Zertifikat ersetzt.">
+
+<!ENTITY threat0		"Alles in Ordnung.">
+<!ENTITY threat1		"Wahrscheinlich harmlos:">
+<!ENTITY threat2		"Seltsames Geschehen?">
+<!ENTITY threat3		"Grund zur Sorge!">
+
+<!ENTITY daysPast		"vor [_days] Tagen">
+<!ENTITY daysFuture		"in [_days] Tagen">
+
+<!ENTITY issuedTo		"Ausgegeben an:">
+<!ENTITY issuedBy		"Anscheinend ausgestellt durch:">
+<!ENTITY validity		"Gültigkeit:">
+<!ENTITY fingerprints		"Prüfsummen:">
+<!ENTITY commonName		"Name (CN):">
+<!ENTITY organization		"Organisation (O):">
+<!ENTITY organizationalUnit	"Abteilung (OU):">
+<!ENTITY serialNumber		"Seriennummer:">
+<!ENTITY emailAddress		"Kontakt:">
+<!ENTITY notBefore		"Ausgestellt am:">
+<!ENTITY notAfter		"Gültig bis:">
+<!ENTITY stored			"Gespeichert am:">
+<!ENTITY md5Fingerprint		"MD5 Fingerprint:">
+<!ENTITY sha1Fingerprint	"SHA1 Fingerprint:">
+
+<!ENTITY oldCert		"Altes Zertifikat:">
+<!ENTITY newCert		"Neues Zertifikat:">
+<!ENTITY oldCertHier		"Alte Zertifikatshierarchie:">
+<!ENTITY newCertHier		"Neue Zertifikatshierarchie:">
+<!ENTITY hierarchy		"Zertifikatshierarchie:">
+<!ENTITY viewHierarchy		"Zertifikatshierarchie betrachten">
+
+<!ENTITY viewOldCert		"Betrachte altes Zertifikat">
+<!ENTITY viewOldCert_key	"T">
+<!ENTITY viewNewCert		"Betrachte neues Zertifikat">
+<!ENTITY viewNewCert_key	"N">
+<!ENTITY viewDetails		"Details anschauen">
+<!ENTITY viewDetails_key	"S">
+
+<!ENTITY accept			"Annehmen">
+<!ENTITY accept_key		"A">
+<!ENTITY reject			"Verwerfen">
+<!ENTITY reject_key		"V">
+<!ENTITY issuerOnly		"Zuviele Meldungen? Beachte für diese Domain nur die Zertifizierungsstelle">
+<!ENTITY issuerOnly_key		"Z">
+<!ENTITY ignoreHost		"Ignoriere diese Adresse">
+<!ENTITY ignoreHost_key		"I">
+
+<!ENTITY warn_wildcard		"Info: Dieses Wildcard-Zertifikat wird auch für andere Sites dieser Domain eingesetzt.">
+<!ENTITY warn_commonName	"Warnung: Name der Site hat sich geändert. Schau mal ob das ok ist so.">
+<!ENTITY warn_issuerCommonName	"Vorsicht: Es wurde die Zertifizierungsstelle gewechselt.">
+<!ENTITY warn_notBefore		"Achtung! Dieses Zertifikat ist noch nicht gültig.">
+<!ENTITY warn_notAfter_expired	"Info: Altes Zertifikat ist abgelaufen. Es muss ersetzt werden.">
+<!ENTITY warn_notAfter_notdue	"Warnung: Dieses Zertifikat ist noch lange Zeit gültig. Sollte diese Site regelmäßig mehr als ein Zertifikat verwenden, ist es nützlich die 'Nur CA beachten' Option in der Detailansicht zu aktivieren.">
+<!ENTITY warn_notAfter_due	"Info: Das alte Zertifikat liefe demnächst ab. Es ist in Ordnung es zu erneuern.">
+
+<!ENTITY sanitizer.itemLabel	"Durch Certificate Patrol gespeicherte Zertifikate">
+
+<!ENTITY certManager.description	"Certificate Patrol hat folgende Zertifikate gespeichert:">
+<!ENTITY certManager.confirmDelete	"Sicher, dass die Zertifikate von der CertPatrol Datenbank gelöscht werden sollen?">
+
+<!ENTITY certManager.sha1		"SHA1 Fingerprint">
+<!ENTITY certManager.md5		"MD5 Fingerprint">
+<!ENTITY certManager.stored		"Gespeichert am">
+
+<!ENTITY certManager.groupByCA		"Nach Root CA gruppieren">
+<!ENTITY certManager.groupByCA.key	"G">
+
+<!ENTITY certManager.issuerOnly			"Nur CA beachten">
+<!ENTITY certManager.issuerOnly.set		"Aktiviere nur CA beachten">
+<!ENTITY certManager.issuerOnly.set.key		"A">
+<!ENTITY certManager.issuerOnly.unset		"Deaktiviere nur CA beachten">
+<!ENTITY certManager.issuerOnly.unset.key	"D">

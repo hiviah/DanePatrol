@@ -12,3 +12,5 @@ DANE_patrol.creator.user
 DANE_patrol.files
 DANE_patrol.includes
 
+#generated *xpi
+*.xpi

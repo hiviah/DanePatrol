@@ -2,4 +2,13 @@
 libs
 unbound-test
 .gdb_history
+#Komodo files
 *.kpf
+
+#Qt Creator files
+DANE_patrol.config
+DANE_patrol.creator
+DANE_patrol.creator.user
+DANE_patrol.files
+DANE_patrol.includes
+

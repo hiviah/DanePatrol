@@ -52,30 +52,12 @@ FB::VariantMap ResolvedTLSA::toJSVariant() const
     return result;
 }
 
-///////////////////////////////////////////////////////////////////////////////
-/// @fn TLSAfetcherAPI::TLSAfetcherAPI(const TLSAfetcherPtr& plugin, const FB::BrowserHostPtr host)
-///
-/// @brief  Constructor for your JSAPI object.  You should register your methods, properties, and events
-///         that should be accessible to Javascript from here.
-///
-/// @see FB::JSAPIAuto::registerMethod
-/// @see FB::JSAPIAuto::registerProperty
-/// @see FB::JSAPIAuto::registerEvent
-///////////////////////////////////////////////////////////////////////////////
 TLSAfetcherAPI::TLSAfetcherAPI(const TLSAfetcherPtr& plugin, const FB::BrowserHostPtr& host) : 
 	m_plugin(plugin), 
 	m_host(host),
 	m_resolver(NULL)
 {
-    registerMethod("echo",      make_method(this, &TLSAfetcherAPI::echo));
-    registerMethod("testEvent", make_method(this, &TLSAfetcherAPI::testEvent));
     registerMethod("fetchTLSA", make_method(this, &TLSAfetcherAPI::fetchTLSA));
-
-    // Read-write property
-    registerProperty("testString",
-                     make_property(this,
-                        &TLSAfetcherAPI::get_testString,
-                        &TLSAfetcherAPI::set_testString));
 
     // Read-only property
     registerProperty("version",
@@ -114,25 +96,10 @@ void TLSAfetcherAPI::initializeUnbound()
     }
 }
 
-///////////////////////////////////////////////////////////////////////////////
-/// @fn TLSAfetcherAPI::~TLSAfetcherAPI()
-///
-/// @brief  Destructor.  Remember that this object will not be released until
-///         the browser is done with it; this will almost definitely be after
-///         the plugin is released.
-///////////////////////////////////////////////////////////////////////////////
 TLSAfetcherAPI::~TLSAfetcherAPI()
 {
 }
 
-///////////////////////////////////////////////////////////////////////////////
-/// @fn TLSAfetcherPtr TLSAfetcherAPI::getPlugin()
-///
-/// @brief  Gets a reference to the plugin that was passed in when the object
-///         was created.  If the plugin has already been released then this
-///         will throw a FB::script_error that will be translated into a
-///         javascript exception in the page.
-///////////////////////////////////////////////////////////////////////////////
 TLSAfetcherPtr TLSAfetcherAPI::getPlugin()
 {
     TLSAfetcherPtr plugin(m_plugin.lock());
@@ -143,34 +110,10 @@ TLSAfetcherPtr TLSAfetcherAPI::getPlugin()
 }
 
 
-
-// Read/Write property testString
-std::string TLSAfetcherAPI::get_testString()
-{
-    return m_testString;
-}
-void TLSAfetcherAPI::set_testString(const std::string& val)
-{
-    m_testString = val;
-}
-
 // Read-only property version
 std::string TLSAfetcherAPI::get_version()
 {
     return FBSTRING_PLUGIN_VERSION;
-}
-
-// Method echo
-FB::variant TLSAfetcherAPI::echo(const FB::variant& msg)
-{
-    static int n(0);
-    fire_echo(msg, n++);
-    return msg;
-}
-
-void TLSAfetcherAPI::testEvent(const FB::variant& var)
-{
-    fire_fired(var, true, 1);
 }
 
 TLSAList TLSAfetcherAPI::parseResult(const ub_result* result) const
@@ -242,12 +185,12 @@ FB::VariantMap TLSAfetcherAPI::fetchTLSA(const std::string& fqdn, int port)
     FB::VariantMap jsResult;
     int retval, rcode;
 
-    if (!m_resolver) {
+    if (!canResolve()) {
     	return FB::variant_map_of(std::string("result"), -2);
     }
     
     if (port < 1 || port > 0xffff || fqdn.size() < 1) {
-        return FB::variant_map_of(std::string("result"), -1);//("errorMsg", "Invalid arguments");
+        return FB::variant_map_of(std::string("result"), -1);
     }
 
     boost::format fmt("_%2%._tcp.%1%");

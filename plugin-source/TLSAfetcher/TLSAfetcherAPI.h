@@ -22,6 +22,7 @@
 struct ub_ctx;
 struct ub_result;
 
+/*! Exception for signaling resolving or DNS parsing errors. */
 class ResolverException
 {
 public:
@@ -42,59 +43,102 @@ protected:
     std::string m_message;
 };
 
+/*! Container for parsed TLSA RR */
 struct ResolvedTLSA
 {
+    /*! 
+     * Constructor from TLSA RR fields. 
+     *
+     * @param certUsage: certificate usage 
+     * @param selector: selector
+     * @param matchingType: matching type
+     * @param association: hex-encoded string of association data
+     */
     ResolvedTLSA(uint8_t certUsage, uint8_t selector, uint8_t matchingType, std::string association);
     
+    /*! Convert to JSAPI map passable to javascript */
     FB::VariantMap toJSVariant() const;
     
+    /*! certificate usage from TLSA RR*/
     uint8_t m_certUsage;
+    
+    /*! selector from TLSA RR*/
     uint8_t m_selector;
+    
+    /*! matching type from TLSA RR*/
     uint8_t m_matchingType;
     
+    /*! association data - hash or certificate from TLSA RR */
     std::string m_association;
 };
 
+/*! List of parsed TLSA records represented as JSAPI-compatible list */
 typedef FB::VariantList TLSAList;
 
 class TLSAfetcherAPI : public FB::JSAPIAuto
 {
 public:
+
+	/*!
+	 * Constructor for the JSAPI object. JSAPI methods available from browser 
+	 * javascript are registered here.
+	 *
+	 *  @see FB::JSAPIAuto::registerMethod
+	 *  @see FB::JSAPIAuto::registerProperty
+	 *  @see FB::JSAPIAuto::registerEvent
+	 */
     TLSAfetcherAPI(const TLSAfetcherPtr& plugin, const FB::BrowserHostPtr& host);
+    
+  /*!
+   * Destructor.  Remember that this object will not be released until
+   * the browser is done with it; this will almost definitely be after
+   * the plugin is released.
+   */
     virtual ~TLSAfetcherAPI();
 
+    /*! 
+     * Gets a reference to the plugin that was passed in when the object
+     * was created.  If the plugin has already been released then this
+     * will throw a FB::script_error that will be translated into a
+     * javascript exception in the page.
+	 */
     TLSAfetcherPtr getPlugin();
 
-    // Read/Write property ${PROPERTY.ident}
-    std::string get_testString();
-    void set_testString(const std::string& val);
-
-    // Read-only property ${PROPERTY.ident}
+    /*! Returns version string. Bound to JSAPI "version" property. */
     std::string get_version();
 
-    // Method echo
-    FB::variant echo(const FB::variant& msg);
-
-    /*! Fetch TLSA records.
+    /*! 
+     * Fetch TLSA records. Protocol for the queried TLSA is always TCP.
+     * 
+     * Returned as variant map passable to JSAPI. Exposed JSAPI method.
+     *
+     * @param fqdn: FQDN of host whose TLS certificates to query 
+     *				(without _port._proto prefix)
+     * @param port: port of the TLS service
      */
     FB::VariantMap fetchTLSA(const std::string& fqdn, int port);
     
-    // Event helpers
-    FB_JSAPI_EVENT(fired, 3, (const FB::variant&, bool, int));
-    FB_JSAPI_EVENT(echo, 2, (const FB::variant&, const int));
-    FB_JSAPI_EVENT(notify, 0, ());
-
-    // Method test-event
-    void testEvent(const FB::variant& s);
-    
+    /*! Whether the resolver is usable. */
     bool canResolve() const
     	{return m_resolver != NULL;}
 
 private:
 
+    /*! 
+     * Initialize unbound resolver context.
+     *
+     * @throws ResolverException on error
+     */
     void initializeUnbound();
+    
+    /*!
+     * Parse result from unbound resolver into list of JSAPI TLSA structures.
+     *
+     * @param result: result from ub_resolve
+     */
     TLSAList parseResult(const ub_result* result) const;
     
+    /*! Weak pointer to JS root plugin */
     TLSAfetcherWeakPtr m_plugin;
     FB::BrowserHostPtr m_host;
 

@@ -2,7 +2,7 @@
 
 <!DOCTYPE prefwindow [
   <!ENTITY % prefs SYSTEM "chrome://danepatrol/locale/prefs.dtd"> %prefs;
-  <!ENTITY % danepatrol SYSTEM "chrome://danepatrol/locale/CertPatrol.dtd"> %certpatrol;
+  <!ENTITY % danepatrol SYSTEM "chrome://danepatrol/locale/DanePatrol.dtd"> %danepatrol;
 ]>
 <!--DOCTYPE prefwindow SYSTEM "chrome://danepatrol/locale/prefs.dtd"-->
 
@@ -19,7 +19,7 @@
   ondialogextra1="DanePatrol.showSanitizer()"
   ondialogdisclosure="DanePatrol.showRelNotes()">
 
-<script src="CertPatrol.js"/>
+<script src="DanePatrol.js"/>
 
 <prefpane id="main">
   <preferences> 

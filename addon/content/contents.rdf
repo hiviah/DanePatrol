@@ -16,7 +16,7 @@
         chrome:xpcNativeWrappers="no"
         chrome:extension="true"><!--
         chrome:settingsURL="chrome://danepatrol/content/settings.xul"
-        chrome:iconURL="chrome://danepatrol/skin/CertPatrol.png" -->
+        chrome:iconURL="chrome://danepatrol/skin/DanePatrol.png" -->
     </RDF:Description>
 
     <RDF:Seq about="urn:mozilla:overlays">

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
-<!DOCTYPE dialog SYSTEM "chrome://danepatrol/locale/CertPatrol.dtd">
+<!DOCTYPE dialog SYSTEM "chrome://danepatrol/locale/DanePatrol.dtd">
 
-<?xml-stylesheet href="chrome://danepatrol/content/CertPatrol.css" type="text/css"?>
+<?xml-stylesheet href="chrome://danepatrol/content/DanePatrol.css" type="text/css"?>
 
 <dialog id="ssl-view"
   title="DANE Patrol"

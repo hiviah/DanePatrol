@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- ?xml-stylesheet href="chrome://danepatrol/content/CertPatrol.css" type="text/css"? -->
+<!-- ?xml-stylesheet href="chrome://danepatrol/content/DanePatrol.css" type="text/css"? -->
 
 <!DOCTYPE overlay [
-  <!ENTITY % certpatrol SYSTEM "chrome://danepatrol/locale/CertPatrol.dtd"> %certpatrol;
+  <!ENTITY % danepatrol SYSTEM "chrome://danepatrol/locale/DanePatrol.dtd"> %danepatrol;
   <!ENTITY % pippki SYSTEM "chrome://pippki/locale/certManager.dtd"> %pippki;
 ]>
 <overlay id="DanePatrol-certManager-overlay" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
-  <script src="CertPatrol.js"/>
+  <script src="DanePatrol.js"/>
   <script src="treeview.js" type="application/x-javascript; version=1.7; charset=utf-8" />
   <script src="certManager.js"/>
   <script>

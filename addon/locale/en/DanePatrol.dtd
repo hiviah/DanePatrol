@@ -60,7 +60,7 @@
 
 <!ENTITY sanitizer.itemLabel	"Certificates stored by DANE Patrol">
 
-<!ENTITY certManager.description	"DANE ificate Patrol has stored the following certificates for you:">
+<!ENTITY certManager.description	"DANE Patrol has stored the following certificates for you:">
 <!ENTITY certManager.confirmDelete	"Are you sure you want to delete the selected certificates from the DANE Patrol database?">
 
 <!ENTITY certManager.sha1		"SHA1 Fingerprint">

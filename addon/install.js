@@ -6,9 +6,9 @@
 
 (function() {
 
-var displayName = "CertPatrol";
-var version     = "2.0.14";
-var name        = "certpatrol"; // leafname of the JAR file
+var displayName = "DanePatrol";
+var version     = "0.1.0";
+var name        = "danepatrol"; // leafname of the JAR file
 
 // The following three sets of variables tell this installer script how your
 // extension directory structure looks.
@@ -22,7 +22,7 @@ var localeDir	= "/"
 // languages disabled for now... FIXME
 var locales       = new Array(  ); // "en", "it", "de" );
 var skins         = new Array(  ); // "classic"
-var prefs         = new Array( "CertPatrol.js" );
+var prefs         = new Array( "DanePatrol.js" );
 var components    = new Array(  );
 var searchPlugins = new Array(  );
 

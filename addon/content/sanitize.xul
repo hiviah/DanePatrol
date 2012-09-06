@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!DOCTYPE overlay SYSTEM "chrome://danepatrol/locale/CertPatrol.dtd">
+<!DOCTYPE overlay SYSTEM "chrome://danepatrol/locale/DanePatrol.dtd">
 <overlay id="DanePatrol-sanitize-overlay" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
-  <script src="CertPatrol.js"/>
+  <script src="DanePatrol.js"/>
   <script src="sanitize.js" type="application/x-javascript; version=1.7; charset=utf-8" />
   <script>
 

@@ -47,6 +47,9 @@
     <preference id="_hosts_ignore"
                 name="danepatrol.hosts.ignore"
                 type="string" />
+    <preference id="_dane_check"
+                name="danepatrol.dane.check"
+                type="string" />
   </preferences>
 
   <dialogheader title="&_title;" />
@@ -90,10 +93,10 @@
 
   <groupbox>
     <caption label="&_dane_options;" />
-    <radiogroup>
-      <radio id="dane_never" label="&_dane_never;" />
-      <radio id="dane_new" label="&_dane_new;"  selected="true"/>
-      <radio id="dane_always" label="&_dane_always;" />
+    <radiogroup preference="_dane_check">
+      <radio id="never" label="&_dane_never;" />
+      <radio id="new" label="&_dane_new;"  selected="true"/>
+      <radio id="always" label="&_dane_always;" />
     </radiogroup>
   </groupbox>
 

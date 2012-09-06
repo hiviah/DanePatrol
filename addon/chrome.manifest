@@ -10,16 +10,16 @@ overlay	chrome://browser/content/sanitize.xul chrome://danepatrol/content/saniti
 overlay chrome://pippki/content/certManager.xul chrome://danepatrol/content/certManager.xul
 
 # Mobile (Fennec)
-override chrome://danepatrol/content/prefs.xul chrome://danepatrol/content/prefs-mobile.xul application={a23983c0-fd0e-11dc-95ff-0800200c9a66}
+#override chrome://danepatrol/content/prefs.xul chrome://danepatrol/content/prefs-mobile.xul application={a23983c0-fd0e-11dc-95ff-0800200c9a66}
 
 # Thunderbird, Mozilla Mail
-overlay chrome://messenger/content/messenger.xul chrome://danepatrol/content/overlay.xul
+#overlay chrome://messenger/content/messenger.xul chrome://danepatrol/content/overlay.xul
 
 # SeaMonkey
-overlay chrome://navigator/content/navigator.xul chrome://danepatrol/content/overlay.xul
+#overlay chrome://navigator/content/navigator.xul chrome://danepatrol/content/overlay.xul
 
 # Songbird
-overlay chrome://songbird/content/xul/mainScriptsOverlay.xul chrome://danepatrol/content/overlay.xul
+#overlay chrome://songbird/content/xul/mainScriptsOverlay.xul chrome://danepatrol/content/overlay.xul
 
 # chrome://chatzilla/content/chatzilla.xul and
 # chrome://calendar/content/calendar.xul maybe?

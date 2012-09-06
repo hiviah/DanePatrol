@@ -15,7 +15,6 @@
 
 #include "PluginCore.h"
 
-
 FB_FORWARD_PTR(TLSAfetcher)
 class TLSAfetcher : public FB::PluginCore
 {
@@ -37,6 +36,8 @@ public:
     // FB::PluginCore::isWindowless()
     virtual bool isWindowless() { return false; }
 
+
+
     BEGIN_PLUGIN_EVENT_MAP()
         EVENTTYPE_CASE(FB::MouseDownEvent, onMouseDown, FB::PluginWindow)
         EVENTTYPE_CASE(FB::MouseUpEvent, onMouseUp, FB::PluginWindow)
@@ -53,6 +54,7 @@ public:
     virtual bool onWindowAttached(FB::AttachedEvent *evt, FB::PluginWindow *);
     virtual bool onWindowDetached(FB::DetachedEvent *evt, FB::PluginWindow *);
     /** END EVENTDEF -- DON'T CHANGE THIS LINE **/
+
 };
 
 

@@ -13,13 +13,8 @@
 
 #include "TLSAfetcher.h"
 
-#include <string>
-#include "boost/format.hpp"
-#include "unbound.h"
-
 
 /*! Shared global resolver structure. It should be thread-safe. */
-static struct ub_ctx* unboundResolver=NULL;
 
 ///////////////////////////////////////////////////////////////////////////////
 /// @fn TLSAfetcher::StaticInitialize()
@@ -30,22 +25,7 @@ static struct ub_ctx* unboundResolver=NULL;
 ///////////////////////////////////////////////////////////////////////////////
 void TLSAfetcher::StaticInitialize()
 {
-    int ub_retval;
-
     FB::Log::initLogging();
-    unboundResolver = ub_ctx_create();
-
-    if (!unboundResolver) {
-        FBLOG_FATAL("", "Failed to create ub_ctx resolver");
-        return;
-    }
-    
-    ub_retval = ub_ctx_add_ta(unboundResolver, ".   IN DS   19036 8 2 49AAC11D7B6F6446702E54A1607371607A1A41855200FD2CE1CDDE32F24E8FB5");
-    if (ub_retval != 0) {
-        boost::format fmt("Cannot add trust anchor to resolver: %1)");
-        fmt % std::string(ub_strerror(ub_retval));
-        FBLOG_FATAL("", fmt.str());
-    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -57,8 +37,6 @@ void TLSAfetcher::StaticInitialize()
 ///////////////////////////////////////////////////////////////////////////////
 void TLSAfetcher::StaticDeinitialize()
 {
-    ub_ctx_delete(unboundResolver);
-    unboundResolver = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

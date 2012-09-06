@@ -1,4 +1,4 @@
-// Add CertPatrol checkbox to the 'Clear Recent History' dialog.
+// Add DanePatrol checkbox to the 'Clear Recent History' dialog.
 // Based on similar functionality from Tab Mix Plus (http://tmp.garyr.net).
 
 var CP_Sanitizer = {
@@ -7,9 +7,9 @@ var CP_Sanitizer = {
     onLoad: function (event) {
 	if (typeof Sanitizer != 'function') return;
 
-	Sanitizer.prototype.items['extensions-certpatrol'] = {
+	Sanitizer.prototype.items['extensions-danepatrol'] = {
             clear: function() {
-		CertPatrol.delCertsSince(this.range);
+		DanePatrol.delCertsSince(this.range);
             },
             get canClear() {
 		return true;
@@ -32,9 +32,9 @@ var CP_Sanitizer = {
             let prefName;
             let cpd = _item.getAttribute("preference").indexOf("privacy.cpd.") != -1;
             if (cpd)
-	      prefName = "privacy.cpd.extensions-certpatrol";
+	      prefName = "privacy.cpd.extensions-danepatrol";
             else
-	      prefName = "privacy.clearOnShutdown.extensions-certpatrol";
+	      prefName = "privacy.clearOnShutdown.extensions-danepatrol";
 
             let pref = document.createElement("preference");
             pref.setAttribute("id", prefName);

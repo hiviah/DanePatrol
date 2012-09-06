@@ -2,11 +2,16 @@
 /* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
- * ''Certificate Patrol'' was conceived by Carlo v. Loesch and
+ * ''DANE Patrol'' is a fork of Certificate Patrol
+ *
+ * Author: CZ.NIC Labs
+ * https://labs.nic.cz
+ *
+ * Authors of original Certificate Patrol: conceived by Carlo v. Loesch and
  * implemented by Aiko Barz, Gabor Adam Toth, Carlo v. Loesch and Mukunda Modell.
  * Wildcard functionality was contributed by Georg Koppen, JonDos GmbH 2010.
  *
- * http://patrol.psyced.org
+ * Original Certificate Patrol site: https://patrol.psyced.org
  *
  * The contents of this file are subject to the Mozilla Public License Version
  * 1.1 (the "License"); you may not use this file except in compliance with
@@ -33,9 +38,9 @@
  * ***** END LICENSE BLOCK ***** */
 
 // This source code is formatted according to half-indented KNF.
-var CertPatrol = {
+var DanePatrol = {
     CHECK_ISSUER_ONLY: 1,
-    extID: "CertPatrol@PSYC.EU",
+    extID: "DanePatrol@nic.cz",
     locale: {},
 
     // Main
@@ -65,15 +70,15 @@ var CertPatrol = {
 	      .get("ProfD", Components.interfaces.nsIFile);
 	    var storage = Components.classes["@mozilla.org/storage/service;1"]
 	      .getService(Components.interfaces.mozIStorageService);
-	    file.append("CertPatrol.sqlite");
+	    file.append("DanePatrol.sqlite");
 
 	    // Must be checked before openDatabase()
 	    var exists = file.exists();
 
-	    // Now, CertPatrol.sqlite exists
+	    // Now, DanePatrol.sqlite exists
 	    this.dbh = storage.openDatabase(file);
 
-	    // CertPatrol.sqlite initialization
+	    // DanePatrol.sqlite initialization
 	    if (!exists) {
 		this.dbh.executeSimpleSQL("CREATE TABLE version (version INT, extversion TEXT)");
 		this.dbh.executeSimpleSQL("INSERT INTO version (version, extversion) VALUES (3, '"+ this.version +"')");
@@ -158,7 +163,7 @@ var CertPatrol = {
 		this.dbh = null;
 	    }
 	} catch (err) {
-	    this.log("CertPatrol: Error trying to close connection: ", err);
+	    this.log("DanePatrol: Error trying to close connection: ", err);
 	}
     },
 
@@ -167,7 +172,7 @@ var CertPatrol = {
 	var Cc = Components.classes, Ci = Components.interfaces;
 	this.prefs = Cc["@mozilla.org/preferences-service;1"]
 	  .getService(Ci.nsIPrefService)
-	  .getBranch("certpatrol.")
+	  .getBranch("danepatrol.")
 	  .QueryInterface(Ci.nsIPrefBranch2);
 
 	this.registerObserver("http-on-examine-response");
@@ -457,6 +462,7 @@ var CertPatrol = {
 	var wild = this.wildcardCertCheck(now.cert);
 
 	// The certificate changed
+        // DANETODO: remove stale code
 	if (found && (!old.cert || !now.cert.equals(old.cert))) {
 	    // If the cert info was stored in the previous version of CertPatrol
 	    // we don't have the full cert yet, so we just store it in the DB
@@ -853,7 +859,7 @@ var CertPatrol = {
 	if (notifyBox && !popup) {
 	    var timeout;
 	    var n = notifyBox.appendNotification(
-	      "(CertPatrol) "+ certobj.host +": "+certobj.event +" "+
+	      "(DanePatrol) "+ certobj.host +": "+certobj.event +" "+
 	      certobj.now.commonName +". "+
 	      this.locale.issuedBy +" "+
 	      (certobj.now.issuerOrganization || certobj.now.issuerCommonName)
@@ -862,16 +868,16 @@ var CertPatrol = {
 		accessKey: this.locale.reject_key,
 		callback: function(msg, btn) {
 		    if (timeout) clearTimeout(timeout);
-		    CertPatrol.delCert(certobj.host);
+		    DanePatrol.delCert(certobj.host);
 		}
 	    }, {
 		label: this.locale.viewDetails,
 		accessKey: this.locale.viewDetails_key,
 		callback: function(msg, btn) {
 		    if (timeout) clearTimeout(timeout);
-		    win.openDialog("chrome://certpatrol/content/new.xul",
+		    win.openDialog("chrome://danepatrol/content/new.xul",
 				   "_blank", "chrome,dialog,modal",
-				   certobj, CertPatrol);
+				   certobj, DanePatrol);
 		}
 	    }]);
 	    n.persistence = 10; // make sure it stays visible after redirects
@@ -887,8 +893,8 @@ var CertPatrol = {
 	    } catch (err) {}
 	}
 	if (popup)
-	  win.openDialog("chrome://certpatrol/content/new.xul", "_blank",
-			 "chrome,dialog,modal", certobj, CertPatrol);
+	  win.openDialog("chrome://danepatrol/content/new.xul", "_blank",
+			 "chrome,dialog,modal", certobj, DanePatrol);
     },
 
     outchange: function(browser, certobj) {
@@ -915,7 +921,7 @@ var CertPatrol = {
 
 	    var timeout;
 	    var n = notifyBox.appendNotification(
-	      "(CertPatrol) "+ certobj.host +": "+ certobj.event +" "+
+	      "(DanePatrol) "+ certobj.host +": "+ certobj.event +" "+
 	      certobj.now.commonName +". "+
 	      this.locale.issuedBy +" "+
 	      (certobj.now.issuerOrganization || certobj.now.issuerCommonName) +" "+
@@ -924,16 +930,16 @@ var CertPatrol = {
 		accessKey: this.locale.accept_key,
 		callback: function(msg, btn) {
 		    if (timeout) clearTimeout(timeout);
-		    CertPatrol.saveCert(certobj);
+		    DanePatrol.saveCert(certobj);
 		}
 	    }, {
 		label: this.locale.viewDetails,
 		accessKey: this.locale.viewDetails_key,
 		callback: function(msg, btn) {
 		    if (timeout) clearTimeout(timeout);
-		    win.openDialog("chrome://certpatrol/content/change.xul",
+		    win.openDialog("chrome://danepatrol/content/change.xul",
 				   "_blank", "chrome,dialog,modal",
-				   certobj, CertPatrol);
+				   certobj, DanePatrol);
 		}
 	    }]);
 	    n.persistence = 10; // make sure it stays visible after redirects
@@ -945,7 +951,7 @@ var CertPatrol = {
 			timeout = setTimeout(function() {
 			    if (n.parentNode) {
 			        notifyBox.removeNotification(n);
-			        CertPatrol.saveCert(certobj);
+			        DanePatrol.saveCert(certobj);
                             }
 			    n = certobj = null;
 			}, t * 1000);
@@ -954,8 +960,8 @@ var CertPatrol = {
 	    }
 	}
 	if (popup)
-	  win.openDialog("chrome://certpatrol/content/change.xul", "_blank",
-			 "chrome,dialog,modal", certobj, CertPatrol);
+	  win.openDialog("chrome://danepatrol/content/change.xul", "_blank",
+			 "chrome,dialog,modal", certobj, DanePatrol);
     },
 
     getNotificationBox: function (win) {
@@ -967,7 +973,7 @@ var CertPatrol = {
 
     warn: function(result, error) {
 	if (error) result += error +" at "+ error.fileName +" line "+ error.lineNumber;
-	window.openDialog("chrome://certpatrol/content/warning.xul",
+	window.openDialog("chrome://danepatrol/content/warning.xul",
 			  "_blank", "chrome,dialog,modal", result);
 	this.log("CertPatol: "+ result);
     },
@@ -1006,7 +1012,7 @@ var CertPatrol = {
     },
 
     showRelNotes: function() {
-	var url = "chrome://certpatrol/content/pages/version.html";
+	var url = "chrome://danepatrol/content/pages/version.html";
 	window.openDialog(url, "_blank", "width=700,height=600");
     },
 

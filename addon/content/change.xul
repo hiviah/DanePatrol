@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
-<!DOCTYPE dialog SYSTEM "chrome://certpatrol/locale/CertPatrol.dtd">
+<!DOCTYPE dialog SYSTEM "chrome://danepatrol/locale/CertPatrol.dtd">
 
-<?xml-stylesheet href="chrome://certpatrol/content/CertPatrol.css" type="text/css"?>
+<?xml-stylesheet href="chrome://danepatrol/content/CertPatrol.css" type="text/css"?>
 
 <dialog id="ssl-change"
-  title="Certificate Patrol"
+  title="DANE Patrol"
   xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
   persist="screenX screenY width height" width="800" height="600"
   buttons="extra1,accept,cancel"
@@ -15,13 +15,13 @@
   buttonaccesskeyextra1="&ignoreHost_key;"
   buttonaccesskeyaccept="&accept_key;"
   buttonaccesskeycancel="&reject_key;"
-  ondialogextra1="CertPatrol.ignoreHost(certobj.host); window.close()"
-  ondialogaccept="return CertPatrol.saveCert(certobj)"
+  ondialogextra1="DanePatrol.ignoreHost(certobj.host); window.close()"
+  ondialogaccept="return DanePatrol.saveCert(certobj)"
   ondialogcancel="return true">
 
   <script>
   var certobj = window.arguments[0];
-  var CertPatrol = window.arguments[1];
+  var DanePatrol = window.arguments[1];
   //var $ = document.getElementById.bind(document); // TB does not have bind()
   function $() { return document.getElementById.apply(document, arguments); }
 
@@ -71,14 +71,14 @@
         if (certobj.warn[k])
           $("warn_"+k).hidden = false;
 
-      CertPatrol.addCertChain($("cmchaino"), certobj.old.cert);
-      CertPatrol.addCertChain($("cmchainn"), certobj.now.cert);
+      DanePatrol.addCertChain($("cmchaino"), certobj.old.cert);
+      DanePatrol.addCertChain($("cmchainn"), certobj.now.cert);
       if ($("cmchaino").value != $("cmchainn").value) {
           $("cmchaino").className += " old";
           $("cmchainn").className += " new";
       }
 
-      $("cmissueronly").checked = certobj.flags &amp; CertPatrol.CHECK_ISSUER_ONLY;
+      $("cmissueronly").checked = certobj.flags &amp; DanePatrol.CHECK_ISSUER_ONLY;
   }
 
   </script>
@@ -109,7 +109,7 @@
         <row>
           <vbox>
             <label value="&oldCertHier;" />
-            <button id="cmdetailso" oncommand="CertPatrol.viewCert(certobj.old.cert)" label="&viewOldCert;" accesskey="&viewOldCert_key;" />
+            <button id="cmdetailso" oncommand="DanePatrol.viewCert(certobj.old.cert)" label="&viewOldCert;" accesskey="&viewOldCert_key;" />
           </vbox>
           <vbox>
             <textbox id="cmchaino" multiline="true" readonly="true" />
@@ -118,7 +118,7 @@
         <row>
           <vbox>
             <label value="&newCertHier;" />
-            <button id="cmdetailsn" oncommand="CertPatrol.viewCert(certobj.now.cert)" label="&viewNewCert;" accesskey="&viewNewCert_key;" />
+            <button id="cmdetailsn" oncommand="DanePatrol.viewCert(certobj.now.cert)" label="&viewNewCert;" accesskey="&viewNewCert_key;" />
           </vbox>
           <vbox>
             <textbox id="cmchainn" multiline="true" readonly="true" />
@@ -245,5 +245,5 @@
 
   </vbox>
 
-  <checkbox id="cmissueronly" oncommand="CertPatrol.setFlag(certobj, CertPatrol.CHECK_ISSUER_ONLY, this.checked)" label="&issuerOnly;" accesskey="&issuerOnly_key;" />
+  <checkbox id="cmissueronly" oncommand="DanePatrol.setFlag(certobj, DanePatrol.CHECK_ISSUER_ONLY, this.checked)" label="&issuerOnly;" accesskey="&issuerOnly_key;" />
 </dialog>

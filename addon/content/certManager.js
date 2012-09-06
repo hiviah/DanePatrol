@@ -1,10 +1,16 @@
 /* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
- * ''Certificate Patrol'' was conceived by Carlo v. Loesch and
- * implemented by Aiko Barz, Mukunda Modell, Carlo v. Loesch and Gabor Adam Toth.
+ * ''DANE Patrol'' is a fork of Certificate Patrol
  *
- * http://patrol.psyced.org
+ * Author: CZ.NIC Labs
+ * https://labs.nic.cz
+ *
+ * Authors of original Certificate Patrol: conceived by Carlo v. Loesch and
+ * implemented by Aiko Barz, Gabor Adam Toth, Carlo v. Loesch and Mukunda Modell.
+ * Wildcard functionality was contributed by Georg Koppen, JonDos GmbH 2010.
+ *
+ * Original Certificate Patrol site: https://patrol.psyced.org
  *
  * The contents of this file are subject to the Mozilla Public License Version
  * 1.1 (the "License"); you may not use this file except in compliance with
@@ -34,19 +40,19 @@ var CP_CertManager = {
     locale: {},
     inited: false,
     grouping: true,
-    log: CertPatrol.log,
+    log: DanePatrol.log,
 
     onLoad: function() {
-	var tree = this.tree = document.getElementById('CertPatrol-tree');
+	var tree = this.tree = document.getElementById('DanePatrol-tree');
 	var tabbox = this.tabbox = document.getElementById("certmanagertabs");
-	var tab = this.tab = document.getElementById("CertPatrol_tab");
-	var panel = this.panel = document.getElementById("CertPatrolCerts");
+	var tab = this.tab = document.getElementById("DanePatrol_tab");
+	var panel = this.panel = document.getElementById("DanePatrolCerts");
 
 	this.buttons = {
-	    view: document.getElementById("CertPatrol_viewButton"),
-	    delete: document.getElementById("CertPatrol_deleteButton"),
-	    setIssuerOnly: document.getElementById("CertPatrol_setIssuerOnlyButton"),
-	    unsetIssuerOnly: document.getElementById("CertPatrol_unsetIssuerOnlyButton"),
+	    view: document.getElementById("DanePatrol_viewButton"),
+	    delete: document.getElementById("DanePatrol_deleteButton"),
+	    setIssuerOnly: document.getElementById("DanePatrol_setIssuerOnlyButton"),
+	    unsetIssuerOnly: document.getElementById("DanePatrol_unsetIssuerOnlyButton"),
 	}
 
 	tabbox.tabpanels.appendChild(panel);
@@ -71,7 +77,7 @@ var CP_CertManager = {
     },
 
     loadCerts: function() {
-	this.certs = CertPatrol.getAllCerts();
+	this.certs = DanePatrol.getAllCerts();
 	this.addCerts();
     },
 
@@ -179,11 +185,11 @@ var CP_CertManager = {
 	var certs = this.getSelectedCerts();
 	for (var i=0; i<certs.length; i++) {
 	    if (certs[i].cert instanceof Components.interfaces.nsIX509Cert)
-	      CertPatrol.viewCert(certs[i].cert);
+	      DanePatrol.viewCert(certs[i].cert);
 	    else if (certs[i].sha1Fingerprint != null)
-	      window.openDialog("chrome://certpatrol/content/view.xul",
+	      window.openDialog("chrome://danepatrol/content/view.xul",
 				"_blank", "chrome,dialog",
-				certs[i], CertPatrol);
+				certs[i], DanePatrol);
 
 	}
     },
@@ -194,7 +200,7 @@ var CP_CertManager = {
 
 	if (!confirm(this.locale.confirmDelete +'\n\n'+ hosts.sort().join(', ')))
 	  return;
-	CertPatrol.delCerts(hosts);
+	DanePatrol.delCerts(hosts);
 
 	var rows = this.treeView.getOpenRows();
 	this.loadCerts();
@@ -205,7 +211,7 @@ var CP_CertManager = {
 	var hosts = this.getSelectedHosts();
 	if (!hosts.length) return;
 
-	CertPatrol.updateFlags(hosts, CertPatrol.CHECK_ISSUER_ONLY, on);
+	DanePatrol.updateFlags(hosts, DanePatrol.CHECK_ISSUER_ONLY, on);
 
 	var rows = this.treeView.getOpenRows();
 	this.loadCerts();
@@ -323,10 +329,10 @@ CP_TreeView.getRow = function(data, level) {
 		serialNumber: cert.serialNumber,
 		sha1Fingerprint: cert.sha1Fingerprint,
 		md5Fingerprint: cert.md5Fingerprint,
-		notBefore: CertPatrol.isodatedelta(cert.validity.notBefore),
-		notAfter: CertPatrol.isodatedelta(cert.validity.notAfter),
-		stored: CertPatrol.isodatedelta(d.stored * 1000),
-		issueronly: d.flags & CertPatrol.CHECK_ISSUER_ONLY ? 'x' : '',
+		notBefore: DanePatrol.isodatedelta(cert.validity.notBefore),
+		notAfter: DanePatrol.isodatedelta(cert.validity.notAfter),
+		stored: DanePatrol.isodatedelta(d.stored * 1000),
+		issueronly: d.flags & DanePatrol.CHECK_ISSUER_ONLY ? 'x' : '',
 	    };
 	    return cols[col.id];
 	},

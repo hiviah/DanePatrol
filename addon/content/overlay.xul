@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- ?xml-stylesheet href="chrome://certpatrol/skin/overlay.css" type="text/css"? -->
-<!DOCTYPE overlay SYSTEM "chrome://certpatrol/locale/CertPatrol.dtd">
-<overlay id="CertPatrol-overlay"
+<!-- ?xml-stylesheet href="chrome://danepatrol/skin/overlay.css" type="text/css"? -->
+<!DOCTYPE overlay SYSTEM "chrome://danepatrol/locale/CertPatrol.dtd">
+<overlay id="DanePatrol-overlay"
          xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
   <script src="CertPatrol.js"/>
   <script>
 
-window.addEventListener("load", function(e) { CertPatrol.onLoad(e); }, false);
-window.addEventListener("unload", function(e) { CertPatrol.onUnload(e); }, false);
+window.addEventListener("load", function(e) { DanePatrol.onLoad(e); }, false);
+window.addEventListener("unload", function(e) { DanePatrol.onUnload(e); }, false);
 
-CertPatrol.locale = {
+DanePatrol.locale = {
      newEvent: "&newEvent;", wildEvent: "&wildEvent;", changeEvent: "&changeEvent;",
      threat0: "&threat0;", threat1: "&threat1;", threat2: "&threat2;", threat3: "&threat3;",
      accept: "&accept;", accept_key: "&accept_key;", reject: "&reject;", reject_key: "&reject_key;",
@@ -27,6 +27,6 @@ CertPatrol.locale = {
 
   </script>
   <stringbundleset id="stringbundleset">
-    <stringbundle id="CertPatrol-strings" src="chrome://certpatrol/locale/CertPatrol.properties"/>
+    <stringbundle id="DanePatrol-strings" src="chrome://danepatrol/locale/CertPatrol.properties"/>
   </stringbundleset>
 </overlay>

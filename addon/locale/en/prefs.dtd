@@ -1,4 +1,4 @@
-<!ENTITY _title		"Certificate Patrol Preferences">
+<!ENTITY _title		"DANE Patrol Preferences">
 <!ENTITY _title_notify	"Notification bar">
 <!ENTITY _title_popup	"Pop-up dialogs">
 <!ENTITY _title_options	"Options">
@@ -20,3 +20,7 @@
 <!ENTITY _certmgr_key	"C">
 <!ENTITY _sanitizer	"Edit Recent History">
 <!ENTITY _sanitizer_key	"R">
+<!ENTITY _dane_options	"Verifying certificates using DANE protocol (fetching TLSA records)">
+<!ENTITY _dane_never	"Never check DANE TLSA records">
+<!ENTITY _dane_new	"Check DANE TLSA records only for new certificates">
+<!ENTITY _dane_always	"Always check DANE TLSA records every certificate">

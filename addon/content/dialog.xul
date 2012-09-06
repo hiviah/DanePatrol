@@ -5,8 +5,8 @@
 <?xml-stylesheet href="chrome://global/skin/global.css" type="text/css"?>
 
 <!-- currently unused, but might change in future -->
-<dialog id="cpat-dialog"
-    title="Certificate Patrol Report"
+<dialog id="danepatrol-dialog"
+    title="DANE Patrol Report"
     xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
     persist="screenX screenY width height" width="555" height="555"
     buttons="accept" centerWindowOnScreen="yes"
@@ -22,7 +22,7 @@ function onLoad() {
 }
 
 	</script>
-	<dialogheader title="Certificate Patrol" flex='1'
+	<dialogheader title="DANE Patrol" flex='1'
 	     description="Report"/>
 
 	<textbox flex='6' id='message' multiline='true'

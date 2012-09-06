@@ -1,4 +1,4 @@
-<!ENTITY updateMsg		"Certificate Patrol has been updated to version [_version], click [_button] to see what changed.">
+<!ENTITY updateMsg		"DANE Patrol has been updated to version [_version], click [_button] to see what changed.">
 
 <!ENTITY newEvent		"Certificate accepted and stored.">
 <!ENTITY wildEvent		"Wildcard certificate accepted for a new host.">
@@ -58,10 +58,10 @@
 <!ENTITY warn_notAfter_notdue	"Warning: This certificate wasn't due yet. If this site regularely uses more than one certificate, you may want to activate the 'CA only' option in the details.">
 <!ENTITY warn_notAfter_due	"Info: This certificate will expire soon. It is normal to replace it now.">
 
-<!ENTITY sanitizer.itemLabel	"Certificates stored by CertPatrol">
+<!ENTITY sanitizer.itemLabel	"Certificates stored by DANE Patrol">
 
-<!ENTITY certManager.description	"Certificate Patrol has stored the following certificates for you:">
-<!ENTITY certManager.confirmDelete	"Are you sure you want to delete the selected certificates from the CertPatrol database?">
+<!ENTITY certManager.description	"DANE ificate Patrol has stored the following certificates for you:">
+<!ENTITY certManager.confirmDelete	"Are you sure you want to delete the selected certificates from the DANE Patrol database?">
 
 <!ENTITY certManager.sha1		"SHA1 Fingerprint">
 <!ENTITY certManager.md5		"MD5 Fingerprint">

@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
-<!DOCTYPE dialog SYSTEM "chrome://certpatrol/locale/CertPatrol.dtd">
+<!DOCTYPE dialog SYSTEM "chrome://danepatrol/locale/CertPatrol.dtd">
 
-<?xml-stylesheet href="chrome://certpatrol/content/CertPatrol.css" type="text/css"?>
+<?xml-stylesheet href="chrome://danepatrol/content/CertPatrol.css" type="text/css"?>
 
 <dialog id="ssl-new"
-  title="Certificate Patrol"
+  title="DANE Patrol"
   xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
   persist="screenX screenY width height" width="800" height="370"
   buttons="accept,cancel"
@@ -14,11 +14,11 @@
   buttonaccesskeyaccept="&accept_key;"
   buttonaccesskeycancel="&reject_key;"
   ondialogaccept="return true"
-  ondialogcancel="return CertPatrol.delCert(certobj.host)">
+  ondialogcancel="return DanePatrol.delCert(certobj.host)">
   <script>
 
 var certobj = window.arguments[0];
-var CertPatrol = window.arguments[1];
+var DanePatrol = window.arguments[1];
 //var $ = document.getElementById.bind(document); // TB does not have bind()
 function $() { return document.getElementById.apply(document, arguments); }
 
@@ -49,7 +49,7 @@ function onLoad() {
 	var key = keys[i];
 	$(key).value = certobj.now[key];
     }
-    CertPatrol.addCertChain($("cmchain"), certobj.now.cert);
+    DanePatrol.addCertChain($("cmchain"), certobj.now.cert);
 }
 
   </script>
@@ -69,7 +69,7 @@ function onLoad() {
         </groupbox>
         <row>
           <vbox>
-            <button id="cmdetails" oncommand="CertPatrol.viewCert(certobj.now.cert)" label="&viewDetails;" accesskey="&viewDetails_key;" />
+            <button id="cmdetails" oncommand="DanePatrol.viewCert(certobj.now.cert)" label="&viewDetails;" accesskey="&viewDetails_key;" />
           </vbox>
           <vbox>
             <textbox id="cmchain" multiline="true" readonly="true" />

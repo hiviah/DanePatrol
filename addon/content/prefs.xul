@@ -1,51 +1,51 @@
 <?xml version="1.0"?>
 
 <!DOCTYPE prefwindow [
-  <!ENTITY % prefs SYSTEM "chrome://certpatrol/locale/prefs.dtd"> %prefs;
-  <!ENTITY % certpatrol SYSTEM "chrome://certpatrol/locale/CertPatrol.dtd"> %certpatrol;
+  <!ENTITY % prefs SYSTEM "chrome://danepatrol/locale/prefs.dtd"> %prefs;
+  <!ENTITY % danepatrol SYSTEM "chrome://danepatrol/locale/CertPatrol.dtd"> %certpatrol;
 ]>
-<!--DOCTYPE prefwindow SYSTEM "chrome://certpatrol/locale/prefs.dtd"-->
+<!--DOCTYPE prefwindow SYSTEM "chrome://danepatrol/locale/prefs.dtd"-->
 
 <?xml-stylesheet href="chrome://global/skin/global.css" type="text/css"?>
 
-<prefwindow id="CertPatrol-prefs" title="&_title;"
+<prefwindow id="DanePatrol-prefs" title="&_title;"
   xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
   buttons="accept,cancel,disclosure,extra1,extra2"
   buttonlabelextra2="&_certmgr;"
   buttonaccesskeyextra2="&_certmgr_key;"
   buttonlabelextra1="&_sanitizer;"
   buttonaccesskeyextra1="&_sanitizer_key;"
-  ondialogextra2="CertPatrol.showCertMgr()"
-  ondialogextra1="CertPatrol.showSanitizer()"
-  ondialogdisclosure="CertPatrol.showRelNotes()">
+  ondialogextra2="DanePatrol.showCertMgr()"
+  ondialogextra1="DanePatrol.showSanitizer()"
+  ondialogdisclosure="DanePatrol.showRelNotes()">
 
 <script src="CertPatrol.js"/>
 
 <prefpane id="main">
   <preferences> 
     <preference id="_popup_new"
-                name="certpatrol.popup.new"
+                name="danepatrol.popup.new"
                 type="bool" />
     <preference id="_popup_change"
-                name="certpatrol.popup.change"
+                name="danepatrol.popup.change"
                 type="bool" />
     <preference id="_popup_wild"
-                name="certpatrol.popup.wild"
+                name="danepatrol.popup.wild"
                 type="bool" />
     <preference id="_notify_new"
-                name="certpatrol.notify.new"
+                name="danepatrol.notify.new"
                 type="bool" />
     <preference id="_notify_wild"
-                name="certpatrol.notify.wild"
+                name="danepatrol.notify.wild"
                 type="bool" />
     <preference id="_notify_timeout"
-                name="certpatrol.notify.timeout"
+                name="danepatrol.notify.timeout"
                 type="int" />
     <preference id="_privatebrowsing_save"
-                name="certpatrol.privatebrowsing.save"
+                name="danepatrol.privatebrowsing.save"
                 type="bool" />
     <preference id="_hosts_ignore"
-                name="certpatrol.hosts.ignore"
+                name="danepatrol.hosts.ignore"
                 type="string" />
   </preferences>
 
@@ -89,6 +89,15 @@
   </groupbox>
 
   <groupbox>
+    <caption label="&_dane_options;" />
+    <radiogroup>
+      <radio id="dane_never" label="&_dane_never;" />
+      <radio id="dane_new" label="&_dane_new;"  selected="true"/>
+      <radio id="dane_always" label="&_dane_always;" />
+    </radiogroup>
+  </groupbox>
+
+  <groupbox>
     <caption label="&_title_ignore;" />
     <vbox>
       <label>&#8226; &_hosts_ignore_1;</label>
@@ -102,7 +111,7 @@
 
 <script>
   if (!Components.classes["@mozilla.org/browser/browserglue;1"]) {
-    var btn = document.getElementById("CertPatrol-prefs").getButton("extra1");
+    var btn = document.getElementById("DanePatrol-prefs").getButton("extra1");
     btn.parentNode.removeChild(btn);
   }
 </script>

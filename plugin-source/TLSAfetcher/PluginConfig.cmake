@@ -34,7 +34,7 @@ set(MOZILLA_PLUGINID "labs.nic.cz/TLSAfetcher")
 # strings
 set(FBSTRING_CompanyName "CZ.NIC Labs")
 set(FBSTRING_FileDescription "Fetches TLSA records with DNSSEC information")
-set(FBSTRING_PLUGIN_VERSION "1.0.0.0")
+set(FBSTRING_PLUGIN_VERSION "0.1.0")
 set(FBSTRING_LegalCopyright "Copyright 2012 CZ.NIC Labs")
 set(FBSTRING_PluginFileName "np${PLUGIN_NAME}.dll")
 set(FBSTRING_ProductName "DANE TLSA fetcher")

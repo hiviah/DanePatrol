@@ -95,7 +95,8 @@
     <caption label="&_dane_options;" />
     <radiogroup preference="_dane_check">
       <radio id="never" label="&_dane_never;" />
-      <radio id="new" label="&_dane_new;"  selected="true"/>
+      <radio id="new" label="&_dane_new;" />
+      <radio id="new" label="&_dane_new_and_known;"  selected="true"/>
       <radio id="always" label="&_dane_always;" />
     </radiogroup>
   </groupbox>

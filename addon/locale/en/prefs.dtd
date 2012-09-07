@@ -23,4 +23,5 @@
 <!ENTITY _dane_options	"Verifying certificates using DANE protocol (fetching TLSA records)">
 <!ENTITY _dane_never	"Never check DANE TLSA records">
 <!ENTITY _dane_new	"Check DANE TLSA records only for new certificates">
+<!ENTITY _dane_new_and_known	"Check DANE TLSA records for new certificates or hosts that had TLSA before">
 <!ENTITY _dane_always	"Always check DANE TLSA records every certificate">

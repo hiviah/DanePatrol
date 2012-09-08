@@ -1,0 +1,21 @@
+## Class definitions for structures passed inbetween plugin<->javascript
+
+#Will generate output_basefname.cpp and output_basefname.h in current dir
+output_basefname: TLSAfetcherStructures
+
+#Includes that need to be inserted with "includefile.h" must have explicit
+#apostrophes around, otherwise YAML will interpret it its string.
+includes:
+    - '"APITypes.h"'
+
+ResolvedTLSA:
+    certUsage: int
+    selector: int
+    matchingType: int
+    association: string
+
+TLSALookupResult:
+    result: int
+    rcode: int
+    secure: int
+    tlsa: list<ResolvedTLSA>

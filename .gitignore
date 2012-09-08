@@ -1,4 +1,5 @@
 .*.swp
+*.py[co]
 libs
 unbound-test
 .gdb_history
@@ -14,3 +15,6 @@ DANE_patrol.includes
 
 #generated *xpi
 *.xpi
+
+TLSAfetcherStructures.h
+TLSAfetcherStructures.cpp

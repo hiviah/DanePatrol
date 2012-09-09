@@ -14,6 +14,7 @@
 #include "JSAPIAuto.h"
 #include "BrowserHost.h"
 #include "variant_map.h"
+#include "variant.h"
 #include "TLSAfetcher.h"
 
 #ifndef H_TLSAfetcherAPI

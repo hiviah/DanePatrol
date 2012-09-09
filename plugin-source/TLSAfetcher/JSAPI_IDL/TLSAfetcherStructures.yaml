@@ -1,12 +1,18 @@
 ## Class definitions for structures passed inbetween plugin<->javascript
+## Class names should begin with a capital letter to avoid clash with keywords.
 
 #Will generate output_basefname.cpp and output_basefname.h in current dir
 output_basefname: TLSAfetcherStructures
 
-#Includes that need to be inserted with "includefile.h" must have explicit
-#apostrophes around, otherwise YAML will interpret it its string.
-includes:
-    - '"APITypes.h"'
+# Optional includes that need to be inserted with "includefile.h" must have
+# explicit apostrophes around, otherwise YAML will interpret it its string.
+# (e.g. for including header with definition of a type)
+#
+#includes:
+#    - '"APITypes.h"'
+
+# Optional namespace, defaults to empty namespace.
+namespace: JSAPI
 
 ResolvedTLSA:
     certUsage: int

@@ -11,6 +11,9 @@
 #include <string>
 #include "boost/format.hpp"
 
+#include "variant.h"
+#include "variant_list.h"
+#include "variant_map.h"
 #include "TLSAfetcherAPI.h"
 
 #include "ldns/ldns.h"
@@ -220,6 +223,14 @@ FB::VariantMap TLSAfetcherAPI::fetchTLSA(const std::string& fqdn, int port)
     jsResult["rcode"] = rcode;
     jsResult["tlsa"] = tlsaList;
     jsResult["dnssec"] = dnssecStatus;
+    
+    std::vector<ResolvedTLSA> sl;
+    FB::VariantList vl = FB::make_variant_list(tlsaList);
+    vl = FB::make_variant_list(sl);
+    FB::variant v1 = vl;
+    typedef std::map<std::string, FB::variant> StringVariantMap; 
+    FB::VariantMap svm = FB::variant_map_of<std::string>("a",1)("b","2")("c",3.4); 
+    v1 = svm;
     
     return jsResult;
 }

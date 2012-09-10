@@ -35,26 +35,6 @@ ResolverException& ResolverException::operator= (const ResolverException& other)
 	return *this;
 }
 
-ResolvedTLSA::ResolvedTLSA(uint8_t certUsage, uint8_t selector, uint8_t matchingType, std::string association):
-    m_certUsage(certUsage),
-    m_selector(selector),
-    m_matchingType(matchingType),
-    m_association(association)
-{
-}
-
-FB::VariantMap ResolvedTLSA::toJSVariant() const
-{
-    #define keyname(x) std::string(x)
-    FB::VariantMap result = FB::variant_map_of(keyname("certUsage"), m_certUsage);
-    result[keyname("selector")] = m_selector;
-    result[keyname("matchingType")] = m_matchingType;
-    result[keyname("association")] = m_association;
-    #undef keyname
-    
-    return result;
-}
-
 TLSAfetcherAPI::TLSAfetcherAPI(const TLSAfetcherPtr& plugin, const FB::BrowserHostPtr& host) : 
 	m_plugin(plugin), 
 	m_host(host),
@@ -166,7 +146,7 @@ TLSAList TLSAfetcherAPI::parseResult(const ub_result* result) const
 		association += (boost::format("%1$02x") % int(rdf_data[j])).str();
 	    }
 	    
-	    tlsaList.push_back(ResolvedTLSA(cert_usage, selector, matching_type, association).toJSVariant());
+	    tlsaList.push_back(ResolvedTLSA(cert_usage, selector, matching_type, association).toVariant());
 	    
 	    ldns_rr_free(rr);
 	}

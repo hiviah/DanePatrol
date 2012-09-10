@@ -10,10 +10,12 @@ set (CMAKE_BACKWARDS_COMPATIBILITY 2.6)
 
 Project(${PLUGIN_NAME})
 
+set (JSAPI JSAPI_IDL/TLSAfetcherStructures.cpp)
 file (GLOB GENERAL RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
     [^.]*.cpp
     [^.]*.h
     [^.]*.cmake
+    ${JSAPI}
     )
 
 include_directories(${PLUGIN_INCLUDE_DIRS})

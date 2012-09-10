@@ -24,6 +24,7 @@ FIREBREATH_TAG = firebreath-1.6.0
 
 PLUGIN_SOURCE_DIR = $(BASEDIR)/plugin-source/TLSAfetcher
 PLUGIN_BUILD_DIR = $(FIREBREATH_DIR)/build
+PLUGIN_JSAPI_IDL_DIR = $(PLUGIN_SOURCE_DIR)/JSAPI_IDL
 
 ## uncomment to make plugin build verbose - shows gcc invocations etc.
 #PLUGIN_VERBOSE_BUILD = VERBOSE=1
@@ -63,7 +64,7 @@ $(UNBOUND_DIR): $(UNBOUND_TARBALL)
 	tar xzf $< -C libs
 
 ## plugin
-plugin: $(PLUGIN_BUILD_DIR) $(UNBOUND_LIB)
+plugin: $(PLUGIN_BUILD_DIR) $(UNBOUND_LIB) $(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.cpp $(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.h
 	make $(PLUGIN_VERBOSE_BUILD) -C $<
 
 plugin-nodeps:
@@ -77,6 +78,11 @@ $(PLUGIN_BUILD_DIR): $(PLUGIN_SOURCE_DIR)/CMakeLists.txt $(PLUGIN_SOURCE_DIR)/Pl
 		#dependencies end
 		make prepmake
 
+$(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.cpp: $(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.yaml
+	(cd "$(PLUGIN_JSAPI_IDL_DIR)" && python $(PLUGIN_JSAPI_IDL_DIR)/JSAPI_IDL_compiler.py $<)
+
+$(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.h: $(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.yaml
+	(cd "$(PLUGIN_JSAPI_IDL_DIR)" && python $(PLUGIN_JSAPI_IDL_DIR)/JSAPI_IDL_compiler.py $<)
 
 ## tests
 unbound-test: unbound-test.c $(UNBOUND_LIB)

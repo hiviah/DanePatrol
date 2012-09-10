@@ -17,6 +17,8 @@
 #include "variant.h"
 #include "TLSAfetcher.h"
 
+#include "JSAPI_IDL/TLSAfetcherStructures.h"
+
 #ifndef H_TLSAfetcherAPI
 #define H_TLSAfetcherAPI
 
@@ -45,33 +47,7 @@ protected:
 };
 
 /*! Container for parsed TLSA RR */
-struct ResolvedTLSA
-{
-    /*! 
-     * Constructor from TLSA RR fields. 
-     *
-     * @param certUsage: certificate usage 
-     * @param selector: selector
-     * @param matchingType: matching type
-     * @param association: hex-encoded string of association data
-     */
-    ResolvedTLSA(uint8_t certUsage, uint8_t selector, uint8_t matchingType, std::string association);
-    
-    /*! Convert to JSAPI map passable to javascript */
-    FB::VariantMap toJSVariant() const;
-    
-    /*! certificate usage from TLSA RR*/
-    uint8_t m_certUsage;
-    
-    /*! selector from TLSA RR*/
-    uint8_t m_selector;
-    
-    /*! matching type from TLSA RR*/
-    uint8_t m_matchingType;
-    
-    /*! association data - hash or certificate from TLSA RR */
-    std::string m_association;
-};
+typedef JSAPI::ResolvedTLSA ResolvedTLSA;
 
 /*! List of parsed TLSA records represented as JSAPI-compatible list */
 typedef FB::VariantList TLSAList;

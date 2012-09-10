@@ -49,8 +49,11 @@ protected:
 /*! Container for parsed TLSA RR */
 typedef JSAPI::ResolvedTLSA ResolvedTLSA;
 
+/*! Container for parsed DNS lookup result with TLSA RRs */
+typedef JSAPI::TLSALookupResult TLSALookupResult;
+
 /*! List of parsed TLSA records represented as JSAPI-compatible list */
-typedef FB::VariantList TLSAList;
+typedef std::vector<ResolvedTLSA> TLSAList;
 
 class TLSAfetcherAPI : public FB::JSAPIAuto
 {
@@ -93,7 +96,7 @@ public:
      *				(without _port._proto prefix)
      * @param port: port of the TLS service
      */
-    FB::VariantMap fetchTLSA(const std::string& fqdn, int port);
+    FB::variant fetchTLSA(const std::string& fqdn, int port);
     
     /*! Whether the resolver is usable. */
     bool canResolve() const

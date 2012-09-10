@@ -22,6 +22,7 @@ ResolvedTLSA:
 
 TLSALookupResult:
     result: int
+    errorStr: string
     rcode: int
-    secure: int
+    dnssecStatus: string
     tlsa: list<ResolvedTLSA>

@@ -146,7 +146,7 @@ TLSAList TLSAfetcherAPI::parseResult(const ub_result* result) const
 		association += (boost::format("%1$02x") % int(rdf_data[j])).str();
 	    }
 	    
-	    tlsaList.push_back(ResolvedTLSA(cert_usage, selector, matching_type, association).toVariant());
+	    tlsaList.push_back(ResolvedTLSA(cert_usage, selector, matching_type, association));
 	    
 	    ldns_rr_free(rr);
 	}
@@ -161,19 +161,22 @@ TLSAList TLSAfetcherAPI::parseResult(const ub_result* result) const
     return tlsaList;
 }
 
-FB::VariantMap TLSAfetcherAPI::fetchTLSA(const std::string& fqdn, int port)
+FB::variant TLSAfetcherAPI::fetchTLSA(const std::string& fqdn, int port)
 {
     struct ub_result *resolveResult;
-    TLSAList tlsaList;
-    FB::VariantMap jsResult;
+    TLSALookupResult jsResult;
     int retval, rcode;
 
+    jsResult.result = -1;
+
     if (!canResolve()) {
-    	return FB::variant_map_of(std::string("result"), -2);
+        jsResult.errorStr = "Resolver initialization failed";
+    	return jsResult.toVariant();
     }
     
     if (port < 1 || port > 0xffff || fqdn.size() < 1) {
-        return FB::variant_map_of(std::string("result"), -1);
+        jsResult.errorStr = "Invalid arguments for resolving.";
+    	return jsResult.toVariant();
     }
 
     boost::format fmt("_%2%._tcp.%1%");
@@ -184,27 +187,23 @@ FB::VariantMap TLSAfetcherAPI::fetchTLSA(const std::string& fqdn, int port)
         RR_TYPE_TLSA, LDNS_RR_CLASS_IN, &resolveResult);
 
     if (retval == 0) {
-    	tlsaList = parseResult(resolveResult);
+    	jsResult.tlsa = parseResult(resolveResult);
     }
     
-    rcode = resolveResult->rcode;
+    jsResult.result = retval;
+    jsResult.rcode = resolveResult->rcode;
+
     ub_resolve_free(resolveResult);
     
-    std::string dnssecStatus;
     if (resolveResult->secure) {
-    	dnssecStatus = "secure";
+    	jsResult.dnssecStatus = "secure";
     } else if (resolveResult->bogus) {
-    	dnssecStatus = "bogus";
+    	jsResult.dnssecStatus = "bogus";
     } else {
-    	dnssecStatus = "insecure";
+    	jsResult.dnssecStatus = "insecure";
     }
     
-    jsResult["result"] = retval;
-    jsResult["rcode"] = rcode;
-    jsResult["tlsa"] = tlsaList;
-    jsResult["dnssec"] = dnssecStatus;
-    
-    return jsResult;
+    return jsResult.toVariant();
 }
 
 

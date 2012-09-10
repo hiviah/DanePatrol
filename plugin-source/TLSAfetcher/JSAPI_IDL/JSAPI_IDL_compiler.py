@@ -80,6 +80,7 @@ CPP_TEMPLATE = \
 #include <iterator>
 #include <algorithm>
 
+#include "variant.h"
 #include "variant_list.h"
 #include "variant_map.h"
 
@@ -117,7 +118,7 @@ FB::variant to_variant< %(class_name)s >(const %(class_name)s& val)
 {
     FB::VariantMap vm;
 
-    %(member_assign)s;
+    %(member_assign)s
 
     return vm;
 }
@@ -344,7 +345,7 @@ class ClassGenerator(object):
 		"""Return generated text for class declaration"""
 		
 		initializers = ["\t%s(%s)" % (m, m) for m in self.memberNames()]
-		memberAssign = ['vm["%s"] = to_variant(val.%s));' % (m, m) for m in self.memberNames()]
+		memberAssign = ['vm["%s"] = to_variant(val.%s);' % (m, m) for m in self.memberNames()]
 		
 		classText = CLASS_CPP_TEMPLATE % \
 		{

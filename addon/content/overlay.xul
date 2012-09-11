@@ -3,6 +3,7 @@
 <!-- ?xml-stylesheet href="chrome://danepatrol/skin/overlay.css" type="text/css"? -->
 <!DOCTYPE overlay SYSTEM "chrome://danepatrol/locale/DanePatrol.dtd">
 <overlay id="DanePatrol-overlay"
+         xmlns:html="http://www.w3.org/1999/xhtml" 
          xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
   <script src="DanePatrol.js"/>
   <script>
@@ -26,6 +27,12 @@ DanePatrol.locale = {
 };
 
   </script>
+
+  <!-- TLSAfetcher NPAPI plugin -->
+  <html:div>
+    <html:object id="dane-tlsa-plugin" type="application/x-tlsafetcher" width="0" height="0"></html:object>
+  </html:div>
+
   <stringbundleset id="stringbundleset">
     <stringbundle id="DanePatrol-strings" src="chrome://danepatrol/locale/DanePatrol.properties"/>
   </stringbundleset>

@@ -1,4 +1,4 @@
-.PHONY: all submodules libs-build plugin prepmake
+.PHONY: all submodules libs-build plugin prepmake addon_build addon_clean
 all: libs-build plugin
 
 CFLAGS=-fPIC
@@ -19,12 +19,16 @@ OPENSSL_LIB := $(BASEDIR)/libs/openssl
 LDNS_LIB := $(BASEDIR)/libs/ldns
 UNBOUND_LIB := $(BASEDIR)/libs/unbound
 
-FIREBREATH_DIR = $(BASEDIR)/FireBreath
-FIREBREATH_TAG = firebreath-1.6.0
+FIREBREATH_DIR := $(BASEDIR)/FireBreath
+FIREBREATH_TAG := firebreath-1.6.0
 
-PLUGIN_SOURCE_DIR = $(BASEDIR)/plugin-source/TLSAfetcher
-PLUGIN_BUILD_DIR = $(FIREBREATH_DIR)/build
-PLUGIN_JSAPI_IDL_DIR = $(PLUGIN_SOURCE_DIR)/JSAPI_IDL
+PLUGIN_SOURCE_DIR := $(BASEDIR)/plugin-source/TLSAfetcher
+PLUGIN_BUILD_DIR := $(FIREBREATH_DIR)/build
+PLUGIN_JSAPI_IDL_DIR := $(PLUGIN_SOURCE_DIR)/JSAPI_IDL
+PLUGIN_BINARY := $(PLUGIN_BUILD_DIR)/bin/TLSAfetcher/npTLSAfetcher.so
+
+ADDON_XPI_FILE := DanePatrol.xpi
+ADDON_DIR := addon
 
 ## uncomment to make plugin build verbose - shows gcc invocations etc.
 #PLUGIN_VERBOSE_BUILD = VERBOSE=1
@@ -64,6 +68,8 @@ $(UNBOUND_DIR): $(UNBOUND_TARBALL)
 	tar xzf $< -C libs
 
 ## plugin
+$(PLUGIN_BINARY): plugin
+
 plugin: $(PLUGIN_BUILD_DIR) $(UNBOUND_LIB) $(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.cpp $(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.h
 	make $(PLUGIN_VERBOSE_BUILD) -C $<
 
@@ -78,11 +84,23 @@ $(PLUGIN_BUILD_DIR): $(PLUGIN_SOURCE_DIR)/CMakeLists.txt $(PLUGIN_SOURCE_DIR)/Pl
 		#dependencies end
 		make prepmake
 
+# auto-generated cpp and h for JSAPI structures passed between JS <-> C++
 $(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.cpp: $(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.yaml
 	(cd "$(PLUGIN_JSAPI_IDL_DIR)" && python $(PLUGIN_JSAPI_IDL_DIR)/JSAPI_IDL_compiler.py $<)
 
 $(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.h: $(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.yaml
 	(cd "$(PLUGIN_JSAPI_IDL_DIR)" && python $(PLUGIN_JSAPI_IDL_DIR)/JSAPI_IDL_compiler.py $<)
+
+## Addon XPI
+
+addon_build: $(ADDON_XPI_FILE)
+
+addon_clean:
+	rm -f $(ADDON_XPI_FILE)
+
+$(ADDON_XPI_FILE): $(PLUGIN_BINARY)
+	cp -f $< addon/plugins
+	(cd $(ADDON_DIR) && zip -9r ../DanePatrol.xpi . --exclude '*.swp')
 
 ## tests
 unbound-test: unbound-test.c $(UNBOUND_LIB)

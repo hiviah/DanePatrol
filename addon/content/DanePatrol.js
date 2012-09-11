@@ -43,6 +43,11 @@ var DanePatrol = {
     extID: "DanePatrol@nic.cz",
     locale: {},
 
+    debugMsg: function(msg) {
+        Components.utils.import("resource://gre/modules/Services.jsm");
+        Services.console.logStringMessage(msg);
+    },
+
     // Main
     onLoad: function() {
 	this.initialized = true;
@@ -57,6 +62,10 @@ var DanePatrol = {
 
     onUnload: function() {
 	this.unregisterObserver("http-on-examine-response");
+    },
+
+    plugin: function() {
+        return document.getElementById("dane-tlsa-plugin");
     },
 
     // DB init
@@ -460,18 +469,15 @@ var DanePatrol = {
 	}
 
 	var wild = this.wildcardCertCheck(now.cert);
+        var plugin = this.plugin();
+
+        this.debugMsg(plugin + " " + certobj.host);
+        var tlsaLookup = plugin.fetchTLSA(certobj.host, 443);
+        this.debugMsg(tlsaLookup);
+
 
 	// The certificate changed
-        // DANETODO: remove stale code
-	if (found && (!old.cert || !now.cert.equals(old.cert))) {
-	    // If the cert info was stored in the previous version of CertPatrol
-	    // we don't have the full cert yet, so we just store it in the DB
-	    // and return if everything looks fine.
-	    if (!old.cert &&
-	      old.sha1Fingerprint == now.sha1Fingerprint &&
-	      old.md5Fingerprint == now.md5Fingerprint)
-	      return this.saveCert(certobj);
-
+	if (found && !now.cert.equals(old.cert)) {
 	    // has the certificated hostname changed?
 	    if (!wild && now.commonName != old.commonName) {
 		certobj.warn.commonName = true;
@@ -502,13 +508,10 @@ var DanePatrol = {
 	    // further checks done by agent before we even get here
 
 	    // check if they have the same issuer
-	    if (old.cert && now.cert.issuer && now.cert.issuer.equals(old.cert.issuer)) {
+	    if (now.cert.issuer && now.cert.issuer.equals(old.cert.issuer)) {
 		if (certobj.threat == 0 && certobj.flags & this.CHECK_ISSUER_ONLY)
 		  return;
-	    } else if (old.cert ||
-		       (!old.cert && // old method, if we don't have a cert stored yet
-			(now.issuerOrganization != old.issuerOrganization ||
-			 now.issuerCommonName != old.issuerCommonName))) {
+	    } else {
 		certobj.warn.issuerCommonName = true;
 		// companies pick different CAs all the time unfortunately
 		certobj.threat++;

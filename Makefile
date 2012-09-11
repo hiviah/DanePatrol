@@ -76,7 +76,7 @@ plugin: $(PLUGIN_BUILD_DIR) $(UNBOUND_LIB) $(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherSt
 plugin-nodeps:
 	make $(PLUGIN_VERBOSE_BUILD) -C $(PLUGIN_BUILD_DIR)
 
-prepmake:
+prepmake: $(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.cpp $(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.h
 	$(FIREBREATH_DIR)/prepmake.sh $(PLUGIN_SOURCE_DIR) -D CMAKE_BUILD_TYPE=$(PLUGIN_CONFIGURATION)
 
 $(PLUGIN_BUILD_DIR): $(PLUGIN_SOURCE_DIR)/CMakeLists.txt $(PLUGIN_SOURCE_DIR)/PluginConfig.cmake \

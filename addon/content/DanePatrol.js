@@ -471,9 +471,8 @@ var DanePatrol = {
 	var wild = this.wildcardCertCheck(now.cert);
         var plugin = this.plugin();
 
-        this.debugMsg(plugin + " " + certobj.host);
         var tlsaLookup = plugin.fetchTLSA(certobj.host, 443);
-        this.debugMsg(tlsaLookup);
+        this.debugMsg("host: " + certobj.host + " result: " + tlsaLookup.result + " rcode: " + tlsaLookup.rcode + ", TLSA RRs: " + tlsaLookup.tlsa.length);
 
 
 	// The certificate changed
@@ -978,7 +977,7 @@ var DanePatrol = {
 	if (error) result += error +" at "+ error.fileName +" line "+ error.lineNumber;
 	window.openDialog("chrome://danepatrol/content/warning.xul",
 			  "_blank", "chrome,dialog,modal", result);
-	this.log("CertPatol: "+ result);
+	this.log("DanePatrol: "+ result);
     },
 
     log: function(s, a) {

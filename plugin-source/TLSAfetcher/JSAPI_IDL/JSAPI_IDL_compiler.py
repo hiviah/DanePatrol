@@ -95,13 +95,13 @@ namespace %(namespace)s
 {
 
 template <typename T>
-FB::variant to_variant(const T& t)
+inline FB::variant to_variant(const T& t)
 {
     return FB::variant(t);
 }
 
 template <typename Inner>
-FB::variant to_variant(const std::vector<Inner>& val)
+inline FB::variant to_variant(const std::vector<Inner>& val)
 {
     FB::VariantList vl;
 
@@ -119,7 +119,7 @@ FB::variant to_variant(const std::vector<Inner>& val)
 CLASS_CPP_TEMPLATE = \
 """
 template <>
-FB::variant to_variant< %(class_name)s >(const %(class_name)s& val)
+inline FB::variant to_variant< %(class_name)s >(const %(class_name)s& val)
 {
     FB::VariantMap vm;
 

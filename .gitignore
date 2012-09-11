@@ -16,5 +16,9 @@ DANE_patrol.includes
 #generated *xpi
 *.xpi
 
+#generated JSAPI sources
 TLSAfetcherStructures.h
 TLSAfetcherStructures.cpp
+
+#generate plugin binary
+addon/plugins

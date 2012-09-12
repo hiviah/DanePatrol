@@ -386,9 +386,43 @@ var DanePatrol = {
         var plugin = this.plugin();
 
         var tlsaLookup = plugin.fetchTLSA(host, port);
-        this.debugMsg("host: " + host + ", port: " + port + ", result: " + tlsaLookup.result + ", rcode: " + tlsaLookup.rcode + ", TLSA RRs: " + tlsaLookup.tlsa.length + ", dnssecStatus: " + tlsaLookup.dnssecStatus);
+        this.debugMsg("host: " + host + ", port: " + port + ", result: " + 
+            tlsaLookup.result + ", rcode: " + tlsaLookup.rcode + ", TLSA RRs: " + 
+            tlsaLookup.tlsa.length + ", dnssecStatus: " + tlsaLookup.dnssecStatus);
 
         return tlsaLookup;
+    },
+
+    daneSelector: function(cert, selector) {
+        if (selector == 0) return cert.getRawDER();
+
+        //nsIX509Cert has no way to get SPKI
+        return null;
+    },
+
+    daneAssociationMatches: function(cert, matchingType, selector, association) {
+        var data = this.daneSelector(cert, selector);
+
+        switch(matchingType) {
+            case 0:
+                return bin2hex(data) == association;
+            case 1:
+                //sha256
+                break;
+            case 2:
+                //sha512
+                break;
+        }
+
+        return false;
+    },
+
+    daneCheckUsage0: function(cert, tlsa) {
+        return false;
+    },
+
+    daneCheckUsage1: function(cert, tlsa) {
+        return false;
     },
 
     daneCheck: function(hostPort, cert) {
@@ -411,6 +445,19 @@ var DanePatrol = {
                 for (var i=0; i < tlsaResult.tlsa.length; i++) {
                     var tlsa = tlsaResult.tlsa[i];
                     this.debugMsg("TLSA: usage: " + tlsa.certUsage + ", matchingType: " + tlsa.matchingType + ", selector: " + tlsa.selector);
+
+                    switch(tlsa.certUsage) {
+                        case 0:
+                            if (this.daneCheckUsage0(cert, tlsa)) return true;
+                            break;
+                        case 1:
+                            if (this.daneCheckUsage1(cert, tlsa)) return true;
+                            break;
+                        case 2:
+                            break;
+                        case 3:
+                            break
+                    }
                 }
             }
 

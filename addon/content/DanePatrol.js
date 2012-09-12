@@ -40,6 +40,10 @@
 // This source code is formatted according to half-indented KNF.
 var DanePatrol = {
     CHECK_ISSUER_ONLY: 1,
+    DANE_CHECK_NEVER: "never",
+    DANE_CHECK_NEW: "new",
+    DANE_CHECK_NEW_OR_HAD_TLSA: "new_or_had_tlsa",
+    DANE_CHECK_ALWAYS: "always",
     extID: "DanePatrol@nic.cz",
     locale: {},
 
@@ -378,6 +382,41 @@ var DanePatrol = {
 	this.certCheck(browser, certobj);
     },
 
+    fetchTLSA: function(host, port) {
+        var plugin = this.plugin();
+
+        var tlsaLookup = plugin.fetchTLSA(host, port);
+        this.debugMsg("host: " + host + ", port: " + port + ", result: " + tlsaLookup.result + ", rcode: " + tlsaLookup.rcode + ", TLSA RRs: " + tlsaLookup.tlsa.length + ", dnssecStatus: " + tlsaLookup.dnssecStatus);
+
+        return tlsaLookup;
+    },
+
+    daneCheck: function(hostPort, cert) {
+            var host=hostPort, port=443;
+
+            if (hostPort.indexOf(":") >= 0) {
+                hp = hostPort.split(":", 2);
+                host = hp[0];
+                port = hp[1];
+            }
+
+            // var chain = cert.getChain();
+            // for (var i = chain.length - 1; i >= 0; i--) {
+            //     var cert = chain.queryElementAt(i, Components.interfaces.nsIX509Cert);
+            // }
+
+            // I HATE JAVASCRIPT WITH THE PASSION OF THOUSAND SUNS
+            var tlsaResult = this.fetchTLSA(host, port);
+            if (tlsaResult.dnssecStatus == "secure") {
+                for (var i=0; i < tlsaResult.tlsa.length; i++) {
+                    var tlsa = tlsaResult.tlsa[i];
+                    this.debugMsg("TLSA: usage: " + tlsa.certUsage + ", matchingType: " + tlsa.matchingType + ", selector: " + tlsa.selector);
+                }
+            }
+
+            return false;
+    },
+
     // Certificate check
     certCheck: function(browser, certobj) {
         if (this.isIgnoredHost(certobj.host)) return;
@@ -433,10 +472,12 @@ var DanePatrol = {
 	}
 
 	var wild = this.wildcardCertCheck(now.cert);
-        var plugin = this.plugin();
+        var whenCheckTLSA = this.prefs.getCharPref("dane.check"); 
 
-        var tlsaLookup = plugin.fetchTLSA(certobj.host, 443);
-        this.debugMsg("host: " + certobj.host + " result: " + tlsaLookup.result + " rcode: " + tlsaLookup.rcode + ", TLSA RRs: " + tlsaLookup.tlsa.length);
+        if (whenCheckTLSA == this.DANE_CHECK_ALWAYS) {
+            this.daneCheck(certobj.host, now.cert);
+        }
+
 
 
 	// The certificate changed

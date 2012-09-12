@@ -1,5 +1,5 @@
-.PHONY: all submodules libs-build plugin prepmake addon_build addon_clean
-all: libs-build plugin
+.PHONY: all submodules libs-build plugin prepmake addon-build addon-clean
+all: libs-build plugin addon-build
 
 CFLAGS=-fPIC
 export CFLAGS
@@ -93,14 +93,15 @@ $(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.h: $(PLUGIN_JSAPI_IDL_DIR)/TLSAfet
 
 ## Addon XPI
 
-addon_build: $(ADDON_XPI_FILE)
+addon-build: $(ADDON_XPI_FILE)
 
-addon_clean:
+addon-clean:
 	rm -f $(ADDON_XPI_FILE)
 
 $(ADDON_XPI_FILE): $(PLUGIN_BINARY)
-	cp -f $< addon/plugins
-	(cd $(ADDON_DIR) && zip -9r ../DanePatrol.xpi . --exclude '*.swp')
+	mkdir -p addon/plugins
+	cp -f $< addon/plugins/
+	(cd $(ADDON_DIR) && zip -9r ../DanePatrol.xpi . --exclude '*.swp' --exclude '*.kpf')
 
 ## tests
 unbound-test: unbound-test.c $(UNBOUND_LIB)
@@ -117,3 +118,4 @@ clean:
 distclean:
 	rm -rf libs
 	rm -rf $(PLUGIN_BUILD_DIR)
+	rm -f $(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.h $(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.cpp

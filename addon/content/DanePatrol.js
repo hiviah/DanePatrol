@@ -99,44 +99,8 @@ var DanePatrol = {
 		  "  md5Fingerprint VARCHAR, sha1Fingerprint VARCHAR, "+
 		  "  issuerMd5Fingerprint VARCHAR, issuerSha1Fingerprint VARCHAR, "+
 		  "  cert BLOB, flags INT, stored INT)");
-	    } else {
-		var stmt = this.dbh.createStatement("SELECT version FROM version");
-		stmt.executeStep();
-		var version = stmt.row.version;
-		stmt.reset();
 
-		if (version < 2) {
-		    this.dbh.executeSimpleSQL("ALTER TABLE certificates ADD COLUMN issuerMd5Fingerprint VARCHAR");
-		    this.dbh.executeSimpleSQL("ALTER TABLE certificates ADD COLUMN issuerSha1Fingerprint VARCHAR");
-		    this.dbh.executeSimpleSQL("ALTER TABLE certificates ADD COLUMN cert BLOB");
-		    this.dbh.executeSimpleSQL("UPDATE version SET version = 2");
-		}
-
-		if (version < 3) {
-		    this.dbh.executeSimpleSQL("ALTER TABLE certificates ADD COLUMN flags INT");
-		    this.dbh.executeSimpleSQL("ALTER TABLE certificates ADD COLUMN stored INT");
-		    this.dbh.executeSimpleSQL("UPDATE version SET version = 3");
-		}
-
-		var extversion;
-		try {
-		    var stmt = this.dbh.createStatement("SELECT extversion FROM version");
-		    stmt.executeStep();
-		    extversion = stmt.row.extversion;
-		    stmt.reset();
-		} catch (e) {
-		    this.dbh.executeSimpleSQL("ALTER TABLE version ADD COLUMN extversion TEXT");
-		}
-
-		if (extversion && this.version && extversion != this.version) {
-		    this.dbh.executeSimpleSQL("UPDATE version SET extversion='"+ this.version +"'");
-		    // show release notes for stable versions after upgrade when at least minor version changes
-		    var re = /(.*?\..*?)\..*/;
-		    var vold = extversion.replace(re, "$1"), vnew = this.version.replace(re, "$1");
-		    if (!/[a-z]/.test(this.version) && vold != vnew) {
-			this.showRelNotes();
-		    }
-		}
+		this.dbh.executeSimpleSQL("CREATE TABLE tlsa_hosts (host TEXT UNIQUE)");
 	    }
 
 	    // Prepared statements

@@ -1,8 +1,9 @@
-/**********************************************************\
-
-  Auto-generated TLSAfetcherAPI.h
-
-\**********************************************************/
+/*! 
+ * @file TLSAfetcherAPI.h
+ * @brief Interface defining methods and classes visible in Javascript
+ *
+ */
+ 
 
 #include <string>
 #include <sstream>

@@ -1,8 +1,3 @@
-#/**********************************************************\ 
-# Auto-generated Mac project definition file for the
-# DANE TLSA fetcher project
-#\**********************************************************/
-
 # Mac template platform definition CMake file
 # Included from ../CMakeLists.txt
 

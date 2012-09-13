@@ -1,8 +1,3 @@
-#/**********************************************************\ 
-# Auto-generated X11 project definition file for the
-# DANE TLSA fetcher project
-#\**********************************************************/
-
 # X11 template platform definition CMake file
 # Included from ../CMakeLists.txt
 

@@ -1,11 +1,9 @@
-/**********************************************************\
-
-  Auto-generated TLSAfetcher.cpp
-
-  This file contains the auto-generated main plugin object
-  implementation for the DANE TLSA fetcher project
-
-\**********************************************************/
+/*! 
+ * @file TLSAfetcher.cpp
+ * @brief NPAPI plugin interface base implementation
+ *
+ */
+ 
 
 #include "logging.h"
 

@@ -1,10 +1,3 @@
-#/**********************************************************\ 
-#
-# Auto-Generated Plugin Configuration file
-# for DANE TLSA fetcher
-#
-#\**********************************************************/
-
 set(PLUGIN_NAME "TLSAfetcher")
 set(PLUGIN_PREFIX "TLSA")
 set(COMPANY_NAME "CZNICLabs")

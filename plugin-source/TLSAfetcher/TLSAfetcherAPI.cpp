@@ -1,8 +1,9 @@
-/**********************************************************\
-
-  Auto-generated TLSAfetcherAPI.cpp
-
-\**********************************************************/
+/*! 
+ * @file TLSAfetcherAPI.cpp
+ * @brief Objects facing JSAPI interface, visible from Javascript in addon
+ *
+ */
+ 
 
 #include "JSObject.h"
 #include "DOM/Document.h"

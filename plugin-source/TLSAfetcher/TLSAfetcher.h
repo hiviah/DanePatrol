@@ -1,11 +1,9 @@
-/**********************************************************\
-
-  Auto-generated TLSAfetcher.h
-
-  This file contains the auto-generated main plugin object
-  implementation for the DANE TLSA fetcher project
-
-\**********************************************************/
+/*! 
+ * @file TLSAfetcher.h
+ * @brief NPAPI plugin interface for FireBreath
+ *
+ */
+ 
 #ifndef H_TLSAfetcherPLUGIN
 #define H_TLSAfetcherPLUGIN
 

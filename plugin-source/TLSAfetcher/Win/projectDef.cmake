@@ -1,8 +1,3 @@
-#/**********************************************************\ 
-# Auto-generated Windows project definition file for the
-# DANE TLSA fetcher project
-#\**********************************************************/
-
 # Windows template platform definition CMake file
 # Included from ../CMakeLists.txt
 

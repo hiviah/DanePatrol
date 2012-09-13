@@ -5,6 +5,7 @@
 <overlay id="DanePatrol-overlay"
          xmlns:html="http://www.w3.org/1999/xhtml" 
          xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+  <script src="TLSAfetcherStructures.js"/>
   <script src="DanePatrol.js"/>
   <script>
 

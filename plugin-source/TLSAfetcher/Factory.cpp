@@ -59,7 +59,7 @@ void getLoggingMethods( FB::Log::LogMethodList& outMethods )
     outMethods.push_back(std::make_pair(FB::Log::LogMethod_Console, std::string()));
  
     // The next line will enable logging to a logfile.
-    outMethods.push_back(std::make_pair(FB::Log::LogMethod_File, "/foo/bar/baz.log"));
+//    outMethods.push_back(std::make_pair(FB::Log::LogMethod_File, "/foo/bar/baz.log"));
  
     // Obviously, if you use both lines, you will get output on both sinks.
 }

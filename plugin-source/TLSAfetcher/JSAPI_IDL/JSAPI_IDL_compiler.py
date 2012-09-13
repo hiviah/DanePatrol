@@ -61,12 +61,17 @@ CLASS_H_TEMPLATE = \
 """
 struct %(class_name)s
 {
-	/* Constructors, destructor is default */
+	/*! No-member-fill constructor. */
 	%(class_name)s() {}
+
+	/*! Constructor setting all member fields. */
 	%(class_name)s(%(member_init)s);
-	
+
+	/*! Virtual destructor to make inherited virtual methods possible */
+	virtual ~%(class_name)s() {}
+
 	/* API function to convert to JSAPI object passable to javascript */
-	FB::variant toVariant() const;
+	virtual FB::variant toVariant() const;
 
 	/* Member fields */
 %(members)s

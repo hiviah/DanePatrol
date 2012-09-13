@@ -1,0 +1,80 @@
+## Makefile for XPI separated, the file would clobber the main Makefile
+
+ADDON_XPI_FILE := DanePatrol.xpi
+ADDON_DIR := addon
+
+## Addon files, explicitly enumerated to employ make's dependency tracking
+ADDON_JS_SOURCES := \
+    $(ADDON_DIR)/install.js \
+    $(ADDON_DIR)/content/sanitize.js \
+    $(ADDON_DIR)/content/certManager.js \
+    $(ADDON_DIR)/content/DanePatrol.js \
+    $(ADDON_DIR)/content/sha_nice.js \
+    $(ADDON_DIR)/content/treeview.js \
+    $(ADDON_DIR)/defaults/preferences/DanePatrol.js \
+    #end of ADDON_JS_SOURCES
+
+ADDON_XUL_SOURCES := \
+    $(ADDON_DIR)/content/change.xul \
+    $(ADDON_DIR)/content/prefs-mobile.xul \
+    $(ADDON_DIR)/content/new.xul \
+    $(ADDON_DIR)/content/sanitize.xul \
+    $(ADDON_DIR)/content/certManager.xul \
+    $(ADDON_DIR)/content/prefs.xul \
+    $(ADDON_DIR)/content/dialog.xul \
+    $(ADDON_DIR)/content/warning.xul \
+    $(ADDON_DIR)/content/view.xul \
+    $(ADDON_DIR)/content/overlay.xul \
+    #end of ADDON_XUL_SOURCES
+
+ADDON_FF_META_SOURCES := \
+    $(ADDON_DIR)/chrome.manifest \
+    $(ADDON_DIR)/content/contents.rdf \
+    $(ADDON_DIR)/install.rdf \
+    #end of ADDON_FF_META_SOURCES
+
+ADDON_UI_SOURCES := \
+    $(ADDON_DIR)/content/icon.png \
+    $(ADDON_DIR)/content/DanePatrol.css \
+    $(ADDON_DIR)/content/pages/version.html \
+    $(ADDON_DIR)/content/pages/img/dane-patrol-400x300.jpg \
+    $(ADDON_DIR)/content/pages/img/certificate-patrol-400x300.jpg \
+    $(ADDON_DIR)/content/pages/img/flattr-badge-large.png \
+    #end of ADDON_UI_SOURCES
+
+ADDON_LOCALE_SOURCES := \
+    $(ADDON_DIR)/locale/en/DanePatrol.properties \
+    $(ADDON_DIR)/locale/en/DanePatrol.dtd \
+    $(ADDON_DIR)/locale/en/prefs.dtd \
+    $(ADDON_DIR)/locale/en/contents.rdf \
+    #end of ADDON_LOCALE_SOURCES
+
+ADDON_GENERATED_SOURCES := \
+    $(PLUGIN_BINARY) \
+    $(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.js \
+    #end of ADDON_GENERATED_SOURCES
+
+ADDON_ALL_SOURCES := \
+    $(ADDON_JS_SOURCES) \
+    $(ADDON_XUL_SOURCES) \
+    $(ADDON_FF_META_SOURCES) \
+    $(ADDON_UI_SOURCES) \
+    $(ADDON_LOCALE_SOURCES) \
+    $(ADDON_GENERATED_SOURCES) \
+    #end of ADDON_ALL_SOURCES
+
+## Addon XPI
+
+addon-build: $(ADDON_XPI_FILE)
+
+addon-clean:
+	rm -f $(ADDON_XPI_FILE)
+
+$(ADDON_XPI_FILE): $(ADDON_ALL_SOURCES)
+	rm -f $@
+	mkdir -p $(ADDON_DIR)/plugins
+	cp -fa $(PLUGIN_BINARY) $(ADDON_DIR)/plugins/
+	cp -fa $(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.js $(ADDON_DIR)/content/
+	(cd $(ADDON_DIR) && zip -9r ../DanePatrol.xpi . --exclude '*.swp' --exclude '*.kpf')
+
+

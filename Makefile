@@ -27,9 +27,6 @@ PLUGIN_BUILD_DIR := $(FIREBREATH_DIR)/build
 PLUGIN_JSAPI_IDL_DIR := $(PLUGIN_SOURCE_DIR)/JSAPI_IDL
 PLUGIN_BINARY := $(PLUGIN_BUILD_DIR)/bin/TLSAfetcher/npTLSAfetcher.so
 
-ADDON_XPI_FILE := DanePatrol.xpi
-ADDON_DIR := addon
-
 ## uncomment to make plugin build verbose - shows gcc invocations etc.
 #PLUGIN_VERBOSE_BUILD = VERBOSE=1
 
@@ -91,18 +88,6 @@ $(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.cpp: $(PLUGIN_JSAPI_IDL_DIR)/TLSAf
 $(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.h: $(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.yaml
 	(cd "$(PLUGIN_JSAPI_IDL_DIR)" && python $(PLUGIN_JSAPI_IDL_DIR)/JSAPI_IDL_compiler.py $<)
 
-## Addon XPI
-
-addon-build: $(ADDON_XPI_FILE)
-
-addon-clean:
-	rm -f $(ADDON_XPI_FILE)
-
-$(ADDON_XPI_FILE): $(PLUGIN_BINARY)
-	mkdir -p addon/plugins
-	cp -f $< addon/plugins/
-	(cd $(ADDON_DIR) && zip -9r ../DanePatrol.xpi . --exclude '*.swp' --exclude '*.kpf')
-
 ## tests
 unbound-test: unbound-test.c $(UNBOUND_LIB)
 	$(CC) -Wall -pedantic -std=c99 -g $< -o $@ -L$(UNBOUND_LIB)/lib -L$(OPENSSL_LIB)/lib -L$(LDNS_LIB)/lib -I$(OPENSSL_LIB)/include -I$(LDNS_LIB)/include -I$(UNBOUND_LIB)/include -lunbound -lldns -lssl -lcrypto -lpthread -ldl
@@ -119,3 +104,6 @@ distclean:
 	rm -rf libs
 	rm -rf $(PLUGIN_BUILD_DIR)
 	rm -f $(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.h $(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.cpp
+
+## XPI build rules from separate makefile
+include Makefile.addon

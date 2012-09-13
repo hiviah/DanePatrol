@@ -12,17 +12,39 @@ output_basefname: TLSAfetcherStructures
 #    - '"APITypes.h"'
 
 # Optional namespace, defaults to empty namespace.
-namespace: JSAPI
+namespace: TLSAjs
+
+# enums must be toplevel so that we can export them to JS
+enums:
+    DNSSECStatus:
+        - INSECURE: 0
+        - SECURE
+        - BOGUS
+    
+    CertUsage:
+        - CA_CERT_PIN: 0
+        - EE_CERT_PIN: 1
+        - CA_TA_ADDED: 2
+        - EE_TA_ADDED: 3
+        
+    MatchingType:
+        - EXACT: 0
+        - SHA256: 1
+        - SHA512: 2
+    
+    Selector:
+        - FULL: 0
+        - SPKI: 1
 
 ResolvedTLSA:
-    certUsage: int
-    selector: int
-    matchingType: int
+    certUsage: CertUsage
+    selector: Selector
+    matchingType: MatchingType
     association: string
 
 TLSALookupResult:
     result: int
     errorStr: string
     rcode: int
-    dnssecStatus: string
+    dnssecStatus: DNSSECStatus
     tlsa: list<ResolvedTLSA>

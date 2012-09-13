@@ -47,10 +47,10 @@ protected:
 };
 
 /*! Container for parsed TLSA RR */
-typedef JSAPI::ResolvedTLSA ResolvedTLSA;
+typedef TLSAjs::ResolvedTLSA ResolvedTLSA;
 
 /*! Container for parsed DNS lookup result with TLSA RRs */
-typedef JSAPI::TLSALookupResult TLSALookupResult;
+typedef TLSAjs::TLSALookupResult TLSALookupResult;
 
 /*! List of parsed TLSA records represented as JSAPI-compatible list */
 typedef std::vector<ResolvedTLSA> TLSAList;

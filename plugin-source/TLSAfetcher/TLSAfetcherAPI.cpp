@@ -21,6 +21,11 @@
 
 #define RR_TYPE_TLSA (ldns_rr_type(52))
 
+using TLSAjs::CertUsage;
+using TLSAjs::MatchingType;
+using TLSAjs::Selector;
+using TLSAjs::DNSSECStatus;
+
 ResolverException::ResolverException(const ResolverException& other) throw()
 {
     m_message = other.m_message;
@@ -134,17 +139,16 @@ TLSAList TLSAfetcherAPI::parseResult(const ub_result* result) const
 		continue;
 	    }
     
-	    uint8_t cert_usage, selector, matching_type;
 	    uint8_t *rdf_data = ldns_rdf_data(rdf);
-	    std::string association;
     
-	    cert_usage = rdf_data[0];
-	    selector = rdf_data[1];
-	    matching_type = rdf_data[2];
+	    CertUsage cert_usage = CertUsage(rdf_data[0]);
+	    Selector selector = Selector(rdf_data[1]);
+	    MatchingType matching_type = MatchingType(rdf_data[2]);
+	    std::string association((char *)(rdf_data+3), rdf_size-3);
 	    
-	    for (int j=3; j<rdf_size; j++) {
-		association += (boost::format("%1$02x") % int(rdf_data[j])).str();
-	    }
+//	    for (int j=3; j<rdf_size; j++) {
+//		association += (boost::format("%1$02x") % int(rdf_data[j])).str();
+//	    }
 	    
 	    tlsaList.push_back(ResolvedTLSA(cert_usage, selector, matching_type, association));
 	    
@@ -196,11 +200,11 @@ FB::variant TLSAfetcherAPI::fetchTLSA(const std::string& fqdn, int port)
     ub_resolve_free(resolveResult);
     
     if (resolveResult->secure) {
-    	jsResult.dnssecStatus = "secure";
+    	jsResult.dnssecStatus = TLSAjs::SECURE;
     } else if (resolveResult->bogus) {
-    	jsResult.dnssecStatus = "bogus";
+    	jsResult.dnssecStatus = TLSAjs::BOGUS;
     } else {
-    	jsResult.dnssecStatus = "insecure";
+    	jsResult.dnssecStatus = TLSAjs::INSECURE;
     }
     
     return jsResult.toVariant();

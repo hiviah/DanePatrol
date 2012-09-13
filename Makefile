@@ -26,6 +26,7 @@ PLUGIN_SOURCE_DIR := $(BASEDIR)/plugin-source/TLSAfetcher
 PLUGIN_BUILD_DIR := $(FIREBREATH_DIR)/build
 PLUGIN_JSAPI_IDL_DIR := $(PLUGIN_SOURCE_DIR)/JSAPI_IDL
 PLUGIN_BINARY := $(PLUGIN_BUILD_DIR)/bin/TLSAfetcher/npTLSAfetcher.so
+PLUGIN_IDL_COMPILER := $(PLUGIN_JSAPI_IDL_DIR)/JSAPI_IDL_compiler.py
 
 ## uncomment to make plugin build verbose - shows gcc invocations etc.
 #PLUGIN_VERBOSE_BUILD = VERBOSE=1
@@ -82,11 +83,11 @@ $(PLUGIN_BUILD_DIR): $(PLUGIN_SOURCE_DIR)/CMakeLists.txt $(PLUGIN_SOURCE_DIR)/Pl
 		make prepmake
 
 # auto-generated cpp and h for JSAPI structures passed between JS <-> C++
-$(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.cpp: $(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.yaml
-	(cd "$(PLUGIN_JSAPI_IDL_DIR)" && python $(PLUGIN_JSAPI_IDL_DIR)/JSAPI_IDL_compiler.py $<)
+$(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.cpp: $(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.yaml $(PLUGIN_IDL_COMPILER)
+	(cd "$(PLUGIN_JSAPI_IDL_DIR)" && python $(PLUGIN_IDL_COMPILER) $<)
 
-$(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.h: $(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.yaml
-	(cd "$(PLUGIN_JSAPI_IDL_DIR)" && python $(PLUGIN_JSAPI_IDL_DIR)/JSAPI_IDL_compiler.py $<)
+$(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.h: $(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.yaml $(PLUGIN_IDL_COMPILER)
+	(cd "$(PLUGIN_JSAPI_IDL_DIR)" && python $(PLUGIN_IDL_COMPILER) $<)
 
 ## tests
 unbound-test: unbound-test.c $(UNBOUND_LIB)

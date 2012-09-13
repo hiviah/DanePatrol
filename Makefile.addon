@@ -70,6 +70,9 @@ addon-build: $(ADDON_XPI_FILE)
 addon-clean:
 	rm -f $(ADDON_XPI_FILE)
 
+$(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.js: $(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.yaml $(PLUGIN_IDL_COMPILER)
+	(cd "$(PLUGIN_JSAPI_IDL_DIR)" && python $(PLUGIN_IDL_COMPILER) $<)
+
 $(ADDON_XPI_FILE): $(ADDON_ALL_SOURCES)
 	rm -f $@
 	mkdir -p $(ADDON_DIR)/plugins

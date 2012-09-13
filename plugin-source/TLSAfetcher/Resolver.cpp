@@ -6,6 +6,11 @@
  
 #include <boost/format.hpp>
 #include <boost/scoped_ptr.hpp>
+#include <string>
+#include <sstream>
+#include <iterator>
+#include <stdexcept>
+
 #include "logging.h"
 
 #include "Resolver.h"
@@ -17,6 +22,42 @@ using TLSAjs::CertUsage;
 using TLSAjs::MatchingType;
 using TLSAjs::Selector;
 using TLSAjs::DNSSECStatus;
+
+// ...never thought I'd write bin2hex again
+// I mean ... really? There must be an elegant way
+std::string bin2hex(const std::string& val)
+{
+    std::string res;
+    std::string::const_iterator it = val.begin();
+
+    for ( ; it != val.end(); it++) {
+	int v = uint8_t(*it);
+	std::string vs = (boost::format("%1$02x") % v).str();
+	res += vs;
+    }
+
+    return res;	    
+}
+
+std::string hex2bin(const std::string& val)
+{
+    if (val.size() % 2 == 1) {
+	throw std::domain_error("Hex string with odd character count");
+    }
+
+    std::string res;
+    for(size_t i=0; i < val.size(); i+=2)
+    {
+	std::stringstream s;
+	int charVal;
+	s << val.substr(i, 2) << std::hex;
+	s >> charVal;
+
+    	res.append(1, char(charVal));
+    }
+
+    return res;
+}
 
 Resolver::Resolver(const std::string &trustAnchors):
 	m_resolver(ub_ctx_create(), ub_ctx_delete)
@@ -92,11 +133,11 @@ TLSAList Resolver::parseResult(const ub_result* result) const
 	    MatchingType matching_type = MatchingType(rdf_data[2]);
 	    std::string association((char *)(rdf_data+3), rdf_size-3);
 	    
-//	    for (int j=3; j<rdf_size; j++) {
-//		association += (boost::format("%1$02x") % int(rdf_data[j])).str();
-//	    }
-	    
-	    tlsaList.push_back(ResolvedTLSA(cert_usage, selector, matching_type, association));
+	    tlsaList.push_back(ResolvedTLSA(cert_usage, selector, matching_type, 
+		association, bin2hex(association)));
+
+	    std::string z=hex2bin(bin2hex(association));
+	    FBLOG_INFO("-", (z == association) ? "Y" : "N");
 	    
 	    ldns_rr_free(rr);
 	}
@@ -149,6 +190,7 @@ TLSALookupResult Resolver::fetchTLSA(const std::string& fqdn, int port)
     	jsResult.dnssecStatus = TLSAjs::SECURE;
     } else if (resolveResult->bogus) {
     	jsResult.dnssecStatus = TLSAjs::BOGUS;
+    	jsResult.errorStr = resolveResult->why_bogus;
     } else {
     	jsResult.dnssecStatus = TLSAjs::INSECURE;
     }

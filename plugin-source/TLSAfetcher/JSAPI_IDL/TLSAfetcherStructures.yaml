@@ -41,6 +41,7 @@ ResolvedTLSA:
     selector: Selector
     matchingType: MatchingType
     association: string
+    associationHex: string # JS or FB doesn't seem to like the null char
 
 TLSALookupResult:
     result: int

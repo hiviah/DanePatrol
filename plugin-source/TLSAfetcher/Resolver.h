@@ -40,33 +40,6 @@ protected:
     std::string m_message;
 };
 
-///*! Container for parsed TLSA RR */
-//class ResolvedTLSA: public TLSAjs::ResolvedTLSA
-//{
-//public:
-//
-//    /*! Do-not-fill-any-field constructor. */
-//    ResolvedTLSA():
-//    	TLSAjs::ResolvedTLSA()
-//    	{}
-//    	
-//    /*! Constructor delegated to ancestor, just stores fields. */
-//    ResolvedTLSA(TLSAjs::CertUsage certUsage, TLSAjs::Selector selector, 
-//    		TLSAjs::MatchingType matchingType, const std::string &association):
-//    	TLSAjs::ResolvedTLSA(certUsage, selector, matchingType, association)
-//    	{}
-//
-//    virtual ~ResolvedTLSA()
-//    	{}
-//
-//    /*! 
-//     * Adds association as hex string, since we seem unable to pass string with 
-//     * null characters.
-//     */ 
-//    virtual FB::variant toVariant() const;
-//		
-//};
-
 /*! Container for parsed DNS lookup result with TLSA RRs */
 typedef TLSAjs::ResolvedTLSA ResolvedTLSA;
 

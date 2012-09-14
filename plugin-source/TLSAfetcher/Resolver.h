@@ -94,7 +94,7 @@ protected:
     TLSAList parseResult(const ub_result* result) const;
     
     /*! Setup unbound context with trust anchors, etc. */
-    void initializeResolver();
+    void initializeResolver(const std::string& trustAnchors = "");
     
     /*! Builtin DS record for root DNS zone */
     static const std::string m_rootTrustAnchor;

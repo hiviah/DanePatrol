@@ -63,7 +63,7 @@ Resolver::Resolver(const std::string &trustAnchors):
 	m_resolver(ub_ctx_create(), ub_ctx_delete)
 {
     try {
-    	initializeResolver();
+        initializeResolver(trustAnchors);
     }
     catch (const ResolverException& e) {
     	FBLOG_FATAL("", e.message());
@@ -74,16 +74,16 @@ Resolver::~Resolver()
 {
 }
 
-void Resolver::initializeResolver()
+void Resolver::initializeResolver(const std::string &trustAnchors)
 {
-    // Unbound initialization
     int ub_retval;
+    std::string ta = trustAnchors.empty() ? m_rootTrustAnchor : trustAnchors;
 
     if (!m_resolver.get()) {
         throw ResolverException("Failed to create ub_ctx resolver");
     }
     
-    ub_retval = ub_ctx_add_ta(m_resolver.get(), const_cast<char*>(m_rootTrustAnchor.c_str()));
+    ub_retval = ub_ctx_add_ta(m_resolver.get(), const_cast<char*>(ta.c_str()));
     if (ub_retval != 0) {
         boost::format fmt("Cannot add trust anchor to resolver: %1%)");
         fmt % std::string(ub_strerror(ub_retval));

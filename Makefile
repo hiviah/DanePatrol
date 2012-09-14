@@ -91,6 +91,7 @@ $(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.h: $(PLUGIN_JSAPI_IDL_DIR)/TLSAfet
 	(cd "$(PLUGIN_JSAPI_IDL_DIR)" && python $(PLUGIN_IDL_COMPILER) $<)
 
 ## tests
+# depend on 'plugin' target, not adding explicitly
 test: 
 	make -C tests
 

@@ -94,10 +94,15 @@ protected:
      * Parse result from unbound resolver into list of JSAPI TLSA structures.
      *
      * @param result: result from ub_resolve
+     * @throws ResolverException: if packet is malformed
      */
     TLSAList parseResult(const ub_result* result) const;
     
-    /*! Setup unbound context with trust anchors, etc. */
+    /*!
+     * Setup unbound context with trust anchors, etc.
+     *
+     * @throws ResolverException on error
+     */
     void initializeResolver(const std::string& trustAnchors = "");
     
     /*! Builtin DS record for root DNS zone */

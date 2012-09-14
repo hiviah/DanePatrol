@@ -62,12 +62,7 @@ std::string hex2bin(const std::string& val)
 Resolver::Resolver(const std::string &trustAnchors):
 	m_resolver(ub_ctx_create(), ub_ctx_delete)
 {
-    try {
-        initializeResolver(trustAnchors);
-    }
-    catch (const ResolverException& e) {
-    	FBLOG_FATAL("", e.message());
-    }
+    initializeResolver(trustAnchors);
 }
 
 Resolver::~Resolver()
@@ -102,51 +97,42 @@ TLSAList Resolver::parseResult(const ub_result* result) const
 	return tlsaList;
     }
     
-    try {
-	if (parse_status != LDNS_STATUS_OK) {
-		throw ResolverException("Failed to parse response packet\n");
-	}
-	
-	rrs = ldns_pkt_rr_list_by_type(packet, RR_TYPE_TLSA, LDNS_SECTION_ANSWER);
-	for (int i = 0; i < ldns_rr_list_rr_count(rrs); i++) {
-	    /* extract first rdf, which is the whole TLSA record */
-	    ldns_rr *rr = ldns_rr_list_rr(rrs, i);
-	    if (ldns_rr_rd_count(rr) < 1) {
-		FBLOG_WARN("", "RR has no RDFs\n");
-		ldns_rr_free(rr);
-		continue;
-	    }
-    
-	    ldns_rdf *rdf = ldns_rr_rdf(rr, 0);
-	    
-	    size_t rdf_size = ldns_rdf_size(rdf);
-	    if (rdf_size < 4) {
-		FBLOG_WARN("", "TLSA record in RR too short\n");
-		ldns_rr_free(rr);
-		continue;
-	    }
-    
-	    uint8_t *rdf_data = ldns_rdf_data(rdf);
-    
-	    CertUsage cert_usage = CertUsage(rdf_data[0]);
-	    Selector selector = Selector(rdf_data[1]);
-	    MatchingType matching_type = MatchingType(rdf_data[2]);
-	    std::string association((char *)(rdf_data+3), rdf_size-3);
-	    
-	    tlsaList.push_back(ResolvedTLSA(cert_usage, selector, matching_type, 
-		association, bin2hex(association)));
+    if (parse_status != LDNS_STATUS_OK) {
+        if (packet) ldns_pkt_free(packet);
+        throw ResolverException("Failed to parse response packet\n");
+    }
 
-	    std::string z=hex2bin(bin2hex(association));
-	    FBLOG_INFO("-", (z == association) ? "Y" : "N");
-	    
-	    ldns_rr_free(rr);
-	}
-    }
-    catch (const ResolverException &e) {
-    	FBLOG_WARN("", e.message());
+    rrs = ldns_pkt_rr_list_by_type(packet, RR_TYPE_TLSA, LDNS_SECTION_ANSWER);
+    for (int i = 0; i < ldns_rr_list_rr_count(rrs); i++) {
+        /* extract first rdf, which is the whole TLSA record */
+        ldns_rr *rr = ldns_rr_list_rr(rrs, i);
+        if (ldns_rr_rd_count(rr) < 1) {
+        ldns_rr_free(rr);
+        continue;
+        }
+
+        ldns_rdf *rdf = ldns_rr_rdf(rr, 0);
+
+        size_t rdf_size = ldns_rdf_size(rdf);
+        if (rdf_size < 4) {
+        ldns_rr_free(rr);
+        continue;
+        }
+
+        uint8_t *rdf_data = ldns_rdf_data(rdf);
+
+        CertUsage cert_usage = CertUsage(rdf_data[0]);
+        Selector selector = Selector(rdf_data[1]);
+        MatchingType matching_type = MatchingType(rdf_data[2]);
+        std::string association((char *)(rdf_data+3), rdf_size-3);
+
+        tlsaList.push_back(ResolvedTLSA(cert_usage, selector, matching_type,
+            association, bin2hex(association)));
+
+        ldns_rr_free(rr);
     }
     
-    if (packet)  ldns_pkt_free(packet);
+    if (packet) ldns_pkt_free(packet);
     if (rrs) ldns_rr_list_free(rrs);
     
     return tlsaList;

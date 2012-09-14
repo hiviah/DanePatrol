@@ -4,12 +4,17 @@ set (CMAKE_BACKWARDS_COMPATIBILITY 2.6)
 
 Project(${PLUGIN_NAME})
 
-set (JSAPI JSAPI_IDL/TLSAfetcherStructures.cpp)
 file (GLOB GENERAL RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
-    [^.]*.cpp
-    [^.]*.h
+    Factory.cpp
+    TLSA*.cpp
+    TLSA*.h
     [^.]*.cmake
-    ${JSAPI}
+    )
+
+ADD_LIBRARY( DANECore STATIC
+    DANEAlgorithm.cpp
+    Resolver.cpp
+    JSAPI_IDL/TLSAfetcherStructures.cpp
     )
 
 include_directories(${PLUGIN_INCLUDE_DIRS})

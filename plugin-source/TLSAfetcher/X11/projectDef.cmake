@@ -46,6 +46,7 @@ set_property(TARGET crypto PROPERTY IMPORTED_LOCATION
 # add library dependencies here; leave ${PLUGIN_INTERNAL_DEPS} there unless you know what you're doing!
 target_link_libraries(${PROJNAME}
     ${PLUGIN_INTERNAL_DEPS}
+    DANECore
     unbound
     ldns
     ssl

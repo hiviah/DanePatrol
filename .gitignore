@@ -1,7 +1,7 @@
+*.o
 .*.swp
 *.py[co]
 libs
-unbound-test
 .gdb_history
 #Komodo files
 *.kpf
@@ -23,3 +23,6 @@ TLSAfetcherStructures.js
 
 #generate plugin binary
 addon/plugins
+
+tests/unbound-test
+tests/resolver-test

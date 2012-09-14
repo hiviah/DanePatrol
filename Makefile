@@ -1,4 +1,5 @@
-.PHONY: all submodules libs-build plugin prepmake addon-build addon-clean
+.PHONY: all submodules libs-build plugin prepmake addon-build addon-clean test test-run
+
 all: libs-build plugin addon-build
 
 CFLAGS=-fPIC
@@ -90,12 +91,11 @@ $(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.h: $(PLUGIN_JSAPI_IDL_DIR)/TLSAfet
 	(cd "$(PLUGIN_JSAPI_IDL_DIR)" && python $(PLUGIN_IDL_COMPILER) $<)
 
 ## tests
-tests/unbound-test: tests/unbound-test.c $(UNBOUND_LIB)
-	$(CC) -Wall -pedantic -std=c99 -g $< -o $@ -L$(UNBOUND_LIB)/lib -L$(OPENSSL_LIB)/lib -L$(LDNS_LIB)/lib -I$(OPENSSL_LIB)/include -I$(LDNS_LIB)/include -I$(UNBOUND_LIB)/include -lunbound -lldns -lssl -lcrypto -lpthread -ldl
+test: 
+	make -C tests
 
-test: tests/unbound-test
-	./tests/unbound-test
-
+test-run: test
+	make -C tests run-tests
 
 ## cleaning
 clean:

@@ -19,6 +19,10 @@
 struct ub_ctx;
 struct ub_result;
 
+std::string bin2hex(const std::string& val);
+
+std::string hex2bin(const std::string& val);
+
 /*! Exception for signaling resolving or DNS parsing errors. */
 class ResolverException
 {

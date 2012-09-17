@@ -38,10 +38,10 @@ std::string Certificate::spki() const
     }
 
     int pkeyLen;
-    pkeyLen = i2d_PublicKey(pubkey.get(), NULL);
+    pkeyLen = i2d_PUBKEY(pubkey.get(), NULL);
     boost::scoped_array<char> pubkeyBuf(new char[pkeyLen]);
     unsigned char* pubkeyBufptr = (unsigned char*)pubkeyBuf.get();
-    i2d_PublicKey(pubkey.get(), &pubkeyBufptr);
+    i2d_PUBKEY(pubkey.get(), &pubkeyBufptr);
 
     std::string pubkeyStr(pubkeyBuf.get(), pkeyLen);
     return pubkeyStr;

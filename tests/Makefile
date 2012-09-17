@@ -35,7 +35,7 @@ clean-tests:
 
 ## Separate test builds
 
-unbound-test: unbound-test.c $(UNBOUND_LIB)
+unbound-test: unbound-test.c $(UNBOUND_LIB) $(DANE_CORE_LIB)
 	$(CC) $< -o $@ $(CFLAGS) $(LDFLAGS)
 
 resolver-test: resolver-test.cpp $(UNBOUND_LIB) $(DANE_CORE_LIB)

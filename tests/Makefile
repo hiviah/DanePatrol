@@ -29,6 +29,7 @@ build-tests: $(TARGETS)
 run-tests: build-tests
 	./unbound-test
 	./resolver-test
+	./certificate-test
 
 clean-tests:
 	rm -f $(TARGETS)
@@ -39,4 +40,7 @@ unbound-test: unbound-test.c $(UNBOUND_LIB) $(DANE_CORE_LIB)
 	$(CC) $< -o $@ $(CFLAGS) $(LDFLAGS)
 
 resolver-test: resolver-test.cpp $(UNBOUND_LIB) $(DANE_CORE_LIB)
+	$(CXX) $< -o $@ $(CXXFLAGS) $(LDFLAGS)
+
+certificate-test: certificate-test.cpp $(UNBOUND_LIB) $(DANE_CORE_LIB)
 	$(CXX) $< -o $@ $(CXXFLAGS) $(LDFLAGS)

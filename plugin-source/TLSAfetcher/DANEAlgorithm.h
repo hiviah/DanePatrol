@@ -17,6 +17,9 @@ public:
     CertificateError(const char* reason):
         std::runtime_error(reason)
         {}
+    CertificateError(const std::string& reason):
+        std::runtime_error(reason.c_str())
+        {}
 };
 
 class Certificate

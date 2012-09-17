@@ -26,3 +26,5 @@ addon/plugins
 
 tests/unbound-test
 tests/resolver-test
+tests/certificate-test
+tests/*.der

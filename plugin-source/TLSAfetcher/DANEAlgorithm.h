@@ -9,6 +9,15 @@
 
 #include <string>
 #include <vector>
+#include <stdexcept>
+
+class CertificateError: public std::runtime_error
+{
+public:
+    CertificateError(const char* reason):
+        std::runtime_error(reason)
+        {}
+};
 
 class Certificate
 {
@@ -21,17 +30,17 @@ public:
     const std::string& asDer() const
         { return m_derData; }
 
-    /*! Return ASN.1 DER-encoded SubjectPublicKeyInfo structure. */
-    const std::string& spki() const
-        { return m_spki; }
+    /*!
+     * Return ASN.1 DER-encoded SubjectPublicKeyInfo structure.
+     *
+     * @throws CertificateError: if certificate parsing fails
+     */
+    std::string spki() const;
 
 protected:
 
     /*! DER-encoded cert */
     std::string m_derData;
-
-    /*! DER-encoded ASN.1 structure of SPKI. */
-    std::string m_spki;
 };
 
 /*! Typedef for certificate chain. */

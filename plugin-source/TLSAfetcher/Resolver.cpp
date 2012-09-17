@@ -169,8 +169,6 @@ TLSALookupResult Resolver::fetchTLSA(const std::string& fqdn, int port)
     jsResult.result = retval;
     jsResult.rcode = resolveResult->rcode;
 
-    ub_resolve_free(resolveResult);
-
     try {
         if (retval == 0) {
             jsResult.tlsa = parseResult(resolveResult);
@@ -181,6 +179,8 @@ TLSALookupResult Resolver::fetchTLSA(const std::string& fqdn, int port)
         jsResult.errorStr = e.message();
     }
     
+    ub_resolve_free(resolveResult);
+
     if (resolveResult->secure) {
     	jsResult.dnssecStatus = TLSAjs::SECURE;
     } else if (resolveResult->bogus) {

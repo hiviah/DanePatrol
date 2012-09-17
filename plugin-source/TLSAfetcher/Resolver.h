@@ -74,7 +74,7 @@ public:
     virtual ~Resolver();
     
     bool canResolve() const 
-    	{return m_resolver != NULL;}
+        {return m_canResolve;}
     
     /*! TLSA RR type not yet defined in ldns */
     static const ldns_rr_type RR_TYPE_TLSA = ldns_rr_type(52);
@@ -110,6 +110,9 @@ protected:
 
     /*! libunbound resolver context - is thread safe */
     UbCtx m_resolver;
+
+   /*! Signifies whether unbound resolver was successfully initialized. */
+    bool m_canResolve;
     
 };
 

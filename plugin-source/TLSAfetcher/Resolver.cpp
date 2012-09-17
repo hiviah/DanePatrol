@@ -60,7 +60,8 @@ std::string hex2bin(const std::string& val)
 }
 
 Resolver::Resolver(const std::string &trustAnchors):
-	m_resolver(ub_ctx_create(), ub_ctx_delete)
+    m_resolver(ub_ctx_create(), ub_ctx_delete),
+    m_canResolve(true)
 {
     initializeResolver(trustAnchors);
 }
@@ -75,11 +76,13 @@ void Resolver::initializeResolver(const std::string &trustAnchors)
     std::string ta = trustAnchors.empty() ? m_rootTrustAnchor : trustAnchors;
 
     if (!m_resolver.get()) {
+        m_canResolve = false;
         throw ResolverException("Failed to create ub_ctx resolver");
     }
     
     ub_retval = ub_ctx_add_ta(m_resolver.get(), const_cast<char*>(ta.c_str()));
     if (ub_retval != 0) {
+        m_canResolve = false;
         boost::format fmt("Cannot add trust anchor to resolver: %1%)");
         fmt % std::string(ub_strerror(ub_retval));
         throw ResolverException(fmt.str());
@@ -163,14 +166,20 @@ TLSALookupResult Resolver::fetchTLSA(const std::string& fqdn, int port)
     retval = ub_resolve(m_resolver.get(), const_cast<char *>(rrName.c_str()), 
         RR_TYPE_TLSA, LDNS_RR_CLASS_IN, &resolveResult);
 
-    if (retval == 0) {
-    	jsResult.tlsa = parseResult(resolveResult);
-    }
-    
     jsResult.result = retval;
     jsResult.rcode = resolveResult->rcode;
 
     ub_resolve_free(resolveResult);
+
+    try {
+        if (retval == 0) {
+            jsResult.tlsa = parseResult(resolveResult);
+        }
+    }
+    catch (const ResolverException& e)
+    {
+        jsResult.errorStr = e.message();
+    }
     
     if (resolveResult->secure) {
     	jsResult.dnssecStatus = TLSAjs::SECURE;

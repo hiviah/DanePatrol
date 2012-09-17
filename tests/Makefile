@@ -28,6 +28,7 @@ build-tests: $(TARGETS)
 
 run-tests: build-tests
 	./unbound-test
+	./resolver-test
 
 clean-tests:
 	rm -f $(TARGETS)

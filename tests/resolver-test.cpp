@@ -21,6 +21,7 @@ int main(int argc, char **argv)
         expect(tlsa.result == 0, "Resolve failure");
         expect(tlsa.rcode == 0, "Rcode != NOERROR");
         expect(tlsa.tlsa.size() > 0, "TLSA result present");
+        expect(tlsa.dnssecStatus == TLSAjs::SECURE, "DNSSEC validation status != secure");
 
         ResolvedTLSA rr = tlsa.tlsa.front();
         std::string assocHex = rr.associationHex;
@@ -37,5 +38,6 @@ int main(int argc, char **argv)
         return 1;
     }
 
+    cout << "Resolver test passed" << endl;
     return 0;
 }

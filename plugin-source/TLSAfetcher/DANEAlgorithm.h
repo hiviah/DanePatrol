@@ -12,6 +12,8 @@
 
 #include "JSAPI_IDL/TLSAfetcherStructures.h"
 #include "Exceptions.h"
+#include "openssl/evp.h"
+
 
 class Certificate
 {
@@ -30,9 +32,6 @@ public:
      * @throws CertificateException: if certificate parsing fails
      */
     std::string spki() const;
-    
-    /*! Return named digest of data using openssl algorithms, in binary. */
-    static std::string opensslDigest(const char *name, const std::string& data);
     
     /*! Returns SHA256 of data, in binary. */
     static std::string sha256(const std::string& data);
@@ -58,6 +57,14 @@ public:
 
 protected:
 
+    /*! 
+     * Compute digest of data using openssl algorithm, in binary.
+     * 
+     * @param md: openssl message digest object that specifies the algorithm
+     * @param data: data to compute upon
+     */
+    static std::string opensslDigest(const EVP_MD *md, const std::string& data);
+    
     /*! DER-encoded cert */
     std::string m_derData;
 };

@@ -61,9 +61,21 @@ int main(int argc, char **argv)
         std::string expectedSpki = readFile("spki.der");
 
         Certificate cert(certStr);
-        std::string spki = cert.spki();
+        std::string spki = cert.selectorData(TLSAjs::SPKI);
 
         expect(expectedSpki == spki, "Wrong SPKI was parsed");
+        expect(bin2hex(cert.matchingData(TLSAjs::SHA256, TLSAjs::FULL)) ==
+               "23b854af6b96c0224fd173382c520b465a94f2d4e7238893f63ad2d783e27b4b", 
+               "Wrong SHA256 for full cert");
+        expect(bin2hex(cert.matchingData(TLSAjs::SHA512, TLSAjs::FULL)) ==
+               "9cb4f24a3515cb198696dd4f33aa4de6f0005a9c43afc86482ca54a0e2f558fae9ddd8eec1880f4e2b05401e506f6d60455493a0904b2cb1ef172081467614e9", 
+               "Wrong SHA512 for full cert");
+        expect(bin2hex(cert.matchingData(TLSAjs::SHA256, TLSAjs::SPKI)) ==
+               "a01bfa93ecac24481618e4c589e9ec0ffbe34c416a0eb5f77a387dd9657dbb45", 
+               "Wrong SHA256 for SPKI");
+        expect(bin2hex(cert.matchingData(TLSAjs::SHA512, TLSAjs::SPKI)) ==
+               "a9cd977cd8c71d591730352b1ec8f3f860c288b4bb95393b6cd6e4aeb249f8b260912c71b9df02e176ee4132f503a70c1ff3a4891d31f8caebf1c91541d819ce", 
+               "Wrong SHA512 for SPKI");
     }
     catch (const std::exception& e) {
         cout << e.what() << endl;

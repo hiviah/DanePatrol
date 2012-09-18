@@ -48,15 +48,13 @@ std::string Certificate::spki() const
     return pubkeyStr;
 }
 
-std::string Certificate::opensslDigest(const char *name, const std::string &data)
+std::string Certificate::opensslDigest(const EVP_MD *md, const std::string &data)
 {
     EVP_MD_CTX mdctx;
     unsigned int md_len;
     unsigned char md_value[64]; // enough bytes for SHA2 family up to SHA-512
-    const EVP_MD *md;
     std::string digest;
     
-    md = EVP_get_digestbyname(name);
     assert(md);
     EVP_MD_CTX_init(&mdctx);
     EVP_DigestInit_ex(&mdctx, md, NULL);
@@ -70,12 +68,12 @@ std::string Certificate::opensslDigest(const char *name, const std::string &data
 
 std::string Certificate::sha256(const std::string &data)
 {
-    return opensslDigest("SHA-256", data);
+    return opensslDigest(EVP_sha256(), data);
 }
 
 std::string Certificate::sha512(const std::string &data)
 {
-    return opensslDigest("SHA-512", data);
+    return opensslDigest(EVP_sha512(), data);
 }
 
 std::string Certificate::selectorData(TLSAjs::Selector selector) const
@@ -105,3 +103,4 @@ std::string Certificate::matchingData(TLSAjs::MatchingType matching, TLSAjs::Sel
             break;
     };
 }
+

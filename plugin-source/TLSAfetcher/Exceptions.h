@@ -64,6 +64,7 @@ public:
 };
 
 
+/*! Exception thrown when ASN.1 certificate parsing fails. */
 class CertificateError: public TLSAfetcherException
 {
 public:

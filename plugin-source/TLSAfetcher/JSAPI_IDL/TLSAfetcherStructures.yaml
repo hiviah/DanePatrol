@@ -52,6 +52,7 @@ TLSALookupResult:
 
 # One match of a certificate in chain against TLSA
 DANEMatch:
+    successful: bool #other fields are undefined unless successful==true
     derCert: string
     pemCert: string
     tlsa: ResolvedTLSA

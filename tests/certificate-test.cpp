@@ -42,7 +42,7 @@ using std::endl;
  */
 void expect(bool tested, const std::string& msg)
 {
-    if (!tested) throw(CertificateError(msg));
+    if (!tested) throw(CertificateException(msg));
 }
 
 std::string readFile(const char *fname)

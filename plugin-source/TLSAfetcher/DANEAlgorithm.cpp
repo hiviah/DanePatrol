@@ -5,6 +5,7 @@
  */
  
 #include <cstring>
+#include <cassert>
 #include <boost/scoped_array.hpp>
 #include <boost/shared_ptr.hpp>
 
@@ -28,13 +29,13 @@ std::string Certificate::spki() const
 
     boost::shared_ptr<X509> sslCert(d2i_X509(NULL, const_cast<const unsigned char**>(&bufptr), len), X509_free);
     if (!sslCert.get()) {
-            throw CertificateError("Failed to parse certificate");
+            throw CertificateException("Failed to parse certificate");
     }
 
     boost::shared_ptr<EVP_PKEY> pubkey(X509_get_pubkey(sslCert.get()), EVP_PKEY_free);
 
     if (!pubkey.get()) {
-            throw CertificateError("Failed to get SPKI of certificate");
+            throw CertificateException("Failed to get SPKI of certificate");
     }
 
     int pkeyLen;
@@ -45,4 +46,62 @@ std::string Certificate::spki() const
 
     std::string pubkeyStr(pubkeyBuf.get(), pkeyLen);
     return pubkeyStr;
+}
+
+std::string Certificate::opensslDigest(const char *name, const std::string &data)
+{
+    EVP_MD_CTX mdctx;
+    unsigned int md_len;
+    unsigned char md_value[64]; // enough bytes for SHA2 family up to SHA-512
+    const EVP_MD *md;
+    std::string digest;
+    
+    md = EVP_get_digestbyname(name);
+    assert(md);
+    EVP_MD_CTX_init(&mdctx);
+    EVP_DigestInit_ex(&mdctx, md, NULL);
+    EVP_DigestUpdate(&mdctx, data.data(), data.size());
+    EVP_DigestFinal_ex(&mdctx, md_value, &md_len);
+    EVP_MD_CTX_cleanup(&mdctx);
+    
+    digest = std::string((char *)md_value, md_len);
+    return digest;
+}
+
+std::string Certificate::sha256(const std::string &data)
+{
+    return opensslDigest("SHA-256", data);
+}
+
+std::string Certificate::sha512(const std::string &data)
+{
+    return opensslDigest("SHA-512", data);
+}
+
+std::string Certificate::selectorData(TLSAjs::Selector selector) const
+{
+    switch (selector) {
+        case TLSAjs::FULL:
+            return m_derData;
+        case TLSAjs::SPKI:
+            return spki();
+        default:
+            throw DANEException("Unknown selector type");
+    };
+}
+
+std::string Certificate::matchingData(TLSAjs::MatchingType matching, TLSAjs::Selector selector) const
+{
+    std::string data = selectorData(selector);
+    
+    switch (matching) {
+        case TLSAjs::EXACT:
+            return data;
+        case TLSAjs::SHA256:
+            return sha256(data);
+        case TLSAjs::SHA512:
+            return sha512(data);
+        default:
+            break;
+    };
 }

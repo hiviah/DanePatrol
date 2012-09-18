@@ -65,15 +65,28 @@ public:
 
 
 /*! Exception thrown when ASN.1 certificate parsing fails. */
-class CertificateError: public TLSAfetcherException
+class CertificateException: public TLSAfetcherException
 {
 public:
     
-    CertificateError(const char* msg) throw():
+    CertificateException(const char* msg) throw():
         TLSAfetcherException(msg)
         {}
-    CertificateError(const std::string& msg) throw():
+    CertificateException(const std::string& msg) throw():
         TLSAfetcherException(msg)
+        {}
+};
+
+/*! Exception thrown when DANE algorithm encounters unknown parameters. */
+class DANEException: public CertificateException
+{
+public:
+    
+    DANEException(const char* msg) throw():
+        CertificateException(msg)
+        {}
+    DANEException(const std::string& msg) throw():
+        CertificateException(msg)
         {}
 };
 

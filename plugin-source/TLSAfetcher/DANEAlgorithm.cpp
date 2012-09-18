@@ -169,33 +169,28 @@ DANEMatch DANEAlgorithm::check(const TLSALookupResult &lookup, int policy) const
     for (it = filteredTLSA.begin() ; it != filteredTLSA.end(); it++) {
         try {
             // TLSA RRs are already filtered by policy, we can group them
-            int idx;
+            int idx = -1;
             switch (it->certUsage) {
                 case TLSAjs::CA_CERT_PIN:
                 case TLSAjs::CA_TA_ADDED:
                     idx = caCertMatch(*it);
-                    if (idx > 0) {
-                        match.successful = true;
-                        match.derCert = m_certChain[idx].asDer();
-                        match.pemCert = m_certChain[idx].asPem();
-                        match.tlsa = *it;
-                        return match;
-                    }
                     break;
                 case TLSAjs::EE_CERT_PIN:
                 case TLSAjs::EE_TA_ADDED:
                     idx = eeCertMatch(*it);
-                    if (idx > 0) {
-                        match.successful = true;
-                        match.derCert = m_certChain[idx].asDer();
-                        match.pemCert = m_certChain[idx].asPem();
-                        match.tlsa = *it;
-                        return match;
-                    }
                     break;
                 default:
                     break; // unknown cert usage, skip
             };
+            
+            // if we have a match, copy cert and TLSA into the result
+            if (idx > 0) {
+                match.successful = true;
+                match.derCert = m_certChain[idx].asDer();
+                match.pemCert = m_certChain[idx].asPem();
+                match.tlsa = *it;
+                return match;
+            }
         }
         catch (const DANEException& e) {
             // unknown matching type or selector, skip

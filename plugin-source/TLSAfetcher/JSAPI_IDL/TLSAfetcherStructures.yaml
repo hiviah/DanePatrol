@@ -49,3 +49,9 @@ TLSALookupResult:
     rcode: int
     dnssecStatus: DNSSECStatus
     tlsa: list<ResolvedTLSA>
+
+# One match of a certificate in chain against TLSA
+DANEMatch:
+    derCert: string
+    pemCert: string
+    tlsa: ResolvedTLSA

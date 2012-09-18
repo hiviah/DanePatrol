@@ -10,6 +10,7 @@
 #include <string>
 #include <vector>
 
+#include "JSAPI_IDL/TLSAfetcherStructures.h"
 #include "Exceptions.h"
 
 class Certificate

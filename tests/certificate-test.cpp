@@ -81,7 +81,11 @@ int main(int argc, char **argv)
         cout << e.what() << endl;
         return 1;
     }
-
+    
     cout << "Certificate test passed" << endl;
     return 0;
+
+    // Valgrind shows about 500 bytes from internal openssl structs still 
+    // reachable at the end, but the count doesn't grow if test body is 
+    // repeated in cycle.
 }

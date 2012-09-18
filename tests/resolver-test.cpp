@@ -40,4 +40,8 @@ int main(int argc, char **argv)
 
     cout << "Resolver test passed" << endl;
     return 0;
+
+    // Valgrind shows about 400 bytes from internal openssl structs still 
+    // reachable at the end, but the count doesn't grow if test body is 
+    // repeated in cycle.
 }

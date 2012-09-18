@@ -20,7 +20,7 @@ CFLAGS += $(INCLUDES) -Wall -pedantic -std=c99 -g
 CXXFLAGS += $(INCLUDES) -Wall -g
 LDFLAGS += $(DANE_CORE_LIB) $(LIBS)
 
-TARGETS := unbound-test resolver-test
+TARGETS := unbound-test resolver-test certificate-test
 
 ## Generic targets
 

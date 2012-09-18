@@ -10,7 +10,7 @@
 #include <string>
 #include <vector>
 
-#include "JSAPI_IDL/TLSAfetcherStructures.h"
+#include "Resolver.h"
 #include "Exceptions.h"
 #include "openssl/evp.h"
 
@@ -25,6 +25,9 @@ public:
     /*! Return cert as DER-encoded */
     const std::string& asDer() const
         { return m_derData; }
+
+    /*! Return cert as PEM-encoded */
+    std::string asPem() const;
 
     /*!
      * Return ASN.1 DER-encoded SubjectPublicKeyInfo structure.
@@ -64,7 +67,6 @@ protected:
      * @param data: data to compute upon
      */
     static std::string opensslDigest(const EVP_MD *md, const std::string& data);
-    
     /*! DER-encoded cert */
     std::string m_derData;
 };
@@ -79,15 +81,42 @@ class DANEAlgorithm
 {
 public:
     
-    DANEAlgorithm(const std::string host, int port, const CertChain certChain);
+    /*! 
+     * Initialize DANE TLSA checking for TLS with specified certificate chain.
+     *
+     * @throws DANEException: if arguments are invalid (e.g. empty chain)
+     */
+    DANEAlgorithm(const CertChain certChain);
     
-    /*! Resolve TLSA records and try to match them against certificate chain */
-    DANEMatch resolveAndCheck();
+    /*! 
+     * Check TLSA records and try to match them against certificate chain.
+     *
+     * @param lookup: result of TLSA lookup from resolver
+     * @param policy: bitmap of DANEPolicy which certificate usage is allowed
+     */
+    DANEMatch check(const TLSALookupResult& lookup, int policy) const;
+    
+    /*! Check whether given TLSA matches EE cert of the chain.
+     *
+     * @returns index of cert in chain that matched (0) or -1 if no match
+     */ 
+    int eeCertMatch(const ResolvedTLSA& tlsa) const;
+
+    /*! Check whether given TLSA matches CA cert of the chain.
+     *
+     * @returns index of cert in chain that matched [1..n] or -1 if no match
+     */ 
+    int caCertMatch(const ResolvedTLSA& tlsa) const;
 
 protected:
 
+    
+    /*! Return a list of TLSA record where only those matching policy remain */ 
+    static TLSAList policyFilter(const TLSAList& tlsaList, int policy);
+    
     /*! Certificate chain of site to be checked. */
     CertChain m_certChain;
+    
 };
 
 #endif /* H_DANEAlgorithm */

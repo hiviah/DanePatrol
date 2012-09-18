@@ -100,7 +100,129 @@ std::string Certificate::matchingData(TLSAjs::MatchingType matching, TLSAjs::Sel
         case TLSAjs::SHA512:
             return sha512(data);
         default:
-            break;
+            throw DANEException("Unknown matching type");
     };
 }
+
+std::string Certificate::asPem() const
+{
+    return std::string();
+}
+
+DANEAlgorithm::DANEAlgorithm(const CertChain certChain):
+    m_certChain(certChain)
+{
+    if (m_certChain.size() < 1) {
+        throw DANEException("Empty chain passed to DANE checking");
+    }
+}
+
+TLSAList DANEAlgorithm::policyFilter(const TLSAList& tlsaList, int policy)
+{
+    TLSAList filteredTLSA;
+    TLSAList::const_iterator it = tlsaList.begin();
+    
+    for ( ; it != tlsaList.end(); it++) {
+        switch (it->certUsage) {
+            case TLSAjs::CA_CERT_PIN:
+            case TLSAjs::EE_CERT_PIN:
+                if (policy & TLSAjs::ALLOW_TYPE_01) {
+                    filteredTLSA.push_back(*it);
+                }
+                break;
+            case TLSAjs::CA_TA_ADDED:
+            case TLSAjs::EE_TA_ADDED:
+                if (policy & TLSAjs::ALLOW_TYPE_23) {
+                    filteredTLSA.push_back(*it);
+                }
+                break;
+            default:
+                break;
+        };
+    }
+    
+    return filteredTLSA;
+}
+        
+DANEMatch DANEAlgorithm::check(const TLSALookupResult &lookup, int policy) const
+{
+    DANEMatch match;
+    match.successful = false;
+    match.abort = false;
+    
+    // TODO: How would libunbound react if some TLSA were signed and others not?
+    // Guessing whole thing would be marked insecure, thus we can't filter just
+    // TLSA RRs with correct signature.
+    switch (lookup.dnssecStatus) {
+        case TLSAjs::INSECURE:
+            return match;
+        case TLSAjs::BOGUS:
+            match.abort = true;
+            return match;
+        case TLSAjs::SECURE:
+            break; // continue checking
+    }
+    
+    TLSAList filteredTLSA = policyFilter(lookup.tlsa, policy);
+    TLSAList::const_iterator it;
+    
+    for (it = filteredTLSA.begin() ; it != filteredTLSA.end(); it++) {
+        try {
+            // TLSA RRs are already filtered by policy, we can group them
+            int idx;
+            switch (it->certUsage) {
+                case TLSAjs::CA_CERT_PIN:
+                case TLSAjs::CA_TA_ADDED:
+                    idx = caCertMatch(*it);
+                    if (idx > 0) {
+                        match.successful = true;
+                        match.derCert = m_certChain[idx].asDer();
+                        match.pemCert = m_certChain[idx].asPem();
+                        match.tlsa = *it;
+                        return match;
+                    }
+                    break;
+                case TLSAjs::EE_CERT_PIN:
+                case TLSAjs::EE_TA_ADDED:
+                    idx = eeCertMatch(*it);
+                    if (idx > 0) {
+                        match.successful = true;
+                        match.derCert = m_certChain[idx].asDer();
+                        match.pemCert = m_certChain[idx].asPem();
+                        match.tlsa = *it;
+                        return match;
+                    }
+                    break;
+                default:
+                    break; // unknown cert usage, skip
+            };
+        }
+        catch (const DANEException& e) {
+            // unknown matching type or selector, skip
+        }
+    }
+    
+    return match;
+}
+
+int DANEAlgorithm::eeCertMatch(const ResolvedTLSA &tlsa) const
+{
+    if (m_certChain.front().matchingData(tlsa.matchingType, tlsa.selector) == tlsa.association) {
+        return 0; //index 0 - the EE cert - matched
+    }
+    
+    return -1;
+}
+
+int DANEAlgorithm::caCertMatch(const ResolvedTLSA &tlsa) const
+{
+    for (int i = 1; i < m_certChain.size(); i++) {
+        if (m_certChain[i].matchingData(tlsa.matchingType, tlsa.selector) == tlsa.association) {
+            return i;
+        }
+    }
+    
+    return -1;
+}
+
 

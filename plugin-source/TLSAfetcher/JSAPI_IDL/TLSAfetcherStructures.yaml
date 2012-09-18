@@ -36,6 +36,11 @@ enums:
         - FULL: 0
         - SPKI: 1
 
+    #bits for bitmask policy which CertUsage is allowed
+    DANEPolicy:
+        - ALLOW_TYPE_01: 1
+        - ALLOW_TYPE_23: 2
+
 ResolvedTLSA:
     certUsage: CertUsage
     selector: Selector
@@ -53,6 +58,7 @@ TLSALookupResult:
 # One match of a certificate in chain against TLSA
 DANEMatch:
     successful: bool #other fields are undefined unless successful==true
+    abort: bool #true means that known bogus TLSA reply was on the wire
     derCert: string
     pemCert: string
     tlsa: ResolvedTLSA

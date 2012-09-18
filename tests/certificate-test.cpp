@@ -60,8 +60,6 @@ int main(int argc, char **argv)
         std::string certStr = readFile("torproject.der");
         std::string expectedSpki = readFile("spki.der");
 
-        cout << "Cert len: " << certStr.size() << endl;
-
         Certificate cert(certStr);
         std::string spki = cert.spki();
 

@@ -15,6 +15,7 @@
 
 #include "ldns/rr.h"
 #include "JSAPI_IDL/TLSAfetcherStructures.h"
+#include "Exceptions.h"
 
 struct ub_ctx;
 struct ub_result;
@@ -22,27 +23,6 @@ struct ub_result;
 std::string bin2hex(const std::string& val);
 
 std::string hex2bin(const std::string& val);
-
-/*! Exception for signaling resolving or DNS parsing errors. */
-class ResolverException
-{
-public:
-
-    ResolverException(const char  *msg) throw():
-    	m_message(msg) {}
-    ResolverException(const std::string& msg) throw():
-    	m_message(msg) {}
-    		
-    const std::string& message() const
-    	{return m_message;}
-    
-    ResolverException(const ResolverException& other) throw();
-    ResolverException& operator= (const ResolverException& other) throw();
-
-protected:
-
-    std::string m_message;
-};
 
 /*! Container for parsed DNS lookup result with TLSA RRs */
 typedef TLSAjs::ResolvedTLSA ResolvedTLSA;

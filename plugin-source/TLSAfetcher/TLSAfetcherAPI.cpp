@@ -17,20 +17,6 @@
 #include "variant_map.h"
 #include "TLSAfetcherAPI.h"
 
-ResolverException::ResolverException(const ResolverException& other) throw()
-{
-    m_message = other.m_message;
-}
-
-ResolverException& ResolverException::operator= (const ResolverException& other) throw()
-{
-	if (this == &other) return *this;
-	
-	m_message = other.m_message;
-	
-	return *this;
-}
-
 TLSAfetcherAPI::TLSAfetcherAPI(const TLSAfetcherPtr& plugin, const FB::BrowserHostPtr& host) : 
 	m_plugin(plugin), 
 	m_host(host),

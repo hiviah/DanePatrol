@@ -9,18 +9,8 @@
 
 #include <string>
 #include <vector>
-#include <stdexcept>
 
-class CertificateError: public std::runtime_error
-{
-public:
-    CertificateError(const char* reason):
-        std::runtime_error(reason)
-        {}
-    CertificateError(const std::string& reason):
-        std::runtime_error(reason.c_str())
-        {}
-};
+#include "Exceptions.h"
 
 class Certificate
 {

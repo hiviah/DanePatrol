@@ -8,6 +8,7 @@ file (GLOB GENERAL RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
     Factory.cpp
     TLSA*.cpp
     TLSA*.h
+    Exceptions.h
     [^.]*.cmake
     )
 

@@ -184,7 +184,7 @@ DANEMatch DANEAlgorithm::check(const TLSALookupResult &lookup, int policy) const
             };
             
             // if we have a match, copy cert and TLSA into the result
-            if (idx > 0) {
+            if (idx >= 0) {
                 match.successful = true;
                 match.derCert = m_certChain[idx].asDer();
                 match.pemCert = m_certChain[idx].asPem();

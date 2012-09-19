@@ -6,8 +6,15 @@
  
 #include <cstring>
 #include <cassert>
-#include <boost/scoped_array.hpp>
-#include <boost/shared_ptr.hpp>
+#include <sstream>
+#include <algorithm>
+
+#include "boost/scoped_array.hpp"
+#include "boost/shared_ptr.hpp"
+#include "boost/archive/iterators/base64_from_binary.hpp"
+#include "boost/archive/iterators/insert_linebreaks.hpp"
+#include "boost/archive/iterators/transform_width.hpp"
+#include "boost/archive/iterators/ostream_iterator.hpp"
 
 #include "openssl/x509.h"
 #include "openssl/evp.h"
@@ -106,7 +113,36 @@ std::string Certificate::matchingData(TLSAjs::MatchingType matching, TLSAjs::Sel
 
 std::string Certificate::asPem() const
 {
-    return std::string();
+    // well, this is ugly
+    using namespace boost::archive::iterators;
+
+    size_t paddedChars = (3-(m_derData.size()%3))%3;
+
+    std::stringstream os;
+    os << "-----BEGIN CERTIFICATE-----\n";
+
+    typedef
+        insert_linebreaks<         // insert line breaks every 64 characters
+            base64_from_binary<    // convert binary values ot base64 characters
+                transform_width<   // retrieve 6 bit integers from a sequence of 8 bit bytes
+                    const char *,
+                    6,
+                    8
+                >
+            >
+            ,64
+        >
+        base64_text; // compose all the above operations in to a new iterator
+
+    std::copy(
+        base64_text(m_derData.data()),
+        base64_text(m_derData.data() + m_derData.size()),
+        ostream_iterator<char>(os)
+    );
+
+    os << std::string(paddedChars, '=');
+    os << "\n-----END CERTIFICATE-----\n";
+    return os.str();
 }
 
 DANEAlgorithm::DANEAlgorithm(const CertChain certChain):

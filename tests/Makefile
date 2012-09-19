@@ -20,7 +20,7 @@ CFLAGS += $(INCLUDES) -Wall -pedantic -std=c99 -g
 CXXFLAGS += $(INCLUDES) -Wall -g
 LDFLAGS += $(DANE_CORE_LIB) $(LIBS)
 
-TARGETS := unbound-test resolver-test certificate-test
+TARGETS := unbound-test resolver-test certificate-test dane-test
 
 ## Generic targets
 
@@ -30,6 +30,7 @@ run-tests: build-tests
 	./unbound-test
 	./resolver-test
 	./certificate-test
+	./dane-test
 
 clean-tests:
 	rm -f $(TARGETS)
@@ -43,4 +44,7 @@ resolver-test: resolver-test.cpp $(UNBOUND_LIB) $(DANE_CORE_LIB)
 	$(CXX) $< -o $@ $(CXXFLAGS) $(LDFLAGS)
 
 certificate-test: certificate-test.cpp $(UNBOUND_LIB) $(DANE_CORE_LIB)
+	$(CXX) $< -o $@ $(CXXFLAGS) $(LDFLAGS)
+
+dane-test: dane-test.cpp $(UNBOUND_LIB) $(DANE_CORE_LIB)
 	$(CXX) $< -o $@ $(CXXFLAGS) $(LDFLAGS)

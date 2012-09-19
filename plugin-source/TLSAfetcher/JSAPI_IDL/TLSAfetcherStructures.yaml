@@ -49,7 +49,7 @@ ResolvedTLSA:
     associationHex: string # JS or FB doesn't seem to like the null char
 
 TLSALookupResult:
-    result: int
+    result: int #0 - success, != 0 - failure, errorStr should have a reason
     errorStr: string
     rcode: int
     dnssecStatus: DNSSECStatus

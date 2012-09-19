@@ -26,6 +26,9 @@ std::string readFile(const char *fname)
     return contents;
 }
 
+// NOERROR DNS reply
+const int NOERROR = 0;
+
 // The test will break once the tested TLSA record or real certificates change
 int main(int argc, char **argv)
 {
@@ -39,6 +42,9 @@ int main(int argc, char **argv)
         chain.push_back(cert);
         DANEAlgorithm algo(chain);
         DANEMatch match;
+
+        expect(lookup.result == 0 && lookup.rcode == NOERROR,
+               "DNS resolution for torproject failed");
 
         // test will need update once the TLSA records change
         expect(lookup.tlsa.size() == 1, "Number of TLSA records for www.torproject.org changed");
@@ -70,6 +76,9 @@ int main(int argc, char **argv)
 
         lookup = resolver.fetchTLSA("nlnetlabs.nl", 443);
         algo = DANEAlgorithm(chain);
+
+        expect(lookup.result == 0 && lookup.rcode == NOERROR,
+               "DNS resolution for nlnetlabs.nl failed");
 
         // test will need update once the TLSA records change
         expect(lookup.tlsa.size() == 1, "Number of TLSA records for nlnetlabs.nl changed");

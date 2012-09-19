@@ -143,7 +143,7 @@ TLSAList Resolver::parseResult(const ub_result* result) const
 
 TLSALookupResult Resolver::fetchTLSA(const std::string& fqdn, int port)
 {
-    ub_result *resolveResult;
+    ub_result *resolveResult = NULL;
     TLSALookupResult jsResult;
     int retval, rcode;
 
@@ -172,15 +172,16 @@ TLSALookupResult Resolver::fetchTLSA(const std::string& fqdn, int port)
     try {
         if (retval == 0) {
             jsResult.tlsa = parseResult(resolveResult);
+        } else {
+            jsResult.errorStr = ub_strerror(retval);
         }
     }
     catch (const ResolverException& e)
     {
         jsResult.errorStr = e.message();
+        jsResult.result = -1;
     }
     
-    ub_resolve_free(resolveResult);
-
     if (resolveResult->secure) {
     	jsResult.dnssecStatus = TLSAjs::SECURE;
     } else if (resolveResult->bogus) {
@@ -190,6 +191,8 @@ TLSALookupResult Resolver::fetchTLSA(const std::string& fqdn, int port)
     	jsResult.dnssecStatus = TLSAjs::INSECURE;
     }
     
+    ub_resolve_free(resolveResult);
+
     return jsResult;
 }
 

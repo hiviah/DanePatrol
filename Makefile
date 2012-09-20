@@ -107,5 +107,7 @@ distclean:
 	rm -rf $(PLUGIN_BUILD_DIR)
 	rm -f $(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.h $(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.cpp
 
+README.html: README.md
+	redcarpet $< > $@
 ## XPI build rules from separate makefile
 include Makefile.addon

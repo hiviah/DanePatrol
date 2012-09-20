@@ -5,6 +5,7 @@ libs
 .gdb_history
 #Komodo files
 *.kpf
+README.html
 
 #Qt Creator files
 DANE_patrol.config

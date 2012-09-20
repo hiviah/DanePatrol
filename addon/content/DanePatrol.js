@@ -382,52 +382,10 @@ var DanePatrol = {
 	this.certCheck(browser, certobj);
     },
 
-    fetchTLSA: function(host, port) {
-        var plugin = this.plugin();
-
-        var tlsaLookup = plugin.fetchTLSA(host, port);
-        this.debugMsg("host: " + host + ", port: " + port + ", result: " + 
-            tlsaLookup.result + ", rcode: " + tlsaLookup.rcode + ", TLSA RRs: " + 
-            tlsaLookup.tlsa.length + ", dnssecStatus: " + tlsaLookup.dnssecStatus);
-
-        return tlsaLookup;
-    },
-
-    daneSelector: function(cert, selector) {
-        if (selector == 0) return cert.getRawDER();
-
-        //nsIX509Cert has no way to get SPKI
-        return null;
-    },
-
-    daneAssociationMatches: function(cert, matchingType, selector, association) {
-        var data = this.daneSelector(cert, selector);
-
-        switch(matchingType) {
-            case 0:
-                return bin2hex(data) == association;
-            case 1:
-                //sha256
-                break;
-            case 2:
-                //sha512
-                break;
-        }
-
-        return false;
-    },
-
-    daneCheckUsage0: function(cert, tlsa) {
-        return false;
-    },
-
-    daneCheckUsage1: function(cert, tlsa) {
-        return false;
-    },
-
     daneCheck: function(hostPort, cert) {
             var host=hostPort, port=443;
 
+            // CertPatrol used 'host' variable for hostPort
             if (hostPort.indexOf(":") >= 0) {
                 hp = hostPort.split(":", 2);
                 host = hp[0];
@@ -439,7 +397,7 @@ var DanePatrol = {
             //     var cert = chain.queryElementAt(i, Components.interfaces.nsIX509Cert);
             // }
 
-            // I HATE JAVASCRIPT WITH THE PASSION OF THOUSAND SUNS
+            // I HATE JAVASCRIPT WITH BURNING PASSION OF THOUSAND SUNS
             var tlsaResult = this.fetchTLSA(host, port);
             if (tlsaResult.dnssecStatus == "secure") {
                 for (var i=0; i < tlsaResult.tlsa.length; i++) {

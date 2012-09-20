@@ -52,3 +52,5 @@ set(FBMAC_USE_INVALIDATINGCOREANIMATION 0)
 #set (FB_ATLREG_MACHINEWIDE 1)
 
 add_firebreath_library(log4cplus)
+add_boost_library(regex)
+

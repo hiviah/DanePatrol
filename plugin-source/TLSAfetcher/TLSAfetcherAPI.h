@@ -20,6 +20,7 @@
 #include "TLSAfetcher.h"
 #include "Resolver.h"
 
+/*! NPAPI plugin class visible from JS */
 class TLSAfetcherAPI : public FB::JSAPIAuto
 {
 public:
@@ -62,10 +63,31 @@ public:
      * @returns: variant map passable to JSAPI
      */
     FB::variant fetchTLSA(const std::string& fqdn, int port);
+
+    /*!
+     * Fetch TLSA for host and port. Check if TLS certificate chain matches the
+     * TLSA records.
+     * Exposed JSAPI method.
+     *
+     * @param fqdn: FQDN of host whose TLS certificates to query
+     *				(without _port._proto prefix)
+     * @param port: port of the TLS service
+     * @param certList: TLS certificate chain, EE cert first
+     * @param policy: bit-or of flags in TLSAjs::DANEPolicy
+     * @returns DANEMatch converted to JS variant
+     */
+    FB::variant checkDANE(const std::string& fqdn, int port,
+                          const std::vector<std::string>& certList,
+                          int policy);
     
     /*! Whether the resolver is usable. */
     bool canResolve() const
     	{return m_resolver.canResolve();}
+
+private:
+
+    /*! Simple filter for weeding out non-punycoded IDN and garbage */
+    static bool looksLikeFQDN(const std::string& fqdn);
 
 private:
 

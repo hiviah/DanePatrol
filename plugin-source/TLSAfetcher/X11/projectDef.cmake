@@ -47,6 +47,7 @@ set_property(TARGET crypto PROPERTY IMPORTED_LOCATION
 target_link_libraries(${PROJNAME}
     ${PLUGIN_INTERNAL_DEPS}
     DANECore
+    boost_regex
     unbound
     ldns
     ssl

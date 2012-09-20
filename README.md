@@ -22,3 +22,13 @@ compile the NPAPI plugin.
 To build the Firefox addon with NPAPI plugin, use just `make`. Resulting
 `DanePatrol.xpi` should appear at toplevel directory. For running
 tests, `make test-run`.
+
+NPAPI/JS plugin test
+-----------------------
+
+FireBreath generates `FireBreath/build/projects/TLSAfetcher/gen/FBControl.htm`
+page which can be used to test NPAPI-JS with Firebug before using it in addon
+code. E.g. in Firebug's console:
+
+    plugin().checkDANE("nlnetlabs.nl", 443, ["DERbody1", "DERbody2"], 1)
+

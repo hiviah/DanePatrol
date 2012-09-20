@@ -14,7 +14,7 @@ using namespace boost::assign;
 
 void expect(bool tested, const std::string& msg)
 {
-    if (!tested) throw(CertificateException(msg));
+    if (!tested) throw(DANEException(msg));
 }
 
 std::string readFile(const char *fname)
@@ -111,7 +111,7 @@ int main(int argc, char **argv)
         expect(!match.successful && !match.abort,
                "Failed test for unknown selector");
 
-        // test malformed certificate
+        // test malformed certificate - usable association, but no match => abort
         CertChain malformedChain;
         malformedChain += Certificate("EE malformed"),Certificate("CA malformed");
         DANEAlgorithm malformedChainAlgo(malformedChain);
@@ -119,7 +119,7 @@ int main(int argc, char **argv)
         lookup.tlsa[0].matchingType = TLSAjs::SHA256;
         lookup.tlsa[0].selector = TLSAjs::SPKI; // SPKI causes cert to be parsed
         match = malformedChainAlgo.check(lookup, TLSAjs::ALLOW_TYPE_01 | TLSAjs::ALLOW_TYPE_23);
-        expect(!match.successful && !match.abort,
+        expect(!match.successful && match.abort,
                "Failed test for malformed certificate");
 
     }

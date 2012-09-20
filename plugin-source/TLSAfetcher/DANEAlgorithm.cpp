@@ -187,7 +187,7 @@ DANEMatch DANEAlgorithm::check(const TLSALookupResult &lookup, int policy) const
     match.abort = false;
     
     // TODO: How would libunbound react if some TLSA were signed and others not?
-    // Guessing whole thing would be marked insecure, thus we can't filter just
+    // Guessing whole thing would be marked bogus, thus we can't filter just
     // TLSA RRs with correct signature.
     switch (lookup.dnssecStatus) {
         case TLSAjs::INSECURE:
@@ -201,6 +201,8 @@ DANEMatch DANEAlgorithm::check(const TLSALookupResult &lookup, int policy) const
     
     TLSAList filteredTLSA = policyFilter(lookup.tlsa, policy);
     TLSAList::const_iterator it;
+    // per section 4.1 of RFC 6698
+    size_t usableAssociationCount = filteredTLSA.size();
     
     for (it = filteredTLSA.begin() ; it != filteredTLSA.end(); it++) {
         try {
@@ -229,8 +231,14 @@ DANEMatch DANEAlgorithm::check(const TLSALookupResult &lookup, int policy) const
             }
         }
         catch (const DANEException& e) {
-            // unknown matching type or selector, skip
+            // unknown matching type or selector, skip as unusable
+            usableAssociationCount--;
         }
+    }
+    
+    // We had nonzero usable associations, none succeeded => hard fail 
+    if (usableAssociationCount > 0) {
+        match.abort = true;
     }
     
     return match;

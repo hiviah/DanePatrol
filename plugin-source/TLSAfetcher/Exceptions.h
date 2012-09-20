@@ -78,15 +78,15 @@ public:
 };
 
 /*! Exception thrown when DANE algorithm encounters unknown parameters. */
-class DANEException: public CertificateException
+class DANEException: public TLSAfetcherException
 {
 public:
     
     DANEException(const char* msg) throw():
-        CertificateException(msg)
+        TLSAfetcherException(msg)
         {}
     DANEException(const std::string& msg) throw():
-        CertificateException(msg)
+        TLSAfetcherException(msg)
         {}
 };
 

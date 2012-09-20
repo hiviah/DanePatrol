@@ -508,8 +508,8 @@ var DanePatrol = {
             tlsaMatched = daneMatch.successful && !daneMatch.abort;
             this.debugMsg("TLSA matched: " + tlsaMatched);
 
-            // remember that a new host had TLSA
-            if (tlsaMatched && !hadTLSA) {
+            // remember that a new host had TLSA (if not private browsing)
+            if (tlsaMatched && !hadTLSA && save) {
 		stmt = this.db.insertTLSAHost;
 		try {
 		    stmt.bindUTF8StringParameter( 0, certobj.host);

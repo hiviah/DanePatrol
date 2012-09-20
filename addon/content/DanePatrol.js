@@ -104,7 +104,7 @@ var DanePatrol = {
 		  "  issuerMd5Fingerprint VARCHAR, issuerSha1Fingerprint VARCHAR, "+
 		  "  cert BLOB, flags INT, stored INT)");
 
-		this.dbh.executeSimpleSQL("CREATE TABLE tlsa_hosts (host TEXT UNIQUE)");
+		this.dbh.executeSimpleSQL("CREATE TABLE tlsa_hosts (host VARCHAR UNIQUE)");
 	    }
 
 	    // Prepared statements
@@ -112,12 +112,14 @@ var DanePatrol = {
 		selectAll: this.dbh.createStatement("SELECT * FROM certificates"),
 		selectHost: this.dbh.createStatement("SELECT * FROM certificates WHERE host=?1"),
 		selectWild: this.dbh.createStatement("SELECT * FROM certificates WHERE md5Fingerprint=?12 AND sha1Fingerprint=?13"),
+		selectTLSAHost: this.dbh.createStatement("SELECT 1 FROM tlsa_hosts WHERE host=?1"),
 		insert: this.dbh.createStatement(
 		  "INSERT INTO certificates ("+
 		  "  host, commonName, organization, organizationalUnit, serialNumber, emailAddress, "+
 		  "  notBeforeGMT, notAfterGMT, issuerCommonName, issuerOrganization, issuerOrganizationUnit, "+
 		  "  md5Fingerprint, sha1Fingerprint, issuerMd5Fingerprint, issuerSha1Fingerprint, cert, flags, stored) "+
 		  "VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18)"),
+                insertTLSAHost: this.dbh.createStatement("INSERT OR IGNORE INTO tlsa_hosts VALUES( ?1 )"),
 		update: this.dbh.createStatement(
 		  "UPDATE certificates SET "+
 		  "  commonName=?2, organization=?3, organizationalUnit=?4, serialNumber=?5, emailAddress=?6, "+
@@ -125,6 +127,7 @@ var DanePatrol = {
 		  "  md5Fingerprint=?12, sha1Fingerprint=?13, issuerMd5Fingerprint=?14, issuerSha1Fingerprint=?15, cert=?16, flags=?17, stored=?18 "+
 		  "WHERE host=?1"),
 		delHost: this.dbh.createStatement("DELETE FROM certificates WHERE host=?1"),
+		delTLSAHost: this.dbh.createStatement("DELETE FROM tlsa_hosts WHERE host=?1"),
 		delSince: this.dbh.createStatement("DELETE FROM certificates WHERE stored >= ?18"),
 		delAll: this.dbh.createStatement("DELETE FROM certificates"),
 	    };
@@ -426,6 +429,7 @@ var DanePatrol = {
 	var Cc = Components.classes, Ci = Components.interfaces;
 	var now = certobj.now, old = certobj.old;
 	var found = false;
+        var hadTLSA = false;
 
 
 	var pbs = Cc["@mozilla.org/privatebrowsing;1"];
@@ -473,13 +477,51 @@ var DanePatrol = {
 	    stmt.reset();
 	}
 
+        // check if host is known to have had TLSA in past
+        stmt = this.db.selectTLSAHost;
+	try {
+	    stmt.bindUTF8StringParameter(0, certobj.host);
+	    if (stmt.executeStep()) {
+		hadTLSA = true;
+	    }
+	} catch(err) {
+	    this.warn("Could not check if host had TLSA before: ", err);
+	} finally {
+	    stmt.reset();
+	}
+
 	var wild = this.wildcardCertCheck(now.cert);
         var whenCheckTLSA = this.prefs.getCharPref("dane.check"); 
 
-        if (whenCheckTLSA == this.DANE_CHECK_ALWAYS) {
-            this.daneCheck(certobj.host, now.cert);
-        }
+        var tlsaMatched = false;
+        var doTLSAlookup = (
+            (whenCheckTLSA == this.DANE_CHECK_ALWAYS)                                   ||
+            (whenCheckTLSA == this.DANE_CHECK_NEW_OR_HAD_TLSA && (!found || hadTLSA))   ||
+            (whenCheckTLSA == this.DANE_CHECK_NEW && !found));
 
+        if (doTLSAlookup) {
+            var daneMatch = this.daneCheck(certobj.host, now.cert);
+            if (daneMatch.abort) {
+                // explode - TLSA had bogus signature
+                certobj.threat += 100;
+            }
+            tlsaMatched = daneMatch.successful && !daneMatch.abort;
+            this.debugMsg("TLSA matched: " + tlsaMatched);
+
+            // remember that a new host had TLSA
+            if (tlsaMatched && !hadTLSA) {
+		stmt = this.db.insertTLSAHost;
+		try {
+		    stmt.bindUTF8StringParameter( 0, certobj.host);
+		    stmt.execute();
+		} catch(err) {
+		    this.warn("Error trying to insert known TLSA host for "+
+		      certobj.host +": ", err);
+		} finally {
+		    stmt.reset();
+		}
+            }
+        }
 
 
 	// The certificate changed

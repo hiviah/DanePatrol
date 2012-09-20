@@ -362,11 +362,19 @@ var DanePatrol = {
 	var cert = st.serverCert;
 	if (!cert) return;
 
+        // for debugging - check on every load if preference is set
+        var debugCheckAlways = false;
+        try {
+            debugCheckAlways = this.prefs.getBoolPref("debug.check_always"); 
+        } catch (e) {
+            // not there
+        }
+
 	var obj = browser || win.top;
 	// store certs in the browser object so we can
 	// show only one notification per host for a browser tab
 	var key = [host, cert.md5Fingerprint, cert.sha1Fingerprint].join('|');
-	if (obj.__certs && obj.__certs[key] && cert.equals(obj.__certs[key]))
+	if (!debugCheckAlways && obj.__certs && obj.__certs[key] && cert.equals(obj.__certs[key]))
 	  return;
 	obj.__certs = obj.__certs || {};
 	obj.__certs[key] = cert;
@@ -384,42 +392,31 @@ var DanePatrol = {
 
     daneCheck: function(hostPort, cert) {
             var host=hostPort, port=443;
+            var derCerts = new Array();
 
-            // CertPatrol used 'host' variable for hostPort
             if (hostPort.indexOf(":") >= 0) {
                 hp = hostPort.split(":", 2);
                 host = hp[0];
                 port = hp[1];
             }
 
-            // var chain = cert.getChain();
-            // for (var i = chain.length - 1; i >= 0; i--) {
-            //     var cert = chain.queryElementAt(i, Components.interfaces.nsIX509Cert);
-            // }
-
             // I HATE JAVASCRIPT WITH BURNING PASSION OF THOUSAND SUNS
-            var tlsaResult = this.fetchTLSA(host, port);
-            if (tlsaResult.dnssecStatus == "secure") {
-                for (var i=0; i < tlsaResult.tlsa.length; i++) {
-                    var tlsa = tlsaResult.tlsa[i];
-                    this.debugMsg("TLSA: usage: " + tlsa.certUsage + ", matchingType: " + tlsa.matchingType + ", selector: " + tlsa.selector);
-
-                    switch(tlsa.certUsage) {
-                        case 0:
-                            if (this.daneCheckUsage0(cert, tlsa)) return true;
-                            break;
-                        case 1:
-                            if (this.daneCheckUsage1(cert, tlsa)) return true;
-                            break;
-                        case 2:
-                            break;
-                        case 3:
-                            break
-                    }
-                }
+            var chain = cert.getChain();
+            for (var i = 0; i < chain.length; i++) {
+                var cert = chain.queryElementAt(i, Components.interfaces.nsIX509Cert);
+                var derData = cert.getRawDER({});
+                // derData is Blob, can't pass it as Blob, can't pass it as
+                // string because of Unicode.
+                // Fairly sure the next line tops ugliness of visualbasic
+                var derHex = derData.map(function(x) {return ("0"+x.toString(16)).substr(-2);}).join("");
+                derCerts.push(derHex);
             }
 
-            return false;
+            var policy = DANEPolicy.ALLOW_TYPE_01 | DANEPolicy.ALLOW_TYPE_23;
+            var daneMatch = this.plugin().checkDANE(host, port, derCerts, policy);
+            this.debugMsg("DANE check: successful " + daneMatch.successful + ", abort " + daneMatch.abort);
+
+            return daneMatch;
     },
 
     // Certificate check

@@ -91,9 +91,10 @@ FB::variant TLSAfetcherAPI::checkDANE(const std::string &fqdn, int port,
 
         lookup = m_resolver.fetchTLSA(fqdn, port);
 
-        // convert DER cert strings into CertChain
+        // convert hex DER cert strings into CertChain
         std::transform(certList.begin(), certList.end(), std::back_inserter(chain),
-                       bind(constructor<Certificate>(), ::boost::lambda::_1));
+                       bind(constructor<Certificate>(),
+                            bind(hex2bin, ::boost::lambda::_1)));
 
         DANEAlgorithm algo(chain);
         match = algo.check(lookup, policy);

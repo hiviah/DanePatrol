@@ -97,6 +97,31 @@ int main(int argc, char **argv)
         expect(match.successful && !match.abort && match.derCert == caCertRoot,
                "TLSA association test for cert usage 2 failed");
 
+        // test unknown matching type
+        lookup.tlsa[0].matchingType = TLSAjs::MatchingType(42);
+        lookup.tlsa[0].selector = TLSAjs::SPKI;
+        match = algo.check(lookup, TLSAjs::ALLOW_TYPE_01 | TLSAjs::ALLOW_TYPE_23);
+        expect(!match.successful && !match.abort,
+               "Failed test for unknown matching type");
+
+        // test unknown selector
+        lookup.tlsa[0].matchingType = TLSAjs::SHA256;
+        lookup.tlsa[0].selector = TLSAjs::Selector(42);
+        match = algo.check(lookup, TLSAjs::ALLOW_TYPE_01 | TLSAjs::ALLOW_TYPE_23);
+        expect(!match.successful && !match.abort,
+               "Failed test for unknown selector");
+
+        // test malformed certificate
+        CertChain malformedChain;
+        malformedChain += Certificate("EE malformed"),Certificate("CA malformed");
+        DANEAlgorithm malformedChainAlgo(malformedChain);
+
+        lookup.tlsa[0].matchingType = TLSAjs::SHA256;
+        lookup.tlsa[0].selector = TLSAjs::SPKI; // SPKI causes cert to be parsed
+        match = malformedChainAlgo.check(lookup, TLSAjs::ALLOW_TYPE_01 | TLSAjs::ALLOW_TYPE_23);
+        expect(!match.successful && !match.abort,
+               "Failed test for malformed certificate");
+
     }
     catch (const std::exception& e) {
         cout << e.what() << endl;

@@ -72,7 +72,7 @@ public:
      * @param fqdn: FQDN of host whose TLS certificates to query
      *				(without _port._proto prefix)
      * @param port: port of the TLS service
-     * @param certList: TLS certificate chain, EE cert first
+     * @param certList: TLS certificate chain as list of strings, EE cert first
      * @param policy: bit-or of flags in TLSAjs::DANEPolicy
      * @returns DANEMatch converted to JS variant
      */

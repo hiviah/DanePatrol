@@ -238,8 +238,13 @@ DANEMatch DANEAlgorithm::check(const TLSALookupResult &lookup, int policy) const
 
 int DANEAlgorithm::eeCertMatch(const ResolvedTLSA &tlsa) const
 {
-    if (m_certChain.front().matchingData(tlsa.matchingType, tlsa.selector) == tlsa.association) {
-        return 0; //index 0 - the EE cert - matched
+    try {
+        if (m_certChain.front().matchingData(tlsa.matchingType, tlsa.selector) == tlsa.association) {
+            return 0; //index 0 - the EE cert - matched
+        }
+    }
+    catch (const CertificateException& ) {
+        return -1; // cert parsing failed
     }
     
     return -1;
@@ -248,8 +253,13 @@ int DANEAlgorithm::eeCertMatch(const ResolvedTLSA &tlsa) const
 int DANEAlgorithm::caCertMatch(const ResolvedTLSA &tlsa) const
 {
     for (int i = 1; i < m_certChain.size(); i++) {
-        if (m_certChain[i].matchingData(tlsa.matchingType, tlsa.selector) == tlsa.association) {
-            return i;
+        try {
+            if (m_certChain[i].matchingData(tlsa.matchingType, tlsa.selector) == tlsa.association) {
+                return i;
+            }
+        }
+        catch (const CertificateException& ) {
+            continue; // cert parsing failed
         }
     }
     

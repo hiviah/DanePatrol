@@ -98,12 +98,14 @@ public:
     
     /*! Check whether given TLSA matches EE cert of the chain.
      *
+     * @throws DANEException: if selector or matching type is unknown
      * @returns index of cert in chain that matched (0) or -1 if no match
      */ 
     int eeCertMatch(const ResolvedTLSA& tlsa) const;
 
     /*! Check whether given TLSA matches CA cert of the chain.
      *
+     * @throws DANEException: if selector or matching type is unknown
      * @returns index of cert in chain that matched [1..n] or -1 if no match
      */ 
     int caCertMatch(const ResolvedTLSA& tlsa) const;

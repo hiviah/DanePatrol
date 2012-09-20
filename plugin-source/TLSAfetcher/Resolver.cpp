@@ -48,12 +48,12 @@ std::string hex2bin(const std::string& val)
     std::string res;
     for(size_t i=0; i < val.size(); i+=2)
     {
-	std::stringstream s;
-	int charVal;
-	s << val.substr(i, 2) << std::hex;
-	s >> charVal;
+        std::stringstream s;
+        int charVal;
+        s << val.substr(i, 2) << std::hex;
+        s >> charVal;
 
-    	res.append(1, char(charVal));
+        res.append(1, char(charVal));
     }
 
     return res;

@@ -502,8 +502,8 @@ var DanePatrol = {
         if (doTLSAlookup) {
             var daneMatch = this.daneCheck(certobj.host, now.cert);
             if (daneMatch.abort) {
-                // explode - TLSA had bogus signature
-                certobj.threat += 100;
+                // explode - TLSA had bogus signature or cert didn't match any TLSA
+                certobj.threat += 3;
             }
             tlsaMatched = daneMatch.successful && !daneMatch.abort;
             this.debugMsg("TLSA matched: " + tlsaMatched);
@@ -527,12 +527,12 @@ var DanePatrol = {
 	// The certificate changed
 	if (found && !now.cert.equals(old.cert)) {
 	    // has the certificated hostname changed?
-	    if (!wild && now.commonName != old.commonName) {
+	    if (!wild && now.commonName != old.commonName && !tlsaMatched) {
 		certobj.warn.commonName = true;
 		certobj.threat += 2;
 	    }
 
-	    if (!wild && !(certobj.flags & this.CHECK_ISSUER_ONLY)) {
+	    if (!wild && !(certobj.flags & this.CHECK_ISSUER_ONLY) && !tlsaMatched) {
 		// try to make some sense out of the certificate changes
 		var natd = this.timedelta(old.notAfter);
 		// certificate has expired

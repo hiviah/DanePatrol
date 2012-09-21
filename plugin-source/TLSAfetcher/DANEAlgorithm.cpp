@@ -194,6 +194,7 @@ DANEMatch DANEAlgorithm::check(const TLSALookupResult &lookup, int policy) const
             return match;
         case TLSAjs::BOGUS:
             match.abort = true;
+            match.errorStr = "TLSA query returned with bogus DNSSEC signature";
             return match;
         case TLSAjs::SECURE:
             break; // continue checking
@@ -224,6 +225,7 @@ DANEMatch DANEAlgorithm::check(const TLSALookupResult &lookup, int policy) const
             // if we have a match, copy cert and TLSA into the result
             if (idx >= 0) {
                 match.successful = true;
+                match.abort = false;
                 match.derCert = m_certChain[idx].asDer();
                 match.pemCert = m_certChain[idx].asPem();
                 match.tlsa = *it;
@@ -239,6 +241,9 @@ DANEMatch DANEAlgorithm::check(const TLSALookupResult &lookup, int policy) const
     // We had nonzero usable associations, none succeeded => hard fail 
     if (usableAssociationCount > 0) {
         match.abort = true;
+        match.errorStr = "None of nonzero usable TLSA associations matched.";
+    } else {
+        match.errorStr = "No usable TLSA associations.";
     }
     
     return match;

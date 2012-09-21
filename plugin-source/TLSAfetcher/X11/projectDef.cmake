@@ -52,4 +52,9 @@ target_link_libraries(${PROJNAME}
     ldns
     ssl
     crypto
+
+    #hardening linker flags
+    -Wl,-z=relro -Wl,-z=now
     )
+
+SET (CMAKE_CXX_FLAGS "-fPIC -fPIE -D_FORTIFY_SOURCE=2 -fstack-protector-all -Wstack-protector -fwrapv --param ssp-buffer-size=1")

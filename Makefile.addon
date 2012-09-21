@@ -9,7 +9,6 @@ ADDON_JS_SOURCES := \
     $(ADDON_DIR)/content/sanitize.js \
     $(ADDON_DIR)/content/certManager.js \
     $(ADDON_DIR)/content/DanePatrol.js \
-    $(ADDON_DIR)/content/sha_nice.js \
     $(ADDON_DIR)/content/treeview.js \
     $(ADDON_DIR)/defaults/preferences/DanePatrol.js \
     #end of ADDON_JS_SOURCES

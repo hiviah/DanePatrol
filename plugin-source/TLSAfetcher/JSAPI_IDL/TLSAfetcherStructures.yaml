@@ -59,6 +59,7 @@ TLSALookupResult:
 DANEMatch:
     successful: bool #other fields are undefined unless successful==true
     abort: bool #true means that known bogus TLSA reply was on the wire
+    errorStr: string #error message for abort or unsuccessful match
     derCert: string
     pemCert: string
     tlsa: ResolvedTLSA

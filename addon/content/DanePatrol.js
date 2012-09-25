@@ -110,7 +110,8 @@ var DanePatrol = {
 	    // Prepared statements
 	    this.db = {
 		selectAll: this.dbh.createStatement("SELECT * FROM certificates"),
-		selectHost: this.dbh.createStatement("SELECT * FROM certificates WHERE host=?1"),
+		selectHost: this.dbh.createStatement("SELECT * FROM certificates WHERE host=?1 ORDER BY stored DESC LIMIT 1"),
+		selectHostSHA: this.dbh.createStatement("SELECT * FROM certificates WHERE host=?1 AND sha1Fingerprint=?13 LIMIT 1"),
 		selectWild: this.dbh.createStatement("SELECT * FROM certificates WHERE md5Fingerprint=?12 AND sha1Fingerprint=?13"),
 		selectTLSAHost: this.dbh.createStatement("SELECT 1 FROM tlsa_hosts WHERE host=?1"),
 		insert: this.dbh.createStatement(
@@ -443,8 +444,23 @@ var DanePatrol = {
 	      save = this.prefs.getBoolPref("privatebrowsing.save");
 	} catch (err) {}
 
+        // do we have the exact cert in storage?
+        var stmt = this.db.selectHostSHA;
+        var foundExact = false;
+	try {
+	    stmt.bindUTF8StringParameter(0, certobj.host);
+	    stmt.bindUTF8StringParameter(12, certobj.sha1Fingerprint);
+	    if (stmt.executeStep()) {
+		foundExact = true;
+	    }
+	} catch(err) {
+	    this.warn("Error trying to check certificate: ", err);
+	} finally {
+	    stmt.reset();
+	}
+
 	// Get certificate from storage
-	var stmt = this.db.selectHost;
+	stmt = this.db.selectHost;
 	try {
 	    stmt.bindUTF8StringParameter(0, certobj.host);
 	    if (stmt.executeStep()) {
@@ -503,7 +519,9 @@ var DanePatrol = {
             var daneMatch = this.daneCheck(certobj.host, now.cert);
             if (daneMatch.abort) {
                 // explode - TLSA had bogus signature or cert didn't match any TLSA
-                certobj.threat += 3;
+                this.warn("Certificate had bad TLSA record: " + daneMatch.errorStr);
+                return;
+                // certobj.threat += 3;
             }
             tlsaMatched = daneMatch.successful && !daneMatch.abort;
             this.debugMsg("TLSA matched: " + tlsaMatched);
@@ -524,8 +542,8 @@ var DanePatrol = {
         }
 
 
-	// The certificate changed
-	if (found && !now.cert.equals(old.cert)) {
+	// The certificate changed - found by CN, but not by SHA1
+	if (found && !foundExact) {
 	    // has the certificated hostname changed?
 	    if (!wild && now.commonName != old.commonName && !tlsaMatched) {
 		certobj.warn.commonName = true;

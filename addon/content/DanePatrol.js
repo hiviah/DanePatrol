@@ -449,7 +449,7 @@ var DanePatrol = {
         var foundExact = false;
 	try {
 	    stmt.bindUTF8StringParameter(0, certobj.host);
-	    stmt.bindUTF8StringParameter(12, certobj.sha1Fingerprint);
+	    stmt.bindUTF8StringParameter(12, certobj.now.sha1Fingerprint);
 	    if (stmt.executeStep()) {
 		foundExact = true;
 	    }

@@ -691,7 +691,10 @@ var DanePatrol = {
 
     // accept changed cert
     saveCert: function(certobj) {
-	var stmt = this.db.update;
+        // Multiple certificate support - we expect to be called if the cert by 
+        // fingerprint was not in DB. Store new cert. There may be multiple for host.
+	var stmt = this.db.insert;
+	// var stmt = this.db.update;
 	var cert = certobj.now.cert;
 	try {
 	    stmt.bindUTF8StringParameter( 0, certobj.host);

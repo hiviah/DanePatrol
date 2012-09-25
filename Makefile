@@ -84,10 +84,7 @@ $(PLUGIN_BUILD_DIR): $(PLUGIN_SOURCE_DIR)/CMakeLists.txt $(PLUGIN_SOURCE_DIR)/Pl
 		make prepmake
 
 # auto-generated cpp and h for JSAPI structures passed between JS <-> C++
-$(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.cpp: $(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.yaml $(PLUGIN_IDL_COMPILER)
-	(cd "$(PLUGIN_JSAPI_IDL_DIR)" && python $(PLUGIN_IDL_COMPILER) $<)
-
-$(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.h: $(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.yaml $(PLUGIN_IDL_COMPILER)
+$(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.cpp $(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.h: $(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.yaml $(PLUGIN_IDL_COMPILER)
 	(cd "$(PLUGIN_JSAPI_IDL_DIR)" && python $(PLUGIN_IDL_COMPILER) $<)
 
 ## tests

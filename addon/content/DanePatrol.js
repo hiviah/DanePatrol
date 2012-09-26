@@ -423,6 +423,44 @@ var DanePatrol = {
             return daneMatch;
     },
 
+    // Host is recorded in DB to have had TLSA record before
+    // @param host: host[:port] string
+    hostHadTLSA: function(host) {
+        var stmt = this.db.selectTLSAHost;
+	try {
+	    stmt.bindUTF8StringParameter(0, host);
+	    if (stmt.executeStep()) {
+		return true;
+	    }
+	} catch(err) {
+	    this.warn("Could not check if host had TLSA before: ", err);
+	} finally {
+	    stmt.reset();
+	}
+        
+        return false;
+    },
+
+    // Returns true iff we have record in DB with given SHA1 for given host
+    // @param host: host[:port] string
+    // @param sha1Fingerprint: SHA1 fingerprint in uppercase with colon-delimited bytes
+    sha1CertMatch: function(host, sha1Fingerprint) {
+        var stmt = this.db.selectHostSHA;
+	try {
+	    stmt.bindUTF8StringParameter(0, host);
+	    stmt.bindUTF8StringParameter(12, sha1Fingerprint);
+	    if (stmt.executeStep()) {
+		return true;
+	    }
+	} catch(err) {
+	    this.warn("Error trying to check certificate: ", err);
+	} finally {
+	    stmt.reset();
+	}
+
+        return false;
+    },
+
     // Certificate check
     certCheck: function(browser, certobj) {
         if (this.isIgnoredHost(certobj.host)) return;
@@ -430,8 +468,7 @@ var DanePatrol = {
 	var Cc = Components.classes, Ci = Components.interfaces;
 	var now = certobj.now, old = certobj.old;
 	var found = false;
-        var hadTLSA = false;
-
+        var stmt;
 
 	var pbs = Cc["@mozilla.org/privatebrowsing;1"];
 	if (pbs) {
@@ -445,19 +482,7 @@ var DanePatrol = {
 	} catch (err) {}
 
         // do we have the exact cert in storage?
-        var stmt = this.db.selectHostSHA;
-        var foundExact = false;
-	try {
-	    stmt.bindUTF8StringParameter(0, certobj.host);
-	    stmt.bindUTF8StringParameter(12, certobj.now.sha1Fingerprint);
-	    if (stmt.executeStep()) {
-		foundExact = true;
-	    }
-	} catch(err) {
-	    this.warn("Error trying to check certificate: ", err);
-	} finally {
-	    stmt.reset();
-	}
+        var foundExact = this.sha1CertMatch(certobj.host, certobj.now.sha1Fingerprint);
 
 	// Get certificate from storage
 	stmt = this.db.selectHost;
@@ -494,17 +519,7 @@ var DanePatrol = {
 	}
 
         // check if host is known to have had TLSA in past
-        stmt = this.db.selectTLSAHost;
-	try {
-	    stmt.bindUTF8StringParameter(0, certobj.host);
-	    if (stmt.executeStep()) {
-		hadTLSA = true;
-	    }
-	} catch(err) {
-	    this.warn("Could not check if host had TLSA before: ", err);
-	} finally {
-	    stmt.reset();
-	}
+        var hadTLSA = this.hostHadTLSA(certobj.host);
 
 	var wild = this.wildcardCertCheck(now.cert);
         var whenCheckTLSA = this.prefs.getCharPref("dane.check"); 

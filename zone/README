@@ -2,11 +2,11 @@ Here are some generated CA certs, server certs and zone with TLSA records for
 testing purposes. Certificates are to be used in a server like Apache or nginx
 (don't forget to include the CA cert in the chain).
 
-All passwords for the test keys are: 1234
+All passwords for the test SSL/TLS keys are: 1234
 
 To generate an additional certificate, use:
 
-1. openssl-1.0.1c/misc/CA.pl -newreq
+1. ../libs/openssl/ssl/misc/CA.pl -newreq
 2. rename generated newkey.pem and newreq.pem to something like server3.csr and server3.key
 3. openssl ca -config openssl.cnf -out server3.crt -infiles server3.csr
 
@@ -45,3 +45,18 @@ There's also unbound_test.py that uses unbound's python binding which can be
 used to test that the TLSA record in the signed zone resolves securely. The
 "keys.tlsa-test" file is used as trust anchor list, it's preloaded with the
 generated DS records.
+
+
+Using the local BIND in plugin
+
+To make the NPAPI plugin query local BIND, add it as forwarder with the DS
+records as trust anchors. In plugin-source/TLSAfetcher/Resolver.cpp, add
+following in Resolver::initializeResolver(), under the ub_ctx_add_ta() call:
+
+    ub_ctx_add_ta(m_resolver.get(), "tlsa-test.              IN DS 28858 5 1 A69CDD836A86B709A3D7C37CFD2DC96126F0429B");
+    ub_ctx_add_ta(m_resolver.get(), "tlsa-test.              IN DS 28858 5 2 6836A84EAED3BBFC8FD4B51F85FF6D4004267E2D65808BBC00A6E3DE A9246998");
+    ub_ctx_set_fwd(m_resolver.get(), "127.0.0.1");
+
+A bit hackish, but quick and works.
+
+

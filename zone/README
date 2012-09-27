@@ -22,3 +22,26 @@ dnssec-signzone tlsa-test
 The generated signed zone 'tlsa-test.signed' is then added to locally running
 unbound/bind so that you can test the zone. See options 'local-zone' and
 'local-data' in unbound.conf.
+
+
+Using the zone in BIND on localhost:
+
+1. Put the generated tlsa-test.signed in /var/named/ (or wherever the bind's
+   configuration file points)
+2. Add the generated zone to /etc/named.conf:
+
+    listen-on port 53 { 127.0.0.1; };
+
+    zone "tlsa-test" IN {
+      type master;
+      file "tlsa-test.signed";
+      allow-update { none; };
+    };
+
+3. (Re)start bind
+4. Set "nameserver 127.0.0.1" in /etc/resolv.conf (or setup NetworkManager, etc.)
+
+There's also unbound_test.py that uses unbound's python binding which can be
+used to test that the TLSA record in the signed zone resolves securely. The
+"keys.tlsa-test" file is used as trust anchor list, it's preloaded with the
+generated DS records.

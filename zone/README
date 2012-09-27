@@ -1,0 +1,24 @@
+Here are some generated CA certs, server certs and zone with TLSA records for
+testing purposes. Certificates are to be used in a server like Apache or nginx
+(don't forget to include the CA cert in the chain).
+
+All passwords for the test keys are: 1234
+
+To generate an additional certificate, use:
+
+1. openssl-1.0.1c/misc/CA.pl -newreq
+2. rename generated newkey.pem and newreq.pem to something like server3.csr and server3.key
+3. openssl ca -config openssl.cnf -out server3.crt -infiles server3.csr
+
+For generating the TLSA records, use https://github.com/pieterlexis/swede, e.g.:
+
+./swede --insecure create --usage 0 --selector 1 --mtype 2 localhost
+
+Add the generated TLSA records to tlsa-test file (that's the zone file for a
+mock domain 'tlsa-test'). Resign zone with (you need 'bind' installed):
+
+dnssec-signzone tlsa-test
+
+The generated signed zone 'tlsa-test.signed' is then added to locally running
+unbound/bind so that you can test the zone. See options 'local-zone' and
+'local-data' in unbound.conf.

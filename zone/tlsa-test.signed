@@ -1,0 +1,119 @@
+; File written on Thu Sep 27 14:32:11 2012
+; dnssec_signzone version 9.8.2rc1-RedHat-9.8.2-0.10.rc1.el6_3.3
+tlsa-test.		3600	IN SOA	tlsa-test. hostmaster.tlsa-test. (
+					2012091419 ; serial
+					10800      ; refresh (3 hours)
+					3600       ; retry (1 hour)
+					1209600    ; expire (2 weeks)
+					7200       ; minimum (2 hours)
+					)
+			3600	RRSIG	SOA 5 1 3600 20121027113210 (
+					20120927113210 50313 tlsa-test.
+					nvLjdq3/AO+sXR9YC4N0g2n/mbg+XxEuUdGV
+					SPKcSTj7daG5B4070hy4561QXxroEaF1ZckM
+					q5h/ogWM648k+6sOcySpcI1igCNomnC/QuH+
+					rXEjVxCugQZ2eANQF+5l6PSTBar0jxAlmHSb
+					PouTxe8BdjUi79M6w3jbHIlk2Wc= )
+			3600	NS	tlsa-test.
+			3600	RRSIG	NS 5 1 3600 20121027113210 (
+					20120927113210 50313 tlsa-test.
+					a/nYUOdvtHQ+TWlVkItr99yTeHgaXEFjGnaI
+					TBYkFgsT4RD6RPDxW9VGkA0FCtvXEcebTVcC
+					7jY4KVpgs0T4hJ7y9tqeNnYQNI2NArDSKPmu
+					7qZEJZjSfch18M5yH2shHBBu6sxKt0j+8zB7
+					8nTGquTELdberGZc3xEtarXSAII= )
+			3600	A	127.0.0.1
+			3600	RRSIG	A 5 1 3600 20121027113210 (
+					20120927113210 50313 tlsa-test.
+					ThQI1qHNVdz3+o/WSe2z9IvCqFqiA8Hckr1Q
+					l/Ro0pcDqiWygRplyLpaFIaUO9PmHU/OMewn
+					RlIgrc2VJjrKqi6Tu/suQ1GB0bT4A87QzWQZ
+					rh0U8fwYX7G1PycPnSqlYS14mDVQuaf+Oge+
+					KNq+VuO8XbZhm0qOWmV4qy2sWYI= )
+			3600	AAAA	::1
+			3600	RRSIG	AAAA 5 1 3600 20121027113210 (
+					20120927113210 50313 tlsa-test.
+					jNlUbn9i6oL86d7JwnCULotdNdl21TnNiprh
+					Bo49LyOcGq9FjzFNX/v+vSm4lCWoKm4su7J4
+					ZPxNgexKA4wam4KZqqsG+k+68wM+KQIymDYY
+					/EcPr09vj6fnkpiqf+DIiwHaT9I/OrrpZ2zB
+					r0jnhH5zAMGCBrancUo9WrRmqLw= )
+			7200	NSEC	_443._tcp.tlsa-test. A NS SOA AAAA RRSIG NSEC DNSKEY
+			7200	RRSIG	NSEC 5 1 7200 20121027113210 (
+					20120927113210 50313 tlsa-test.
+					lqFpjc44lGAtKkA90u6NA12f4DTlEJ/WzdtP
+					GzJuCUWURXeZw5fvWuq7IQYlOnQQAkIxbd00
+					E54pqrWRqfcrvRhVS+vQEBD831rYqDJeHfle
+					q56KmPbhUCLgsHU2MhJ2c1+8GbOo98dFNeVH
+					TWx380H3uYTO7AXq18C06b2T8rw= )
+			3600	DNSKEY	256 3 5 (
+					AwEAAaHFmv/E7Et0yGGGa3E1q4GCOFsTBLR9
+					uGLGeeM3dwv9Z+9on/fKbVkSYVmyzUhpwnpC
+					0P2k2WIvDY61lExiPwVsNwv6ARk6V+kLtynE
+					9Kaq7nosfeEu7b2STLJGVhGijsQWdQ9o9L0K
+					hCSaD6aQtCyxB+BZm68ig4RPm7YjxrlV
+					) ; key id = 50313
+			3600	DNSKEY	257 3 5 (
+					AwEAAaFrgjN+oUKqvMKO47FiqM09LveRWjpW
+					ITZ6o7r14isXnUrN+GB/Ofsn0Ye+KL/h+uEj
+					APsBCucqKWaa7HhVdtGjAxB6pl7wQZIHjO4d
+					6up2HIQICtZsafi4XYlboRKKGb83kH1TJOsT
+					Q39xpNBmL5dMcHZ1ZhSMoOLgZagE/jdR
+					) ; key id = 28858
+			3600	RRSIG	DNSKEY 5 1 3600 20121027113210 (
+					20120927113210 50313 tlsa-test.
+					ZgjGchSd/5DWIK99wAV5uScdxhvOYQyovvNB
+					aDG08nz4KE2lKeOUzS/t42ZKY6uUblMwiLDI
+					/PHpW2Tm/EE2Gvbp+9+rf3Z8dzgYXVXUUOnk
+					FO2D8bu8DhuREsThpcjCz9NLI0KEBuv6yK51
+					Om/O4tRqkAkvQ0+wk3HSGhRqZTk= )
+			3600	RRSIG	DNSKEY 5 1 3600 20121027113210 (
+					20120927113210 28858 tlsa-test.
+					c9WDNTq5tXH3/mWfNveX9LLIw0ZUNB2nVy/z
+					h9tnB4lsB3YnXuqVDcK5XfJbW3xthvpHv4Lq
+					EbRggrZejREkwiNd2tPXlv+En6bEvuinNio9
+					k3j8A7owlNyrA5f3sFX4IlbunYxl4AYYqciP
+					cOkXRuauog3pjM+fAFIeDhaRmr8= )
+_443._tcp.tlsa-test.	7200	IN NSEC	www.tlsa-test. RRSIG NSEC TYPE52
+			7200	RRSIG	NSEC 5 3 7200 20121027113210 (
+					20120927113210 50313 tlsa-test.
+					imv5u3HsUKj03tZm+bQ3hbRstuF5PFu9rOpQ
+					Pj4epuqqmODFKkDPvoKFi82DXG5aLw5VLiln
+					qeoSHBxJ5V9c1yxGMlJBcPMo7101B5Z1UJMj
+					Xr06E36Tg+9ZLat0uBKLDWsA8wLTj7LPUnHu
+					Sa97lavU7yFN8/zTw2cC3wkGaak= )
+			10	TYPE52	\# 67 ( 0101025CA20412A46E19DF5A2A302550FF4A
+					277DD82165040A550A5A9CDC86F3B3AD3163
+					BD2133B3DD06991EC0FABF0853564545B6BC
+					93DBB2951DB5A533DAB281ED2D )
+			10	RRSIG	TYPE52 5 3 10 20121027113210 (
+					20120927113210 50313 tlsa-test.
+					EQoVSLCvHb+zX1MdHp9GQE4qPHu13LpaVIVa
+					57lfho5acKDh9+EkKnBQbiezkHmU3qiP/rmX
+					AKgQ788hDhAlntVWbqkYIm9hb8EpEPM1vqCa
+					e7f9SJR7sA7dbWuqmB9fAP89KAuxRrjIKHuP
+					IErCnEwG2rJM2CDXhbe9J+L1eTk= )
+www.tlsa-test.		3600	IN A	127.0.0.1
+			3600	RRSIG	A 5 2 3600 20121027113210 (
+					20120927113210 50313 tlsa-test.
+					K04Vy35fYFYRTPBe6Ucnnsamjhek5wSSwnMf
+					ueA+AWVHlU2Rr+bGvrFBXJej9yZ18iplMhZu
+					H9wa84iiS0ZKhuc5BFKQwXu/BfAL4cCq+m/7
+					uycw0cyJF2jjyt/JoiTJaCVOrIJxgS7foKzq
+					yunwoF2upxW6x60HrMDbRNDGvS8= )
+			3600	AAAA	::1
+			3600	RRSIG	AAAA 5 2 3600 20121027113210 (
+					20120927113210 50313 tlsa-test.
+					oS9e3wY6X8YvCyEw3MfjaFzyAn16sewgRrae
+					Q5fQ0/xRtjKIzBe8kgX3aEvAShleEInS5e9H
+					nMsxHCTPJp4umKi6TtXkrOYDUci7w2Yjd1cf
+					Vv+7t7ilzjZqi/OQhd1rzz/2xKNXsnUDsXNA
+					o8Edaaa4x9XISw5U73NpOO8CpX0= )
+			7200	NSEC	tlsa-test. A AAAA RRSIG NSEC
+			7200	RRSIG	NSEC 5 2 7200 20121027113210 (
+					20120927113210 50313 tlsa-test.
+					KeJ8vJQOc2pr0HxVR+tsM/G4PfzR0b3LiL3/
+					+/HeQHB4gF23urv6LxBlenTq4lDoDQFrcDSy
+					AoFAQzj2Npw3LnyKa/1K3qelusPFI53lvVcB
+					yyZNXFVDbY3zI4TH8pN+AbjSTqLLs31D9yno
+					T+KvV8ZUWeN9YsIBw/rhWIYk6bc= )

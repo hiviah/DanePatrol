@@ -1,0 +1,103 @@
+Certificate:
+    Data:
+        Version: 3 (0x2)
+        Serial Number: 4371 (0x1113)
+        Signature Algorithm: sha256WithRSAEncryption
+        Issuer: C=CZ, O=TLSA Test CA, CN=tlsa-test
+        Validity
+            Not Before: Sep 27 11:41:07 2012 GMT
+            Not After : Sep 27 11:41:07 2013 GMT
+        Subject: C=CZ, O=TLSA Test Server2, CN=tlsa-test
+        Subject Public Key Info:
+            Public Key Algorithm: rsaEncryption
+                Public-Key: (2048 bit)
+                Modulus:
+                    00:cb:65:cf:e0:80:cd:14:bd:27:02:88:c4:0a:b4:
+                    a6:f6:15:f6:c0:d5:be:d5:d1:57:85:3e:1d:ed:5b:
+                    1a:cb:f7:e9:5e:f3:41:c7:1f:e7:47:8d:ba:9e:02:
+                    27:cf:ec:bd:46:00:02:19:70:1d:4b:81:1b:ec:08:
+                    e4:b9:59:19:07:35:17:e6:86:29:f9:10:49:52:4a:
+                    84:b7:5a:5a:1e:d7:6e:fd:3c:c4:68:98:15:e8:a5:
+                    a4:92:e5:ec:eb:7a:f2:14:18:2f:16:9a:b0:0d:47:
+                    29:27:45:59:f5:e1:80:1f:10:3d:40:5f:ba:fb:f1:
+                    34:f5:54:30:e5:a2:bf:61:0b:35:8a:30:76:6f:0a:
+                    f4:46:c3:ba:76:6f:e6:25:e5:7d:ff:f0:3d:1f:03:
+                    ca:d5:09:37:30:14:30:b8:44:38:32:8a:3e:54:15:
+                    d2:9b:a3:2c:20:c3:ca:87:c8:4c:57:09:91:fe:ac:
+                    90:4c:6a:13:83:1c:7e:7a:ff:d2:66:4e:36:f6:45:
+                    0e:2c:b3:44:5a:ef:84:b7:d7:0a:f8:22:b4:1e:e8:
+                    ed:20:bd:85:95:10:a0:d0:30:db:c0:d9:29:4d:1a:
+                    22:fd:32:4f:db:0f:20:38:b0:aa:4f:5a:ff:7b:db:
+                    49:1b:08:3c:5c:53:ea:9c:b7:eb:41:52:f8:58:d5:
+                    91:63
+                Exponent: 65537 (0x10001)
+        X509v3 extensions:
+            X509v3 Basic Constraints: 
+                CA:FALSE
+            Netscape Comment: 
+                OpenSSL Generated Certificate
+            X509v3 Subject Key Identifier: 
+                06:F1:50:95:B2:ED:5A:60:B3:AD:3F:90:3F:BC:F8:1A:F1:39:13:D0
+            X509v3 Authority Key Identifier: 
+                keyid:41:5A:8B:B6:EE:66:C1:46:BC:CB:54:C2:4C:56:84:E1:89:13:29:4A
+                DirName:/C=CZ/O=TLSA Test CA/CN=tlsa-test
+                serial:FE:02:13:52:A7:D3:46:21
+
+    Signature Algorithm: sha256WithRSAEncryption
+        30:db:93:64:c3:39:55:52:9a:48:59:72:f8:a5:aa:6d:1c:1e:
+        63:7e:a2:7d:3c:a8:45:d0:5a:c5:b5:ac:7d:e5:8b:20:c0:4a:
+        bf:87:72:8d:21:34:10:09:f9:fc:df:0d:95:69:02:9a:6b:16:
+        8b:ef:63:38:55:e3:d9:2a:6b:b1:04:11:24:12:54:41:73:ce:
+        cb:b3:3d:c8:a0:a2:c9:87:21:b4:d1:a3:09:c7:7f:8e:e9:56:
+        ae:6a:55:ae:e2:a1:ac:05:d6:c2:2f:91:d3:51:71:9e:d0:3e:
+        61:c1:5b:96:2c:5e:de:0e:e2:4b:3b:9a:a2:ff:5c:64:20:a6:
+        69:39:0d:65:0d:95:c4:2f:69:08:22:39:17:50:3d:4e:5b:b9:
+        0e:a8:31:7e:e3:34:51:ce:21:02:6c:34:32:2e:db:a4:cc:15:
+        c6:a7:f0:e8:66:46:87:6d:4b:1b:ff:aa:77:64:0b:db:1b:8a:
+        d2:89:3c:09:04:6d:4b:66:57:44:38:4a:8c:a6:7f:be:83:21:
+        22:be:dc:e0:d2:05:96:0d:51:f7:93:b9:70:7e:2a:92:b8:fb:
+        a8:89:63:48:7a:84:71:19:c9:99:26:a5:4f:8b:6f:f2:13:5b:
+        2e:dc:44:92:9a:f9:ae:72:f0:ec:7a:b4:80:9e:f9:c8:42:a0:
+        1f:88:fe:82:82:db:2a:f3:6c:44:e5:da:b0:48:0b:0b:5c:4b:
+        55:c3:92:f7:03:71:b3:dd:31:69:d9:77:a4:5e:e9:69:bd:c4:
+        2d:b7:7a:9d:c8:7a:0d:c9:17:13:1b:d7:b0:db:44:64:c1:8c:
+        ff:21:f5:99:82:71:8e:8b:20:d1:02:03:c9:22:aa:db:0a:ba:
+        62:dd:96:b6:71:03:48:03:d2:37:8a:fb:2d:7f:a2:48:f3:66:
+        4d:b0:db:83:0f:1d:3b:82:ad:c3:32:f6:0c:c6:7e:94:d3:b4:
+        47:ee:fe:25:e1:a8:73:09:46:28:5e:92:99:5b:4c:a3:54:b6:
+        92:f8:af:20:51:39:5f:d0:f3:55:c1:71:46:54:5f:2f:3d:a7:
+        a1:e9:b6:2e:b7:c4:4a:78:f3:05:c4:4e:30:17:0f:0f:bb:05:
+        db:01:a0:74:36:45:91:6c:2c:75:b3:dd:31:76:26:26:67:08:
+        09:90:ef:d9:6d:25:40:5f:e4:0a:87:9d:bf:2b:f4:dc:89:b3:
+        78:9b:20:48:f4:72:63:41:8a:10:97:e9:1d:f2:3d:f7:70:e1:
+        d3:dd:bd:d2:45:81:16:2e:53:a0:16:c5:40:6d:87:3f:52:61:
+        04:ef:1e:31:6c:2e:07:55:5e:9d:d2:3b:f2:a3:a8:59:83:03:
+        00:0f:e6:e1:3d:c7:10:ce
+-----BEGIN CERTIFICATE-----
+MIIEtzCCAp+gAwIBAgICERMwDQYJKoZIhvcNAQELBQAwODELMAkGA1UEBhMCQ1ox
+FTATBgNVBAoMDFRMU0EgVGVzdCBDQTESMBAGA1UEAwwJdGxzYS10ZXN0MB4XDTEy
+MDkyNzExNDEwN1oXDTEzMDkyNzExNDEwN1owPTELMAkGA1UEBhMCQ1oxGjAYBgNV
+BAoMEVRMU0EgVGVzdCBTZXJ2ZXIyMRIwEAYDVQQDDAl0bHNhLXRlc3QwggEiMA0G
+CSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDLZc/ggM0UvScCiMQKtKb2FfbA1b7V
+0VeFPh3tWxrL9+le80HHH+dHjbqeAifP7L1GAAIZcB1LgRvsCOS5WRkHNRfmhin5
+EElSSoS3Wloe1279PMRomBXopaSS5ezrevIUGC8WmrANRyknRVn14YAfED1AX7r7
+8TT1VDDlor9hCzWKMHZvCvRGw7p2b+Yl5X3/8D0fA8rVCTcwFDC4RDgyij5UFdKb
+oywgw8qHyExXCZH+rJBMahODHH56/9JmTjb2RQ4ss0Ra74S31wr4IrQe6O0gvYWV
+EKDQMNvA2SlNGiL9Mk/bDyA4sKpPWv9720kbCDxcU+qct+tBUvhY1ZFjAgMBAAGj
+gcUwgcIwCQYDVR0TBAIwADAsBglghkgBhvhCAQ0EHxYdT3BlblNTTCBHZW5lcmF0
+ZWQgQ2VydGlmaWNhdGUwHQYDVR0OBBYEFAbxUJWy7Vpgs60/kD+8+BrxORPQMGgG
+A1UdIwRhMF+AFEFai7buZsFGvMtUwkxWhOGJEylKoTykOjA4MQswCQYDVQQGEwJD
+WjEVMBMGA1UECgwMVExTQSBUZXN0IENBMRIwEAYDVQQDDAl0bHNhLXRlc3SCCQD+
+AhNSp9NGITANBgkqhkiG9w0BAQsFAAOCAgEAMNuTZMM5VVKaSFly+KWqbRweY36i
+fTyoRdBaxbWsfeWLIMBKv4dyjSE0EAn5/N8NlWkCmmsWi+9jOFXj2SprsQQRJBJU
+QXPOy7M9yKCiyYchtNGjCcd/julWrmpVruKhrAXWwi+R01FxntA+YcFblixe3g7i
+Szuaov9cZCCmaTkNZQ2VxC9pCCI5F1A9Tlu5DqgxfuM0Uc4hAmw0Mi7bpMwVxqfw
+6GZGh21LG/+qd2QL2xuK0ok8CQRtS2ZXRDhKjKZ/voMhIr7c4NIFlg1R95O5cH4q
+krj7qIljSHqEcRnJmSalT4tv8hNbLtxEkpr5rnLw7Hq0gJ75yEKgH4j+goLbKvNs
+ROXasEgLC1xLVcOS9wNxs90xadl3pF7pab3ELbd6nch6DckXExvXsNtEZMGM/yH1
+mYJxjosg0QIDySKq2wq6Yt2WtnEDSAPSN4r7LX+iSPNmTbDbgw8dO4KtwzL2DMZ+
+lNO0R+7+JeGocwlGKF6SmVtMo1S2kvivIFE5X9DzVcFxRlRfLz2noem2LrfESnjz
+BcROMBcPD7sF2wGgdDZFkWwsdbPdMXYmJmcICZDv2W0lQF/kCoedvyv03ImzeJsg
+SPRyY0GKEJfpHfI993Dh09290kWBFi5ToBbFQG2HP1JhBO8eMWwuB1VendI78qOo
+WYMDAA/m4T3HEM4=
+-----END CERTIFICATE-----

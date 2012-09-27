@@ -1,0 +1,11 @@
+tlsa-test.  3600    IN SOA  tlsa-test. hostmaster.tlsa-test. 2012091419 10800 3600 1209600 7200
+tlsa-test. 3600 IN  AAAA    ::1
+tlsa-test. 3600 IN  A   127.0.0.1
+www.tlsa-test. 3600 IN  AAAA    ::1
+www.tlsa-test. 3600 IN  A   127.0.0.1
+tlsa-test. 3600 IN NS   tlsa-test.
+tlsa-test. 3600 IN NS   tlsa-test.
+_443._tcp.tlsa-test. 10 IN TYPE52 \# 67 0101025ca20412a46e19df5a2a302550ff4a277dd82165040a550a5a9cdc86f3b3ad3163bd2133b3dd06991ec0fabf0853564545b6bc93dbb2951db5a533dab281ed2d
+;_443._tcp.tlsa-test. 10 IN TYPE52 \# 67 00010200e9d51b388d8663ba5efbc5a23cca91c0e891a5e01e7f6b72faf3b57e5779657f0d3b34f7cd556ce70896c99952a5a998a35491401dc2ab8ab1ef2eb7151dfa
+$INCLUDE Ktlsa-test.+005+50313.key
+$INCLUDE Ktlsa-test.+005+28858.key

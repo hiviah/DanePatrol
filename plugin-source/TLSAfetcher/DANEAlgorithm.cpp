@@ -211,8 +211,12 @@ DANEMatch DANEAlgorithm::check(const TLSALookupResult &lookup, int policy) const
             int idx = -1;
             switch (it->certUsage) {
                 case TLSAjs::CA_CERT_PIN:
-                case TLSAjs::CA_TA_ADDED:
                     idx = caCertMatch(*it);
+                    break;
+                // cert usage 2 is supposed to be used for CA certs, but can
+                // match any cert in chain by specification
+                case TLSAjs::CA_TA_ADDED:
+                    idx = chainCertMatch(*it);
                     break;
                 case TLSAjs::EE_CERT_PIN:
                 case TLSAjs::EE_TA_ADDED:
@@ -266,6 +270,22 @@ int DANEAlgorithm::eeCertMatch(const ResolvedTLSA &tlsa) const
 int DANEAlgorithm::caCertMatch(const ResolvedTLSA &tlsa) const
 {
     for (int i = 1; i < m_certChain.size(); i++) {
+        try {
+            if (m_certChain[i].matchingData(tlsa.matchingType, tlsa.selector) == tlsa.association) {
+                return i;
+            }
+        }
+        catch (const CertificateException& ) {
+            continue; // cert parsing failed
+        }
+    }
+    
+    return -1;
+}
+
+int DANEAlgorithm::chainCertMatch(const ResolvedTLSA &tlsa) const
+{
+    for (int i = 0; i < m_certChain.size(); i++) {
         try {
             if (m_certChain[i].matchingData(tlsa.matchingType, tlsa.selector) == tlsa.association) {
                 return i;

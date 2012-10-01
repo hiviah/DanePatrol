@@ -110,6 +110,13 @@ public:
      */ 
     int caCertMatch(const ResolvedTLSA& tlsa) const;
 
+    /*! Check whether given TLSA matches any cert in the chain.
+     *
+     * @throws DANEException: if selector or matching type is unknown
+     * @returns index of cert in chain that matched [1..n] or -1 if no match
+     */ 
+    int chainCertMatch(const ResolvedTLSA& tlsa) const;
+
 protected:
 
     

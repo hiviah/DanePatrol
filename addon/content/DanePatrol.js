@@ -418,7 +418,7 @@ var DanePatrol = {
 
             var policy = DANEPolicy.ALLOW_TYPE_01 | DANEPolicy.ALLOW_TYPE_23;
             var daneMatch = this.plugin().checkDANE(host, port, derCerts, policy);
-            this.debugMsg("DANE check: successful " + daneMatch.successful + ", abort " + daneMatch.abort);
+            this.debugMsg("DANE check: host " + host + ":" + port + ", successful " + daneMatch.successful + ", abort " + daneMatch.abort);
 
             return daneMatch;
     },

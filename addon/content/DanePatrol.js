@@ -535,12 +535,15 @@ var DanePatrol = {
             var daneMatch = this.daneCheck(certobj.host, now.cert);
             if (daneMatch.abort) {
                 // explode - TLSA had bogus signature or cert didn't match any TLSA
-                this.warn("Certificate had bad TLSA record: " + daneMatch.errorStr);
+                this.warn("Certificate for " + certobj.host + " had bad TLSA record: " + daneMatch.errorStr);
                 return;
                 // certobj.threat += 3;
             }
             tlsaMatched = daneMatch.successful && !daneMatch.abort;
-            this.debugMsg("TLSA matched: " + tlsaMatched);
+            if (tlsaMatched) {
+                // message about TLSA match into popup/notification
+                certobj.warn.tlsa_matched = true;
+            }
 
             // remember that a new host had TLSA (if not private browsing)
             if (tlsaMatched && !hadTLSA && save) {
@@ -945,14 +948,15 @@ var DanePatrol = {
         var win = browser && browser.contentWindow ? browser.contentWindow : window;
 	var notifyBox = this.getNotificationBox(browser);
 	var popup = forcePopup || !notifyBox;
+        var tlsaMsg = certobj.warn.tlsa_matched ? " *** " + this.locale.warn_tlsa_matched : "";
 	if (notifyBox && !popup) {
 	    var timeout;
 	    var n = notifyBox.appendNotification(
 	      "(DanePatrol) "+ certobj.host +": "+certobj.event +" "+
 	      certobj.now.commonName +". "+
 	      this.locale.issuedBy +" "+
-	      (certobj.now.issuerOrganization || certobj.now.issuerCommonName)
-	      , certobj.host, null, notifyBox.PRIORITY_INFO_HIGH, [{
+	      (certobj.now.issuerOrganization || certobj.now.issuerCommonName) + 
+              tlsaMsg , certobj.host, null, notifyBox.PRIORITY_INFO_HIGH, [{
 		label: this.locale.reject,
 		accessKey: this.locale.reject_key,
 		callback: function(msg, btn) {

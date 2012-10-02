@@ -92,6 +92,7 @@
     <description hidden="true" id="warn_notAfter_expired">&warn_notAfter_expired;</description>
     <description hidden="true" id="warn_notAfter_notdue">&warn_notAfter_notdue;</description>
     <description hidden="true" id="warn_notAfter_due">&warn_notAfter_due;</description>
+    <description hidden="true" id="warn_tlsa_matched">&warn_tlsa_matched;</description>
   </vbox>
 
   <vbox id="cmbox" flex="1" style="overflow: auto">

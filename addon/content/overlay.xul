@@ -25,6 +25,7 @@ DanePatrol.locale = {
      warn_notAfter_expired: "&warn_notAfter_expired;",
      warn_notAfter_notdue: "&warn_notAfter_notdue;",
      warn_notAfter_due: "&warn_notAfter_due;",
+     warn_tlsa_matched: "&warn_tlsa_matched;",
 };
 
   </script>

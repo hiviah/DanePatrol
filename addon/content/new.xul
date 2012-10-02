@@ -14,7 +14,7 @@
   buttonaccesskeyaccept="&accept_key;"
   buttonaccesskeycancel="&reject_key;"
   ondialogaccept="return true"
-  ondialogcancel="return DanePatrol.delCert(certobj.host)">
+  ondialogcancel="return DanePatrol.delCert(certobj)">
   <script>
 
 var certobj = window.arguments[0];

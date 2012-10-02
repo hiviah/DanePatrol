@@ -128,6 +128,7 @@ var DanePatrol = {
 		  "  md5Fingerprint=?12, sha1Fingerprint=?13, issuerMd5Fingerprint=?14, issuerSha1Fingerprint=?15, cert=?16, flags=?17, stored=?18 "+
 		  "WHERE host=?1"),
 		delHost: this.dbh.createStatement("DELETE FROM certificates WHERE host=?1"),
+		delHostSHA: this.dbh.createStatement("DELETE FROM certificates WHERE host=?1 and sha1Fingerprint=?13"),
 		delTLSAHost: this.dbh.createStatement("DELETE FROM tlsa_hosts WHERE host=?1"),
 		delSince: this.dbh.createStatement("DELETE FROM certificates WHERE stored >= ?18"),
 		delAll: this.dbh.createStatement("DELETE FROM certificates"),
@@ -743,11 +744,12 @@ var DanePatrol = {
     },
 
     // reject new cert
-    delCert: function(host) {
+    delCert: function(certobj) {
 	var stmt;
 	try {
-	    stmt = this.db.delHost;
-	    stmt.bindUTF8StringParameter(0, host);
+	    stmt = this.db.delHostSHA;
+	    stmt.bindUTF8StringParameter(0, certobj.host);
+	    stmt.bindUTF8StringParameter(12, certobj.now.sha1Fingerprint);
 	    stmt.executeStep();
 	} catch (err) {
 	    this.warn("Error while trying to remove certificate: ", err);
@@ -955,7 +957,7 @@ var DanePatrol = {
 		accessKey: this.locale.reject_key,
 		callback: function(msg, btn) {
 		    if (timeout) clearTimeout(timeout);
-		    DanePatrol.delCert(certobj.host);
+		    DanePatrol.delCert(certobj);
 		}
 	    }, {
 		label: this.locale.viewDetails,

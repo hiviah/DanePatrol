@@ -7,6 +7,7 @@
 
 #include "JSObject.h"
 #include "DOM/Document.h"
+#include "DOM/Window.h"
 #include "global/config.h"
 
 #include <string>
@@ -31,6 +32,10 @@ TLSAfetcherAPI::TLSAfetcherAPI(const TLSAfetcherPtr& plugin, const FB::BrowserHo
 	m_host(host),
 	m_resolver()
 {
+    // disallow any call to function from a "normal" HTML page
+    if (m_host->getDOMWindow()->getLocation() != "chrome://browser/content/browser.xul") {
+        return;
+    }
     registerMethod("fetchTLSA", make_method(this, &TLSAfetcherAPI::fetchTLSA));
     registerMethod("checkDANE", make_method(this, &TLSAfetcherAPI::checkDANE));
 

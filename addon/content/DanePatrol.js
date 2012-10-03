@@ -264,6 +264,9 @@ var DanePatrol = {
 		issuerMd5Fingerprint: "",
 		issuerSha1Fingerprint: "",
 		cert: null,
+                tlsaCertUsage: "--",
+                tlsaMatchingType: "--",
+                tlsaSelector: "--",
 	    },
 	    old: {
 		commonName: "",
@@ -543,6 +546,9 @@ var DanePatrol = {
             if (tlsaMatched) {
                 // message about TLSA match into popup/notification
                 certobj.warn.tlsa_matched = true;
+                certobj.now.tlsaCertUsage = daneMatch.tlsa.certUsage;
+                certobj.now.tlsaMatchingType = daneMatch.tlsa.matchingType;
+                certobj.now.tlsaSelector = daneMatch.tlsa.selector;
             }
 
             // remember that a new host had TLSA (if not private browsing)

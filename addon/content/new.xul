@@ -35,6 +35,7 @@ function onLoad() {
 
     var keys = [ 'commonName', 'organization', 'organizationalUnit',
 	         'md5Fingerprint', 'sha1Fingerprint',
+                 'tlsaCertUsage', 'tlsaMatchingType', 'tlsaSelector',
 	      // NOT SHOWN ANYMORE (go details):
 	      // 'serialNumber',
 	      // 'issuerCommonName', 'issuerOrganization',
@@ -142,6 +143,21 @@ function onLoad() {
         <row>
           <label id="cmsha1l" value="&sha1Fingerprint;" />
           <textbox class="plain" readonly="true" size="64" id="sha1Fingerprint" />
+        </row>
+        <groupbox>
+          <caption id="cmtlsa" label="&tlsa;" />
+        </groupbox>
+        <row>
+          <label id="cmcertusage" value="&tlsaCertUsage;" />
+          <textbox class="plain" readonly="true" size="64" id="tlsaCertUsage" />
+        </row>
+        <row>
+          <label id="cmmatchingtype" value="&tlsaMatchingType;" />
+          <textbox class="plain" readonly="true" size="64" id="tlsaMatchingType" />
+        </row>
+        <row>
+          <label id="cmselector" value="&tlsaSelector;" />
+          <textbox class="plain" readonly="true" size="64" id="tlsaSelector" />
         </row>
       </rows>
     </grid>

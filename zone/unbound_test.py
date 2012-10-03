@@ -10,7 +10,7 @@ u = ub_ctx()
 u.add_ta_file("keys.tlsa-test")
 u.set_fwd("127.0.0.1")
 
-for fqdn in ("_443._tcp.tlsa-test",):
+for fqdn in ("_443._tcp.tlsa-test", "_443._tcp.labs.nic.cz"):
 	s, r = u.resolve(fqdn, RR_TYPE_TLSA)
 	print "fqdn: %s, status: %s, rcode: %s, secure: %s, bogus: %s, why_bogus: %s" % \
 	    (fqdn, s, r.rcode, r.secure, r.bogus, r.why_bogus)

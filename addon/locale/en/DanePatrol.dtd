@@ -26,9 +26,9 @@
 <!ENTITY stored			"Stored Since:">
 <!ENTITY md5Fingerprint		"MD5 Fingerprint:">
 <!ENTITY sha1Fingerprint	"SHA1 Fingerprint:">
-<!ENTITY tlsa			"DANE TLSA match:">
-<!ENTITY tlsaCertUsage		"Certificate usage:">
-<!ENTITY tlsaMatchingType	"Matching type:">
+<!ENTITY tlsa			"DANE TLSA Match:">
+<!ENTITY tlsaCertUsage		"Certificate Usage:">
+<!ENTITY tlsaMatchingType	"Matching Type:">
 <!ENTITY tlsaSelector		"Selector:">
 
 <!ENTITY oldCert		"Old Certificate:">

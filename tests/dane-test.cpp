@@ -83,19 +83,19 @@ int main(int argc, char **argv)
         // test will need update once the TLSA records change
         expect(lookup.tlsa.size() == 1, "Number of TLSA records for nlnetlabs.nl changed");
 
-        match = algo.check(lookup, TLSAjs::ALLOW_TYPE_01);
-        expect(match.successful && !match.abort && match.derCert == caCertRoot,
+        match = algo.check(lookup, TLSAjs::ALLOW_TYPE_23);
+        expect(match.successful && !match.abort && match.derCert == nlnCert,
                "TLSA association for nlnetlabs failed");
 
-        match = algo.check(lookup, TLSAjs::ALLOW_TYPE_23);
+        match = algo.check(lookup, TLSAjs::ALLOW_TYPE_01);
         expect(!match.successful && !match.abort,
                "TLSA policy test for nlnetlabs failed");
 
-        // mockup test for cert usage 2
-        lookup.tlsa[0].certUsage = TLSAjs::CA_TA_ADDED;
-        match = algo.check(lookup, TLSAjs::ALLOW_TYPE_23);
-        expect(match.successful && !match.abort && match.derCert == caCertRoot,
-               "TLSA association test for cert usage 2 failed");
+        // mockup test for cert usage 2 - not used, nlnetlabs changed to usage 3
+        //lookup.tlsa[0].certUsage = TLSAjs::CA_TA_ADDED;
+        //match = algo.check(lookup, TLSAjs::ALLOW_TYPE_23);
+        //expect(match.successful && !match.abort && match.derCert == caCertRoot,
+        //       "TLSA association test for cert usage 2 failed");
 
         // test unknown matching type
         lookup.tlsa[0].matchingType = TLSAjs::MatchingType(42);

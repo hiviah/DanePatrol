@@ -62,6 +62,13 @@
           }
       }
 
+      // TLSA info only available for current cert
+      var tlsaKeys = ["tlsaCertUsage", "tlsaMatchingType", "tlsaSelector"];
+      for (var i in tlsaKeys) {
+          var key = tlsaKeys[i];
+          $(key).value = certobj.now[key];
+      }
+        
       if (certobj.old.stored)
           $("stored").value = certobj.old.stored;
       else
@@ -240,6 +247,21 @@
 	    <textbox class="plain" readonly="true" id="issuerSha1Fingerprint" />
 	    <textbox class="plain" readonly="true" id="issuerSha1Fingerprint2" />
 	  </vbox>
+        </row>
+        <groupbox>
+          <caption id="cmtlsa" label="&tlsa;" />
+        </groupbox>
+        <row>
+          <label id="cmcertusage" value="&tlsaCertUsage;" />
+          <textbox class="plain" readonly="true" size="64" id="tlsaCertUsage" />
+        </row>
+        <row>
+          <label id="cmmatchingtype" value="&tlsaMatchingType;" />
+          <textbox class="plain" readonly="true" size="64" id="tlsaMatchingType" />
+        </row>
+        <row>
+          <label id="cmselector" value="&tlsaSelector;" />
+          <textbox class="plain" readonly="true" size="64" id="tlsaSelector" />
         </row>
       </rows>
     </grid>

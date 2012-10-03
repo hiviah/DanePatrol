@@ -122,6 +122,24 @@ int main(int argc, char **argv)
         expect(!match.successful && match.abort,
                "Failed test for malformed certificate");
 
+        //  --- NOHATS.CA DLV ---
+        std::string nohatsCert = readFile("nohats.ca.der");
+        chain = CertChain();
+        chain += nohatsCert;
+
+        lookup = resolver.fetchTLSA("nohats.ca", 443);
+        algo = DANEAlgorithm(chain);
+
+        expect(lookup.result == 0 && lookup.rcode == NOERROR,
+               "DNS resolution for nohats.ca failed");
+
+        // test will need update once the TLSA records change
+        expect(lookup.tlsa.size() == 1, "Number of TLSA records for nohats.ca changed");
+
+        match = algo.check(lookup, TLSAjs::ALLOW_TYPE_23);
+        expect(match.successful && !match.abort && match.derCert == nlnCert,
+               "TLSA association for nohats.ca with DLV failed");
+
     }
     catch (const std::exception& e) {
         cout << e.what() << endl;

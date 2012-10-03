@@ -88,6 +88,9 @@ protected:
     /*! Builtin DS record for root DNS zone */
     static const std::string m_rootTrustAnchor;
 
+    /*! Builtin DLV key */
+    static const std::string m_dlvTrustAnchor;
+
     /*! libunbound resolver context - is thread safe */
     UbCtx m_resolver;
 

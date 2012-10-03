@@ -87,6 +87,16 @@ void Resolver::initializeResolver(const std::string &trustAnchors)
         fmt % std::string(ub_strerror(ub_retval));
         throw ResolverException(fmt.str());
     }
+
+    ub_retval = ub_ctx_set_option(m_resolver.get(), (char*)"dlv-anchor:",
+        const_cast<char*>(m_dlvTrustAnchor.c_str()));
+    
+    if (ub_retval != 0) {
+        m_canResolve = false;
+        boost::format fmt("Cannot add DLV anchor to resolver: %1%)");
+        fmt % std::string(ub_strerror(ub_retval));
+        throw ResolverException(fmt.str());
+    }
 }
 
 TLSAList Resolver::parseResult(const ub_result* result) const
@@ -199,3 +209,12 @@ TLSALookupResult Resolver::fetchTLSA(const std::string& fqdn, int port)
 const std::string Resolver::m_rootTrustAnchor(
     ".   IN DS   19036 8 2 49AAC11D7B6F6446702E54A1607371607A1A41855200FD2CE1CDDE32F24E8FB5");
     
+const std::string Resolver::m_dlvTrustAnchor(
+    "dlv.isc.org. IN DNSKEY 257 3 5 \
+    BEAAAAPHMu/5onzrEE7z1egmhg/WPO0+juoZrW3euWEn4MxDCE1+lLy2 \
+    brhQv5rN32RKtMzX6Mj70jdzeND4XknW58dnJNPCxn8+jAGl2FZLK8t+ \
+    1uq4W+nnA3qO2+DL+k6BD4mewMLbIYFwe0PG73Te9fZ2kJb56dhgMde5 \
+    ymX4BI/oQ+ cAK50/xvJv00Frf8kw6ucMTwFlgPe+jnGxPPEmHAte/URk \
+    Y62ZfkLoBAADLHQ9IrS2tryAe7mbBZVcOwIeU/Rw/mRx/vwwMCTgNboM \
+    QKtUdvNXDrYJDSHZws3xiRXF1Rf+al9UmZfSav/4NWLKjHzpT59k/VSt TDN0YUuWrBNh");
+

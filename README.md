@@ -50,6 +50,8 @@ Known bugs and quirks
   implementation - reasoning is that if a cert is trusted, the result of the
   TLSA check is the same as if we used the associated cert as trust anchor (I
   could be wrong, but seems to make sense so far).
+- Full RELRO, PIE, stack protector and similar settings should be made global
+  for all sub-libraries used in the project.
 
 Building
 --------

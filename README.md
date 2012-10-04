@@ -67,6 +67,7 @@ compile the NPAPI plugin.
 - cmake &gt;= 2.6
 - git (Makefile pulls submodules)
 - python, python-yaml
+- GTK+ 2 development libraries (usually named `gtk2-devel` or `libgtk2.0-dev`)
 
 To build the Firefox addon with NPAPI plugin, use just `make`. Resulting
 `DanePatrol.xpi` should appear at toplevel directory. For running

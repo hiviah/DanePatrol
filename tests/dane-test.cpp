@@ -137,7 +137,7 @@ int main(int argc, char **argv)
         expect(lookup.tlsa.size() == 1, "Number of TLSA records for nohats.ca changed");
 
         match = algo.check(lookup, TLSAjs::ALLOW_TYPE_23);
-        expect(match.successful && !match.abort && match.derCert == nlnCert,
+        expect(match.successful && !match.abort && match.derCert == nohatsCert,
                "TLSA association for nohats.ca with DLV failed");
 
     }

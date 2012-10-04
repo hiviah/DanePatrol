@@ -28,9 +28,13 @@ int main(void)
 		printf("error adding keys: %s\n", ub_strerror(retval));
 		return 1;
 	}
+        if( (retval=ub_ctx_set_option(ctx, "dlv-anchor:", "dlv.isc.org. IN DNSKEY 257 3 5 BEAAAAPHMu/5onzrEE7z1egmhg/WPO0+juoZrW3euWEn4MxDCE1+lLy2 brhQv5rN32RKtMzX6Mj70jdzeND4XknW58dnJNPCxn8+jAGl2FZLK8t+ 1uq4W+nnA3qO2+DL+k6BD4mewMLbIYFwe0PG73Te9fZ2kJb56dhgMde5 ymX4BI/oQ+ cAK50/xvJv00Frf8kw6ucMTwFlgPe+jnGxPPEmHAte/URk Y62ZfkLoBAADLHQ9IrS2tryAe7mbBZVcOwIeU/Rw/mRx/vwwMCTgNboM QKtUdvNXDrYJDSHZws3xiRXF1Rf+al9UmZfSav/4NWLKjHzpT59k/VSt TDN0YUuWrBNh"))) {
+		printf("error adding DLV keys: %s\n", ub_strerror(retval));
+		return 1;
+	}
 
 	/* query for TLSA */
-	retval = ub_resolve(ctx, "_443._tcp.www.torproject.org", 
+	retval = ub_resolve(ctx, "_443._tcp.www.torproject.org", //"_443._tcp.nohats.ca", 
 		RR_TYPE_TLSA, 
 		1 /* CLASS IN (internet) */, &result);
 	if(retval != 0) {

@@ -395,7 +395,7 @@ var DanePatrol = {
 	certobj.secretKeyLength = st.secretKeyLength;
 	this.fillCertObj(certobj.now, cert);
 
-	this.certCheck(browser, certobj);
+	this.certCheck(browser, certobj, channel);
     },
 
     daneCheck: function(hostPort, cert) {
@@ -466,7 +466,7 @@ var DanePatrol = {
     },
 
     // Certificate check
-    certCheck: function(browser, certobj) {
+    certCheck: function(browser, certobj, channel) {
         if (this.isIgnoredHost(certobj.host)) return;
 
 	var Cc = Components.classes, Ci = Components.interfaces;
@@ -538,9 +538,9 @@ var DanePatrol = {
             var daneMatch = this.daneCheck(certobj.host, now.cert);
             if (daneMatch.abort) {
                 // explode - TLSA had bogus signature or cert didn't match any TLSA
+                channel.cancel(Components.results.NS_BINDING_ABORTED);
                 this.warn("Certificate for " + certobj.host + " had bad TLSA record: " + daneMatch.errorStr);
                 return;
-                // certobj.threat += 3;
             }
             tlsaMatched = daneMatch.successful && !daneMatch.abort;
             if (tlsaMatched) {

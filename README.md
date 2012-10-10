@@ -25,11 +25,11 @@ Limitations
 -----------
 
 The "Reject" button will only reject to store the certificate, it can't abort
-connection. Firefox API has no way of doing that. Similarly a bad TLSA (a MitM
-attack) will display a warning, but can't abort the connection. This isn't such
-a problem for a toplevel site, but could matter for instance if bank's main site
-is bank.com, but login is posted to secure.bank.com through POST via a form on
-the page.
+connection immediately after SSL/TLS handshake. Similarly a bad TLSA (a MitM
+attack) will display a warning, but can't abort the connection before first
+request is made. This isn't such a problem for a toplevel site, but could
+matter for instance if bank's main site is bank.com, but login is posted to
+secure.bank.com through POST via a form on the page.
 
 These above notes (sans TLSA stuff) apply to Certificate Patrol as well (haven't
 seen that described anywhere, found out when digging in code).

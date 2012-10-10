@@ -1,6 +1,6 @@
 [submodule "libs-source"]
 	path = libs-source
-	url = git@git.nic.cz:dane-libs
+	url = git://git.nic.cz/dane-libs
 [submodule "FireBreath"]
 	path = FireBreath
 	url = https://github.com/firebreath/FireBreath.git

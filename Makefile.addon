@@ -48,8 +48,11 @@ ADDON_LOCALE_SOURCES := \
     $(ADDON_DIR)/locale/en/contents.rdf \
     #end of ADDON_LOCALE_SOURCES
 
+# Debug symbols are not added to the XPI, but plugin needs to be stripped
+# and have its debug symbols copied before packaging happens.
 ADDON_GENERATED_SOURCES := \
     $(PLUGIN_BINARY) \
+    $(PLUGIN_BINARY_DEBUG) \
     $(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.js \
     #end of ADDON_GENERATED_SOURCES
 

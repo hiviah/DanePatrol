@@ -27,6 +27,7 @@ PLUGIN_SOURCE_DIR := $(BASEDIR)/plugin-source/TLSAfetcher
 PLUGIN_BUILD_DIR := $(FIREBREATH_DIR)/build
 PLUGIN_JSAPI_IDL_DIR := $(PLUGIN_SOURCE_DIR)/JSAPI_IDL
 PLUGIN_BINARY := $(PLUGIN_BUILD_DIR)/bin/TLSAfetcher/npTLSAfetcher.so
+PLUGIN_BINARY_DEBUG := $(PLUGIN_BUILD_DIR)/bin/TLSAfetcher/npTLSAfetcher.so.debug
 PLUGIN_IDL_COMPILER := $(PLUGIN_JSAPI_IDL_DIR)/JSAPI_IDL_compiler.py
 
 ## uncomment to make plugin build verbose - shows gcc invocations etc.
@@ -82,6 +83,13 @@ $(PLUGIN_BUILD_DIR): $(PLUGIN_SOURCE_DIR)/CMakeLists.txt $(PLUGIN_SOURCE_DIR)/Pl
 		$(PLUGIN_SOURCE_DIR)/X11/projectDef.cmake $(PLUGIN_SOURCE_DIR)/Mac/projectDef.cmake $(PLUGIN_SOURCE_DIR)/Win/projectDef.cmake \
 		#dependencies end
 		make prepmake
+
+# final 'touch' is to keep Makefile time depedencies
+$(PLUGIN_BINARY_DEBUG): $(PLUGIN_BINARY)
+	objcopy --only-keep-debug $< $@
+	strip $<
+	objcopy --add-gnu-debuglink=$@ $<
+	touch $@
 
 # auto-generated cpp and h for JSAPI structures passed between JS <-> C++
 $(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.cpp $(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.h: $(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.yaml $(PLUGIN_IDL_COMPILER)

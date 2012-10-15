@@ -543,7 +543,9 @@ var DanePatrol = {
             var daneMatch = this.daneCheck(certobj.host, now.cert);
             if (daneMatch.abort) {
                 // explode - TLSA had bogus signature or cert didn't match any TLSA
-                channel.cancel(Components.results.NS_BINDING_ABORTED);
+                if (channel) {
+                    channel.cancel(Components.results.NS_BINDING_ABORTED);
+                }
                 this.warn("Certificate for " + certobj.host + " had bad TLSA record: " + daneMatch.errorStr);
                 return;
             }
@@ -1096,33 +1098,58 @@ var DanePatrol = {
 
     untrustedCertListener : { 
 
-            onLocationChange: function(aWebProgress, aRequest, aURI) {
-                //intentionally empty
-            },
+        onLocationChange: function(aWebProgress, aRequest, aURI) {
+            //intentionally empty
+        },
 
-            onStateChange: function(aWebProgress, aRequest, aFlag, aStatus) {
-                //intentionally empty
-            },
+        onStateChange: function(aWebProgress, aRequest, aFlag, aStatus) {
+            //intentionally empty
+        },
 
-            // this is the main function we key off of.  It seems to work well, even though
-            // the docs do not explicitly say when it will be called. 
-            onSecurityChange:    function() {
-                    var uri = null;
-                    try{
-                            uri = window.gBrowser.currentURI;
-                            if (uri) {
-                                DanePatrol.debugMsg("We'd be called for URI: " + uri.spec);
-                                // do magic here
-                            }
-                    } catch(err){
-                        //internal error
-                        DanePatrol.debugMsg("DANE Patrol internal error");
-                    }
-            },
+        // Main hook for catching untrusted cert page
+        onSecurityChange:    function() {
+            var uri = null;
+            try {
+                uri = window.gBrowser.currentURI;
+                if (uri && uri.scheme.toLowerCase() == "https") {
+                    DanePatrol.debugMsg("DANE: onSecurityChange called for URI: " + uri.spec);
+                    var sslStatus = this.getInvalidCertStatus(uri);
+                    if (!sslStatus) return;
 
-            onStatusChange:      function() { },
-            onProgressChange:    function() { },
-            onLinkIconAvailable: function() { }
+                    var cert = sslStatus.QueryInterface(Components.interfaces.nsISSLStatus)
+			.serverCert;
+                    if (!cert) return;
+
+                    DanePatrol.debugMsg("DANE: checking untrusted cert for " + uri.spec);
+                    var daneMatch = DanePatrol.daneCheck(uri.hostPort, cert);
+                }
+            } catch(err){
+                //internal error
+                DanePatrol.warn("DANE Patrol untrustedCertListener internal error", err);
+            }
+        },
+
+        onStatusChange:      function() { },
+        onProgressChange:    function() { },
+        onLinkIconAvailable: function() { },
+
+        // check if URI had an untrusted cert and return the status
+	getInvalidCertStatus: function(uri){
+            var recentCertsSvc = 
+            Components.classes["@mozilla.org/security/recentbadcerts;1"]
+                .getService(Components.interfaces.nsIRecentBadCertsService);
+            if (!recentCertsSvc)
+                return null;
+
+            var port = (uri.port == -1) ? 443 : uri.port;  
+
+            var hostWithPort = uri.host + ":" + port;
+            var gSSLStatus = recentCertsSvc.getRecentBadCert(hostWithPort);
+            if (!gSSLStatus)
+                return null;
+            return gSSLStatus;
+	},
+
     },
 
     // functions for the new & change dialogs

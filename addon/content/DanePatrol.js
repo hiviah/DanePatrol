@@ -46,6 +46,7 @@ var DanePatrol = {
     DANE_CHECK_ALWAYS: "always",
     extID: "DanePatrol@nic.cz",
     locale: {},
+    hostPortOverrideCache: {}, // hostnames we did override for, UTF-8 hostPort keys
 
     debugMsg: function(msg) {
         Components.utils.import("resource://gre/modules/Services.jsm");
@@ -1115,7 +1116,7 @@ var DanePatrol = {
     untrustedCertListener : { 
 
         // Main hook for catching untrusted cert page
-        onSecurityChange: function() {
+        onSecurityChange: function(aWebProgress, aRequest, aState) {
             if (!DanePatrol.overrideUntrustedAllowed()) return;
 
             var uri = null;
@@ -1152,8 +1153,9 @@ var DanePatrol = {
                       uri.asciiHost, uri.port, cert, flags, true);
 
                     DanePatrol.debugMsg("DANE: temporary untrusted cert override for " + uri.hostPort);
+                    DanePatrol.hostPortOverrideCache[uri.hostPort] = true;
                     // page requires reload
-                    setTimeout(function (){ getBrowser().loadURIWithFlags(uri.spec, flags);}, 25);
+                    setTimeout(function (){ getBrowser().loadURIWithFlags(uri.spec, flags);}, 1000);
                 }
             } catch(err){
                 //internal error

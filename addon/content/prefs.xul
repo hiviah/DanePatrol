@@ -50,6 +50,9 @@
     <preference id="_dane_check"
                 name="danepatrol.dane.check"
                 type="string" />
+    <preference id="_dane_override"
+                name="danepatrol.dane.override"
+                type="bool" />
   </preferences>
 
   <dialogheader title="&_title;" />
@@ -99,6 +102,9 @@
       <radio value="new_or_had_tlsa" label="&_dane_new_and_known;"  selected="true"/>
       <radio value="always" label="&_dane_always;" />
     </radiogroup>
+    <checkbox label="&_dane_override;"
+              preference="_dane_override"
+              checked="false" />
   </groupbox>
 
   <groupbox>

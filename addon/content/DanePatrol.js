@@ -403,7 +403,7 @@ var DanePatrol = {
 	this.certCheck(browser, certobj, channel);
     },
 
-    daneCheck: function(hostPort, cert) {
+    daneCheck: function(hostPort, cert, policy) {
             var host=hostPort, port=443;
             var derCerts = new Array();
 
@@ -540,7 +540,8 @@ var DanePatrol = {
             (whenCheckTLSA == this.DANE_CHECK_NEW && !found));
 
         if (doTLSAlookup) {
-            var daneMatch = this.daneCheck(certobj.host, now.cert);
+            var policy = DANEPolicy.ALLOW_TYPE_01 | DANEPolicy.ALLOW_TYPE_23;
+            var daneMatch = this.daneCheck(certobj.host, now.cert, policy);
             if (daneMatch.abort) {
                 // explode - TLSA had bogus signature or cert didn't match any TLSA
                 if (channel) {
@@ -1089,6 +1090,20 @@ var DanePatrol = {
 	Components.classes["@mozilla.org/consoleservice;1"].getService(Components.interfaces.nsIConsoleService).logStringMessage(s);
     },
 
+    // return true iff DANE is enabled and preference for override is set
+    overrideUntrustedAllowed: function() {
+        try {
+            if (!this.prefs) return false;
+            var whenCheckTLSA = this.prefs.getCharPref("dane.check"); 
+            var overridePref = this.prefs.getBoolPref("dane.override");
+
+            return (whenCheckTLSA != this.DANE_CHECK_NEVER && overridePref);
+        } catch(err) {
+            return false;
+        }
+
+    },
+
     // Listener for changes to location - we attempt to catch "cert is untrusted"
     // page here. It's not possible to override untrusted cert except for toplevel
     // location.
@@ -1098,30 +1113,39 @@ var DanePatrol = {
 
     untrustedCertListener : { 
 
-        onLocationChange: function(aWebProgress, aRequest, aURI) {
-            //intentionally empty
-        },
-
-        onStateChange: function(aWebProgress, aRequest, aFlag, aStatus) {
-            //intentionally empty
-        },
-
         // Main hook for catching untrusted cert page
-        onSecurityChange:    function() {
+        onSecurityChange: function() {
+            if (!DanePatrol.overrideUntrustedAllowed()) return;
+
             var uri = null;
             try {
                 uri = window.gBrowser.currentURI;
-                if (uri && uri.scheme.toLowerCase() == "https") {
-                    DanePatrol.debugMsg("DANE: onSecurityChange called for URI: " + uri.spec);
-                    var sslStatus = this.getInvalidCertStatus(uri);
-                    if (!sslStatus) return;
+                if (!uri || uri.scheme.toLowerCase() != "https") return;
 
-                    var cert = sslStatus.QueryInterface(Components.interfaces.nsISSLStatus)
-			.serverCert;
-                    if (!cert) return;
+                var sslStatus = this.getInvalidCertStatus(uri);
+                if (!sslStatus) return;
 
-                    DanePatrol.debugMsg("DANE: checking untrusted cert for " + uri.spec);
-                    var daneMatch = DanePatrol.daneCheck(uri.hostPort, cert);
+                var cert = sslStatus.QueryInterface(Components.interfaces.nsISSLStatus)
+                    .serverCert;
+                if (!cert) return;
+
+                DanePatrol.debugMsg("DANE: checking untrusted cert for " + uri.spec);
+                var daneMatch = DanePatrol.daneCheck(uri.hostPort, cert, DANEPolicy.ALLOW_TYPE_23);
+                if (daneMatch.abort) {
+                    DanePatrol.warn("Certificate for " + uri.hostPort + " had bad TLSA record: " + daneMatch.errorStr);
+                    return;
+                }
+
+                if (daneMatch.successful) {
+                    var overrideService = Components.classes["@mozilla.org/security/certoverride;1"]
+                                                    .getService(Components.interfaces.nsICertOverrideService);
+                    // only valid for untrusted issuers, not bad validity period or CN mismatch
+                    var flags = overrideService.ERROR_UNTRUSTED; 
+
+                    overrideService.rememberValidityOverride(
+                      uri.host, uri.port, cert, flags, true);
+
+                    DanePatrol.debugMsg("DANE: temporary untrusted cert override for " + uri.hostPort);
                 }
             } catch(err){
                 //internal error
@@ -1129,6 +1153,9 @@ var DanePatrol = {
             }
         },
 
+
+        onLocationChange:    function(aWebProgress, aRequest, aURI) { },
+        onStateChange:       function(aWebProgress, aRequest, aFlag, aStatus) { },
         onStatusChange:      function() { },
         onProgressChange:    function() { },
         onLinkIconAvailable: function() { },

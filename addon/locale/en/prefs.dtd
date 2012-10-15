@@ -25,3 +25,4 @@
 <!ENTITY _dane_new	"Check DANE TLSA records only for new certificates">
 <!ENTITY _dane_new_and_known	"Check DANE TLSA records for new certificates or hosts that had TLSA before">
 <!ENTITY _dane_always	"Always check DANE TLSA records for every certificate">
+<!ENTITY _dane_override	"Allow certificate usage 2 and 3 to override untrusted certificates">

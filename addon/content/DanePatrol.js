@@ -407,6 +407,7 @@ var DanePatrol = {
             var host=hostPort, port=443;
             var derCerts = new Array();
 
+            // TODO: hostPort is not IDNA-escaped
             if (hostPort.indexOf(":") >= 0) {
                 hp = hostPort.split(":", 2);
                 host = hp[0];
@@ -1142,10 +1143,17 @@ var DanePatrol = {
                     // only valid for untrusted issuers, not bad validity period or CN mismatch
                     var flags = overrideService.ERROR_UNTRUSTED; 
 
+                    // exception for cert already installed => bail before we loop
+                    var flagsOut={}, tempOut={};
+                    var hasOverride = overrideService.hasMatchingOverride(uri.asciiHost, uri.port, cert, flagsOut, tempOut);
+                    if (hasOverride) return;
+                    
                     overrideService.rememberValidityOverride(
-                      uri.host, uri.port, cert, flags, true);
+                      uri.asciiHost, uri.port, cert, flags, true);
 
                     DanePatrol.debugMsg("DANE: temporary untrusted cert override for " + uri.hostPort);
+                    // page requires reload
+                    setTimeout(function (){ getBrowser().loadURIWithFlags(uri.spec, flags);}, 25);
                 }
             } catch(err){
                 //internal error

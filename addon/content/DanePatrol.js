@@ -66,6 +66,7 @@ var DanePatrol = {
 
     onUnload: function() {
 	this.unregisterObserver("http-on-examine-response");
+        getBrowser().removeProgressListener(DanePatrol.untrustedCertListener);
     },
 
     plugin: function() {
@@ -157,7 +158,11 @@ var DanePatrol = {
 	  .getBranch("danepatrol.")
 	  .QueryInterface(Ci.nsIPrefBranch2);
 
+        // hook for examining certificates that pass FF's PKIX check
 	this.registerObserver("http-on-examine-response");
+
+        // hook for "untrusted certificate page"
+        getBrowser().addProgressListener(DanePatrol.untrustedCertListener);
     },
 
     getMyVersion: function(callback) {
@@ -1080,6 +1085,44 @@ var DanePatrol = {
     log: function(s, a) {
 	if (a && a.length && a.join) s += " " + a.join(", ");
 	Components.classes["@mozilla.org/consoleservice;1"].getService(Components.interfaces.nsIConsoleService).logStringMessage(s);
+    },
+
+    // Listener for changes to location - we attempt to catch "cert is untrusted"
+    // page here. It's not possible to override untrusted cert except for toplevel
+    // location.
+    //
+    // See Documentation for nsIWebProgressListener at: 
+    // https://developer.mozilla.org/en/nsIWebProgressListener
+
+    untrustedCertListener : { 
+
+            onLocationChange: function(aWebProgress, aRequest, aURI) {
+                //intentionally empty
+            },
+
+            onStateChange: function(aWebProgress, aRequest, aFlag, aStatus) {
+                //intentionally empty
+            },
+
+            // this is the main function we key off of.  It seems to work well, even though
+            // the docs do not explicitly say when it will be called. 
+            onSecurityChange:    function() {
+                    var uri = null;
+                    try{
+                            uri = window.gBrowser.currentURI;
+                            if (uri) {
+                                DanePatrol.debugMsg("We'd be called for URI: " + uri.spec);
+                                // do magic here
+                            }
+                    } catch(err){
+                        //internal error
+                        DanePatrol.debugMsg("DANE Patrol internal error");
+                    }
+            },
+
+            onStatusChange:      function() { },
+            onProgressChange:    function() { },
+            onLinkIconAvailable: function() { }
     },
 
     // functions for the new & change dialogs

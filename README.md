@@ -17,9 +17,10 @@ Features
 - By default DANE is checked only for new certs or for host that are recorded to
   have had TLSA before (seemed like most sensible default since TLSA is not yet
   spread; can be changed in preferences)
-- Overriding "this certificate is not trusted" page is not yet implemented
 - The details page for new or changed certificate show which TLSA record matched
   (cert usage, matching type and selector).
+- Can override "this certificate is untrusted" page if TLSA with certificate
+  usage 2 or 3 matches and user allows the override in preferences
 
 Limitations
 -----------
@@ -37,7 +38,6 @@ seen that described anywhere, found out when digging in code).
 Known bugs and quirks
 ---------------------
 
-- Overriding "certificate is not trusted" page is not yet implemented.
 - Each certificate is checked at most once in a Firefox's session (until you
   close it). There's a cache to limit the DB checks and TLSA queries. So once a
   certificate passes TLSA test, it will stay valid even if you change TLSA
@@ -52,6 +52,10 @@ Known bugs and quirks
   could be wrong, but seems to make sense so far).
 - Full RELRO, PIE, stack protector and similar settings should be made global
   for all sub-libraries used in the project.
+- check for TLSA is synchronous, i.e. may appear to "freeze" Firefox for a
+  while, especially if there's many domains used for a page's resources (no way
+  around this without changing Firefox)
+- IDN domains are not yet supported
 
 Building
 --------
@@ -73,20 +77,5 @@ To build the Firefox addon with NPAPI plugin, use just `make`. Resulting
 `DanePatrol.xpi` should appear at toplevel directory. For running
 tests, `make test-run`.
 
-At the moment, all debugging information are kept in the NPAPI plugin binary, so
-it's a bit large. Later in production version it'll be split with strip, objcopy
-and friends.
-
-NPAPI/JS plugin test
------------------------
-
-The following test requires that you comment out the check whether plugin is
-instantiated from Firefox toplevel chrome (it's in
-plugin-source/TLSAfetcher/TLSAfetcherAPI.cpp, the if testing for `chrome.xul`).
-
-FireBreath generates `FireBreath/build/projects/TLSAfetcher/gen/FBControl.htm`
-page which can be used to test NPAPI-JS with Firebug before using it in addon
-code. E.g. in Firebug's console:
-
-    plugin().checkDANE("nlnetlabs.nl", 443, ["DERbody1", "DERbody2"], 1)
-
+Debug information are stripped and copied into separate file during the build
+(debuginfo is not packed into final xpi).

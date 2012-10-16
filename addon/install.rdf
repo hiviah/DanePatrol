@@ -7,7 +7,7 @@
     <em:id>DanePatrol@nic.cz</em:id>
     <em:type>2</em:type>    <!-- Extension -->
     <em:name>DANE Patrol</em:name>
-    <em:version>0.1.0</em:version>
+    <em:version>0.2.0</em:version>
     <em:unpack>true</em:unpack>
     <em:creator>CZ.NIC Labs</em:creator>
     <em:developer>Ondrej Mikle</em:developer>

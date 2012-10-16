@@ -7,7 +7,7 @@
 (function() {
 
 var displayName = "DanePatrol";
-var version     = "0.1.0";
+var version     = "0.2.0";
 var name        = "danepatrol"; // leafname of the JAR file
 
 // The following three sets of variables tell this installer script how your

@@ -113,7 +113,12 @@ inline FB::variant to_variant(const std::vector<Inner>& val)
 {
     FB::VariantList vl;
 
-    std::transform(val.begin(), val.end(), std::back_inserter(vl), &to_variant<Inner>);
+    // Mac OS X C++ compiler doesn't like the std::transform, hence the for cycle
+    // std::transform(val.begin(), val.end(), std::back_inserter(vl), &to_variant<Inner>);
+    typename std::vector<Inner>::const_iterator it = val.begin();
+    for (; it != val.end(); it++) {
+        vl.push_back(to_variant(*it));
+    }
 
     return vl;
 }

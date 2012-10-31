@@ -4,8 +4,12 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
  
 PROJECT(C++)
+
+## Variables set by this script:
+# OPENSSL_ARGS - args passed to openssl's ./Configure
+# CONFIGURE_ARGS - args passed to autotools' ./configure (for ldns and unbound)
+# LIB_CFLAGS - CFLAGS for dependent libraries
  
-# CFLAGS for building dependent libraries
 SET(LIB_CFLAGS "${LIB_CFLAGS} -fPIC")
 
 # If build arch is not explicitly set, use current
@@ -30,14 +34,18 @@ ELSEIF(UNIX)
     IF(APPLE)
         IF(BUILD_64BIT)
             SET(OPENSSL_ARGS "darwin64-x86_64-cc ${LIB_CFLAGS}")
+            SET(CONFIGURE_ARGS "--target=x86_64-apple-darwin11")
         ELSE()
             SET(OPENSSL_ARGS "darwin64-i386-cc ${LIB_CFLAGS}")
+            SET(CONFIGURE_ARGS "--target=i686-apple-darwin11")
         ENDIF()
     ELSE() # Linux
         IF(BUILD_64BIT)
             SET(OPENSSL_ARGS "linux-x86_64 ${LIB_CFLAGS}")
+            SET(CONFIGURE_ARGS "--target=x86_64-pc-linux-gnu")
         ELSE()
             SET(OPENSSL_ARGS "linux-elf ${LIB_CFLAGS}")
+            SET(CONFIGURE_ARGS "--target=i686-pc-linux-gnu")
         ENDIF()
     ENDIF()
 ENDIF()
@@ -47,8 +55,11 @@ ADD_CUSTOM_TARGET(RecursiveBuild ALL)
 
 # Calling Makefile.main passing the set variables on command line
 ADD_CUSTOM_COMMAND(TARGET RecursiveBuild 
-    COMMAND make ARGS -f Makefile.main 
-    LIB_CFLAGS=${LIB_CFLAGS}
-    OPENSSL_ARGS=${OPENSSL_ARGS} 
+    COMMAND make 
+    ARGS -f Makefile.main 
+        LIB_CFLAGS=${LIB_CFLAGS}
+        OPENSSL_ARGS=${OPENSSL_ARGS} 
+        CONFIGURE_ARGS=${CONFIGURE_ARGS} 
+    OUTPUTS DanePatrol.xpi
     )
 

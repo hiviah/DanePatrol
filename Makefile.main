@@ -55,14 +55,23 @@ $(OPENSSL_DIR): $(OPENSSL_TARBALL)
 
 ## ldns
 $(LDNS_LIB): $(LDNS_DIR) $(OPENSSL_LIB)
-	(cd $< && ./configure --disable-shared --with-ssl=$(OPENSSL_LIB) --with-pic --prefix=$@ && make && make install)
+	(cd $< && \
+	    CFLAGS="$(LIB_CFLAGS)" ./configure --disable-shared --with-ssl=$(OPENSSL_LIB) \
+	    --with-pic --prefix=$@ $(CONFIGURE_ARGS) && \
+	    make && \
+	    make install)
 
 $(LDNS_DIR): $(LDNS_TARBALL)
 	tar xzf $< -C libs
 
 ## unbound
 $(UNBOUND_LIB): $(UNBOUND_DIR) $(LDNS_LIB) $(OPENSSL_LIB)
-	(cd $< && ./configure --disable-shared --with-ssl=$(OPENSSL_LIB) --with-ldns=$(LDNS_LIB) --without-libevent --with-pic --prefix=$@ && make && make install)
+	(cd $< && \
+	    CFLAGS="$(LIB_CFLAGS)" ./configure --disable-shared \
+	    --with-ssl=$(OPENSSL_LIB) --with-ldns=$(LDNS_LIB) --without-libevent \
+	    --with-pic --prefix=$@ $(CONFIGURE_ARGS) && \
+	    make && \
+	    make install)
 
 $(UNBOUND_DIR): $(UNBOUND_TARBALL)
 	tar xzf $< -C libs

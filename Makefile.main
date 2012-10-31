@@ -80,10 +80,10 @@ $(UNBOUND_DIR): $(UNBOUND_TARBALL)
 $(PLUGIN_BINARY): plugin
 
 plugin: $(PLUGIN_BUILD_DIR) $(UNBOUND_LIB) $(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.cpp $(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.h
-	make -f Makefile.main $(PLUGIN_VERBOSE_BUILD) -C $<
+	make $(PLUGIN_VERBOSE_BUILD) -C $<
 
 plugin-nodeps:
-	make -f Makefile.main $(PLUGIN_VERBOSE_BUILD) -C $(PLUGIN_BUILD_DIR)
+	make $(PLUGIN_VERBOSE_BUILD) -C $(PLUGIN_BUILD_DIR)
 
 prepmake: $(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.cpp $(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.h
 	$(FIREBREATH_DIR)/prepmake.sh $(PLUGIN_SOURCE_DIR) -D CMAKE_BUILD_TYPE=$(PLUGIN_CONFIGURATION)

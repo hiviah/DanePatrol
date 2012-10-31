@@ -48,7 +48,7 @@ libs:
 
 ## openssl
 $(OPENSSL_LIB): $(OPENSSL_DIR)
-	(cd $< && ./config no-shared no-krb5 --prefix=$@ -fPIC && make -j1 && make -j1 install)
+	(cd $< && ./Configure no-shared no-krb5 --prefix=$@ $(OPENSSL_ARGS) && make -j1 && make -j1 install)
 
 $(OPENSSL_DIR): $(OPENSSL_TARBALL)
 	tar xzf $< -C libs

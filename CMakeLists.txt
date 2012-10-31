@@ -1,0 +1,54 @@
+# Simple script that will setup some variables to be used for recursive build
+# of dependent libraries like openssl, ldns and unbound.
+
+CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
+ 
+PROJECT(C++)
+ 
+# CFLAGS for building dependent libraries
+SET(LIB_CFLAGS "${LIB_CFLAGS} -fPIC")
+
+# If build arch is not explicitly set, use current
+IF(NOT DEFINED TARGET_ARCH)
+    SET(TARGET_ARCH "${CMAKE_SYSTEM_PROCESSOR}")
+ENDIF()
+
+# Set flags for dependent libraries, if/else hell on wheels
+IF(TARGET_ARCH STREQUAL "x86_64")
+    SET(LIB_CFLAGS "${LIB_CFLAGS} -m64")
+    SET(BUILD_64BIT 1)
+ELSEIF(TARGET_ARCH MATCHES "i.86")
+    SET(LIB_CFLAGS "${LIB_CFLAGS} -m32")
+    SET(BUILD_64BIT 0)
+ELSE()
+    MESSAGE(SEND_ERROR "Unsupported architecture - '${TARGET_ARCH}'")
+ENDIF()
+
+IF(WIN32)
+    MESSAGE(SEND_ERROR "Windows build not yet supported")
+ELSEIF(UNIX)
+    IF(APPLE)
+        IF(BUILD_64BIT)
+            SET(OPENSSL_ARGS "darwin64-x86_64-cc ${LIB_CFLAGS}")
+        ELSE()
+            SET(OPENSSL_ARGS "darwin64-i386-cc ${LIB_CFLAGS}")
+        ENDIF()
+    ELSE() # Linux
+        IF(BUILD_64BIT)
+            SET(OPENSSL_ARGS "linux-x86_64 ${LIB_CFLAGS}")
+        ELSE()
+            SET(OPENSSL_ARGS "linux-elf ${LIB_CFLAGS}")
+        ENDIF()
+    ENDIF()
+ENDIF()
+
+# Recursive build using Makefile.main is the target
+ADD_CUSTOM_TARGET(RecursiveBuild ALL)
+
+# Calling Makefile.main passing the set variables on command line
+ADD_CUSTOM_COMMAND(TARGET RecursiveBuild 
+    COMMAND make ARGS -f Makefile.main 
+    LIB_CFLAGS=${LIB_CFLAGS}
+    OPENSSL_ARGS=${OPENSSL_ARGS} 
+    )
+

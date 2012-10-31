@@ -29,3 +29,9 @@ tests/unbound-test
 tests/resolver-test
 tests/certificate-test
 tests/dane-test
+
+#CMake-generated files
+Makefile
+CMakeCache.txt
+CMakeFiles
+cmake_install.cmake

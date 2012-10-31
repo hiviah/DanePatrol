@@ -36,7 +36,7 @@ ELSEIF(UNIX)
             SET(OPENSSL_ARGS "darwin64-x86_64-cc ${LIB_CFLAGS}")
             SET(CONFIGURE_ARGS "--target=x86_64-apple-darwin11")
         ELSE()
-            SET(OPENSSL_ARGS "darwin64-i386-cc ${LIB_CFLAGS}")
+            SET(OPENSSL_ARGS "darwin-i386-cc ${LIB_CFLAGS}")
             SET(CONFIGURE_ARGS "--target=i686-apple-darwin11")
         ENDIF()
     ELSE() # Linux

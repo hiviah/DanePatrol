@@ -91,7 +91,7 @@ prepmake: $(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.cpp $(PLUGIN_JSAPI_IDL_D
 $(PLUGIN_BUILD_DIR): $(PLUGIN_SOURCE_DIR)/CMakeLists.txt $(PLUGIN_SOURCE_DIR)/PluginConfig.cmake \
 		$(PLUGIN_SOURCE_DIR)/X11/projectDef.cmake $(PLUGIN_SOURCE_DIR)/Mac/projectDef.cmake $(PLUGIN_SOURCE_DIR)/Win/projectDef.cmake \
 		#dependencies end
-		make prepmake
+		make -f Makefile.main prepmake
 
 # final 'touch' is to keep Makefile time depedencies
 $(PLUGIN_BINARY_DEBUG): $(PLUGIN_BINARY)

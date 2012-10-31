@@ -26,8 +26,21 @@ FIREBREATH_TAG := firebreath-1.6.0
 PLUGIN_SOURCE_DIR := $(BASEDIR)/plugin-source/TLSAfetcher
 PLUGIN_BUILD_DIR := $(FIREBREATH_DIR)/build
 PLUGIN_JSAPI_IDL_DIR := $(PLUGIN_SOURCE_DIR)/JSAPI_IDL
-PLUGIN_BINARY := $(PLUGIN_BUILD_DIR)/bin/TLSAfetcher/npTLSAfetcher.so
-PLUGIN_BINARY_DEBUG := $(PLUGIN_BUILD_DIR)/bin/TLSAfetcher/npTLSAfetcher.so.debug
+
+# Different NPAPI plugin names based on OS
+ifeq ($(TARGET_OS),LINUX)
+    PLUGIN_BINARY := $(PLUGIN_BUILD_DIR)/bin/TLSAfetcher/npTLSAfetcher.so
+    PLUGIN_BINARY_DEBUG := $(PLUGIN_BUILD_DIR)/bin/TLSAfetcher/npTLSAfetcher.so.debug
+endif
+ifeq ($(TARGET_OS),MAC)
+    PLUGIN_BINARY := $(PLUGIN_BUILD_DIR)/projects/TLSAfetcher/TLSAfetcher.plugin
+    PLUGIN_BINARY_DEBUG := $(PLUGIN_BUILD_DIR)/projects/TLSAfetcher/TLSAfetcher.plugin.debug
+endif
+ifeq ($(TARGET_OS),WINDOWS)
+    PLUGIN_BINARY := $(PLUGIN_BUILD_DIR)/bin/TLSAfetcher/npTLSAfetcher.dll
+    PLUGIN_BINARY_DEBUG := $(PLUGIN_BUILD_DIR)/bin/TLSAfetcher/npTLSAfetcher.dll.debug
+endif
+
 PLUGIN_IDL_COMPILER := $(PLUGIN_JSAPI_IDL_DIR)/JSAPI_IDL_compiler.py
 
 ## uncomment to make plugin build verbose - shows gcc invocations etc.
@@ -95,10 +108,14 @@ $(PLUGIN_BUILD_DIR): $(PLUGIN_SOURCE_DIR)/CMakeLists.txt $(PLUGIN_SOURCE_DIR)/Pl
 
 # final 'touch' is to keep Makefile time depedencies
 $(PLUGIN_BINARY_DEBUG): $(PLUGIN_BINARY)
+ifeq ($(TARGET_OS),LINUX)
 	objcopy --only-keep-debug $< $@
 	strip $<
 	objcopy --add-gnu-debuglink=$@ $<
 	touch $@
+else
+	cp -fr $< $@
+endif
 
 # auto-generated cpp and h for JSAPI structures passed between JS <-> C++
 $(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.cpp $(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.h: $(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.yaml $(PLUGIN_IDL_COMPILER)

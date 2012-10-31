@@ -9,6 +9,7 @@ PROJECT(C++)
 # OPENSSL_ARGS - args passed to openssl's ./Configure
 # CONFIGURE_ARGS - args passed to autotools' ./configure (for ldns and unbound)
 # LIB_CFLAGS - CFLAGS for dependent libraries
+# TARGET_OS - target OS name build is made for
  
 SET(LIB_CFLAGS "${LIB_CFLAGS} -fPIC")
 
@@ -29,9 +30,11 @@ ELSE()
 ENDIF()
 
 IF(WIN32)
+    SET(TARGET_OS "WINDOWS")
     MESSAGE(SEND_ERROR "Windows build not yet supported")
 ELSEIF(UNIX)
     IF(APPLE)
+    	SET(TARGET_OS "MAC")
         IF(BUILD_64BIT)
             SET(OPENSSL_ARGS "darwin64-x86_64-cc ${LIB_CFLAGS}")
             SET(CONFIGURE_ARGS "--target=x86_64-apple-darwin11")
@@ -40,6 +43,7 @@ ELSEIF(UNIX)
             SET(CONFIGURE_ARGS "--target=i686-apple-darwin11")
         ENDIF()
     ELSE() # Linux
+    	SET(TARGET_OS "LINUX")
         IF(BUILD_64BIT)
             SET(OPENSSL_ARGS "linux-x86_64 ${LIB_CFLAGS}")
             SET(CONFIGURE_ARGS "--target=x86_64-pc-linux-gnu")
@@ -60,6 +64,7 @@ ADD_CUSTOM_COMMAND(TARGET RecursiveBuild
         LIB_CFLAGS=${LIB_CFLAGS}
         OPENSSL_ARGS=${OPENSSL_ARGS} 
         CONFIGURE_ARGS=${CONFIGURE_ARGS} 
+	TARGET_OS=${TARGET_OS}
     OUTPUTS DanePatrol.xpi
     )
 

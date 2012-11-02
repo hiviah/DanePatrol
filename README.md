@@ -60,22 +60,61 @@ Known bugs and quirks
 Building
 --------
 
-Currently the build is Linux only (maybe could work on \*BSD). Windows version
-will need modifying the Makefile to use MSVC, Mac version needs to use Xcode to
-compile the NPAPI plugin.
+Currently the build works on Linux and Mac OS X (Windows requires some extra
+hacking).
 
 ### Build requirements
 
 - gcc (possibly clang &gt;= 3.0, 2.8 will fail)
 - autotools (autoconf, automake, make)
-- cmake &gt;= 2.6
+- cmake &gt;= 2.6 (cmake &gt;= 2.8 for Mac)
 - git (Makefile pulls submodules)
 - python, python-yaml
-- GTK+ 2 development libraries (usually named `gtk2-devel` or `libgtk2.0-dev`)
+- platform dependent stuff:
+  - Linux: GTK+ 2 development libraries (usually named `gtk2-devel` or
+    `libgtk2.0-dev`)
+  - Mac: Xcode (FireBreath says it needs it, but seems not necessary when we
+    use `prepmake.sh` instead of `prepmac.sh`)
 
-To build the Firefox addon with NPAPI plugin, use just `make`. Resulting
-`DanePatrol.xpi` should appear at toplevel directory. For running
-tests, `make test-run`.
+### Build parameters of CMake
 
-Debug information are stripped and copied into separate file during the build
-(debuginfo is not packed into final xpi).
+Toplevel CMake takes one parameter `TARGET_ARCH` which can be either `i686` or
+`x86_64`. If not specified, cmake script will try to guess the arch based on
+current machine environment. This works fairly well for Linux, but for Mac
+there is a well-known bug of CMake reporting 32-bit arch even if machine is
+`x86_64`.
+
+Thus in general the build is done by invoking CMake, then make (note the dot
+at the end of cmake invocation):
+
+    cmake [-DTARGET_ARCH=(x86_64|i686)] .
+    make
+
+Do not mix builds for two architectures in one cloned repo tree (build system
+is not that far yet).
+
+### Build on Linux
+
+Just call cmake and make without any extra parameters:
+
+    cmake .
+    make
+
+### Build on Mac
+
+It's recommended to set explicitly the target architecture on Mac since CMake
+may guess it wrong (see above), e.g.:
+
+    cmake -DTARGET_ARCH=x86_64 .
+    make
+
+### Other make targets (tests, clean)
+
+Some usual targets like `clean` and `distclean` were moved to `Makefile.main`
+when CMake was introduced into the mix. Thus invocation:
+
+    make -f Makefile.main clean         #clean intermediate compile files
+    make -f Makefile.main distclean     #clean everything, including built libs
+    make -f Makefile.main test          #build tests
+    make -f Makefile.main test-run      #run tests (build if necessary)
+

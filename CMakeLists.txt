@@ -1,6 +1,8 @@
 # Simple script that will setup some variables to be used for recursive build
 # of dependent libraries like openssl, ldns and unbound.
 
+# On Mac, 2.8 is required due to the use of CMAKE_OSX_ARCHITECTURES
+# Requirement for 2.8 is specified on Mac branch below.
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
  
 PROJECT(C++)
@@ -34,13 +36,16 @@ IF(WIN32)
     MESSAGE(SEND_ERROR "Windows build not yet supported")
 ELSEIF(UNIX)
     IF(APPLE)
+	CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
     	SET(TARGET_OS "MAC")
         IF(BUILD_64BIT)
             SET(OPENSSL_ARGS "darwin64-x86_64-cc ${LIB_CFLAGS}")
             SET(CONFIGURE_ARGS "--target=x86_64-apple-darwin11")
+            SET(CMAKE_OSX_ARCHITECTURES "x86_64")
         ELSE()
             SET(OPENSSL_ARGS "darwin-i386-cc ${LIB_CFLAGS}")
             SET(CONFIGURE_ARGS "--target=i686-apple-darwin11")
+            SET(CMAKE_OSX_ARCHITECTURES "i386")
         ENDIF()
     ELSE() # Linux
     	SET(TARGET_OS "LINUX")
@@ -65,6 +70,8 @@ ADD_CUSTOM_COMMAND(TARGET RecursiveBuild
         OPENSSL_ARGS=${OPENSSL_ARGS} 
         CONFIGURE_ARGS=${CONFIGURE_ARGS} 
 	TARGET_OS=${TARGET_OS}
+	CMAKE_OSX_ARCHITECTURES=${CMAKE_OSX_ARCHITECTURES}
+
     OUTPUTS DanePatrol.xpi
     )
 

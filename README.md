@@ -70,6 +70,7 @@ hacking).
 - cmake &gt;= 2.6 (cmake &gt;= 2.8 for Mac)
 - git (Makefile pulls submodules)
 - python, python-yaml
+- expat (unbound dependency)
 - platform dependent stuff:
   - Linux: GTK+ 2 development libraries (usually named `gtk2-devel` or
     `libgtk2.0-dev`)

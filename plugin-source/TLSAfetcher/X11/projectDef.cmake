@@ -57,4 +57,4 @@ target_link_libraries(${PROJNAME}
     -Wl,-z=relro -Wl,-z=now
     )
 
-SET (CMAKE_CXX_FLAGS "-fPIC -fPIE -D_FORTIFY_SOURCE=2 -fstack-protector-all -Wstack-protector -fwrapv --param ssp-buffer-size=1")
+SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -fPIE -D_FORTIFY_SOURCE=2 -fstack-protector-all -Wstack-protector -fwrapv --param ssp-buffer-size=1")

@@ -31,8 +31,21 @@ PLUGIN_JSAPI_IDL_DIR := $(PLUGIN_SOURCE_DIR)/JSAPI_IDL
 ifeq ($(TARGET_OS),LINUX)
     PLUGIN_BINARY := $(PLUGIN_BUILD_DIR)/bin/TLSAfetcher/npTLSAfetcher.so
     PLUGIN_BINARY_DEBUG := $(PLUGIN_BUILD_DIR)/bin/TLSAfetcher/npTLSAfetcher.so.debug
+    # FireBreath/cmake has no equivalent to autoconf's --target=... except for
+    # CMAKE_OSX_ARCHITECTURES (which works obviously only on Mac).
+    # So, yay! Another workaround.
+    # Note in case it ever becomes necessary: linker has --format flag to
+    # explicitly specify library format, e.g. when passed through gcc:
+    # gcc ... -Wl,--format=elf32-i386 ...
+    # There are also two undocumented CMake variables:
+    # CMAKE_MODULE_LINKER_FLAGS and CMAKE_SHARED_LINKER_FLAGS
+    FIREBREATH_CMAKE_FLAGS := -DCMAKE_CXX_FLAGS="$(LIB_CFLAGS)"
 endif
 ifeq ($(TARGET_OS),MAC)
+    # there is one more FireBreath's prepmake param that might be useful for
+    # compatibility:
+    # -D CMAKE_OSX_DEPLOYMENT_TARGET=10.6 - Set the desired target version of
+    #  Mac OS X
     PLUGIN_BINARY := $(PLUGIN_BUILD_DIR)/projects/TLSAfetcher/TLSAfetcher.plugin
     PLUGIN_BINARY_DEBUG := $(PLUGIN_BUILD_DIR)/projects/TLSAfetcher/TLSAfetcher.plugin.debug
 endif
@@ -48,7 +61,7 @@ PLUGIN_IDL_COMPILER := $(PLUGIN_JSAPI_IDL_DIR)/JSAPI_IDL_compiler.py
 
 ## Configuration is one of Debug, Release, MinSizeRel and RelWithDebInfo.
 ## You need to run 'make prepmake' after changing.
-PLUGIN_CONFIGURATION = Debug
+PLUGIN_CONFIGURATION ?= Debug
 
 libs-build: submodules libs $(OPENSSL_LIB) $(LDNS_LIB) $(UNBOUND_LIB)
 
@@ -99,7 +112,7 @@ plugin-nodeps:
 	make $(PLUGIN_VERBOSE_BUILD) -C $(PLUGIN_BUILD_DIR)
 
 prepmake: $(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.cpp $(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.h
-	$(FIREBREATH_DIR)/prepmake.sh $(PLUGIN_SOURCE_DIR) -D CMAKE_BUILD_TYPE=$(PLUGIN_CONFIGURATION)
+	$(FIREBREATH_DIR)/prepmake.sh $(PLUGIN_SOURCE_DIR) -D CMAKE_BUILD_TYPE=$(PLUGIN_CONFIGURATION) $(FIREBREATH_CMAKE_FLAGS)
 
 $(PLUGIN_BUILD_DIR): $(PLUGIN_SOURCE_DIR)/CMakeLists.txt $(PLUGIN_SOURCE_DIR)/PluginConfig.cmake \
 		$(PLUGIN_SOURCE_DIR)/X11/projectDef.cmake $(PLUGIN_SOURCE_DIR)/Mac/projectDef.cmake $(PLUGIN_SOURCE_DIR)/Win/projectDef.cmake \

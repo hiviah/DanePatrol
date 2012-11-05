@@ -52,6 +52,7 @@ ADDON_LOCALE_SOURCES := \
 ADDON_GENERATED_SOURCES := \
     $(PLUGIN_BINARY) \
     $(PLUGIN_BINARY_DEBUG) \
+    $(PLUGIN_BINARY_TREE) \
     $(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.js \
     #end of ADDON_GENERATED_SOURCES
 
@@ -77,7 +78,7 @@ $(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.js: $(PLUGIN_JSAPI_IDL_DIR)/TLSAfe
 $(ADDON_XPI_FILE): $(ADDON_ALL_SOURCES)
 	rm -f $@
 	mkdir -p $(ADDON_DIR)/plugins
-	cp -fr $(PLUGIN_BINARY) $(ADDON_DIR)/plugins/
+	cp -fr $(PLUGIN_BINARY_TREE) $(ADDON_DIR)/plugins/
 	cp -fa $(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.js $(ADDON_DIR)/content/
 	(cd $(ADDON_DIR) && zip -9r ../$(ADDON_XPI_FILE) . --exclude '*.swp' --exclude '*.kpf')
 

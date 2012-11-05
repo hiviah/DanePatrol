@@ -34,9 +34,12 @@ VERSION := $(shell ./extract_version.py $(ADDON_DIR)/install.rdf)
 VERSION_OS_ARCH := $(VERSION)-$(OS_LOWERCASE)_$(XPI_ARCH)
 
 # Different NPAPI plugin names based on OS
+# PLUGIN_BINARY_TREE is necessary because Mac has dirtree structure instead of
+# a single file.
 ifeq ($(TARGET_OS),LINUX)
     PLUGIN_BINARY := $(PLUGIN_BUILD_DIR)/bin/TLSAfetcher/npTLSAfetcher.so
     PLUGIN_BINARY_DEBUG := $(PLUGIN_BUILD_DIR)/bin/TLSAfetcher/npTLSAfetcher.so.debug
+    PLUGIN_BINARY_TREE := $(PLUGIN_BINARY)
     # FireBreath/cmake has no equivalent to autoconf's --target=... except for
     # CMAKE_OSX_ARCHITECTURES (which works obviously only on Mac).
     # So, yay! Another workaround.
@@ -52,12 +55,14 @@ ifeq ($(TARGET_OS),MAC)
     # compatibility:
     # -D CMAKE_OSX_DEPLOYMENT_TARGET=10.6 - Set the desired target version of
     #  Mac OS X
-    PLUGIN_BINARY := $(PLUGIN_BUILD_DIR)/projects/TLSAfetcher/TLSAfetcher.plugin
-    PLUGIN_BINARY_DEBUG := $(PLUGIN_BUILD_DIR)/projects/TLSAfetcher/TLSAfetcher.plugin.debug
+    PLUGIN_BINARY := $(PLUGIN_BUILD_DIR)/projects/TLSAfetcher/TLSAfetcher.plugin/Contents/MacOS/TLSAfetcher
+    PLUGIN_BINARY_DEBUG := $(PLUGIN_BUILD_DIR)/projects/TLSAfetcher/TLSAfetcher.dSYM
+    PLUGIN_BINARY_TREE := $(PLUGIN_BUILD_DIR)/projects/TLSAfetcher/TLSAfetcher.plugin
 endif
 ifeq ($(TARGET_OS),WINDOWS)
     PLUGIN_BINARY := $(PLUGIN_BUILD_DIR)/bin/TLSAfetcher/npTLSAfetcher.dll
     PLUGIN_BINARY_DEBUG := $(PLUGIN_BUILD_DIR)/bin/TLSAfetcher/npTLSAfetcher.dll.debug
+    PLUGIN_BINARY_TREE := $(PLUGIN_BINARY)
 endif
 
 PLUGIN_IDL_COMPILER := $(PLUGIN_JSAPI_IDL_DIR)/JSAPI_IDL_compiler.py
@@ -109,13 +114,13 @@ $(UNBOUND_DIR): $(UNBOUND_TARBALL)
 	tar xzf $< -C libs
 
 ## plugin
+$(PLUGIN_BINARY_TREE): $(PLUGIN_BINARY)
+	touch $@
+
 $(PLUGIN_BINARY): plugin
 
 plugin: $(PLUGIN_BUILD_DIR) $(UNBOUND_LIB) $(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.cpp $(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.h
 	make $(PLUGIN_VERBOSE_BUILD) -C $<
-
-plugin-nodeps:
-	make $(PLUGIN_VERBOSE_BUILD) -C $(PLUGIN_BUILD_DIR)
 
 prepmake: $(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.cpp $(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.h
 	$(FIREBREATH_DIR)/prepmake.sh $(PLUGIN_SOURCE_DIR) -D CMAKE_BUILD_TYPE=$(PLUGIN_CONFIGURATION) $(FIREBREATH_CMAKE_FLAGS) -D XPI_VERSION=$(VERSION)
@@ -126,15 +131,17 @@ $(PLUGIN_BUILD_DIR): $(PLUGIN_SOURCE_DIR)/CMakeLists.txt $(PLUGIN_SOURCE_DIR)/Pl
 		CMAKE_OSX_ARCHITECTURES="$(CMAKE_OSX_ARCHITECTURES)" make -f Makefile.main prepmake
 
 # final 'touch' is to keep Makefile time depedencies
-$(PLUGIN_BINARY_DEBUG): $(PLUGIN_BINARY)
+$(PLUGIN_BINARY_DEBUG): $(PLUGIN_BINARY) $(PLUGIN_BINARY_TREE)
 ifeq ($(TARGET_OS),LINUX)
 	objcopy --only-keep-debug $< $@
 	strip $<
 	objcopy --add-gnu-debuglink=$@ $<
-	touch $@
-else
-	cp -fr $< $@
 endif
+ifeq ($(TARGET_OS),MAC)
+	dsymutil $< -o $@
+	strip -S $<
+endif
+	touch $@
 
 # auto-generated cpp and h for JSAPI structures passed between JS <-> C++
 $(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.cpp $(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.h: $(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.yaml $(PLUGIN_IDL_COMPILER)

@@ -36,8 +36,8 @@ IF(WIN32)
     MESSAGE(SEND_ERROR "Windows build not yet supported")
 ELSEIF(UNIX)
     IF(APPLE)
-	CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
-    	SET(TARGET_OS "MAC")
+        CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
+        SET(TARGET_OS "MAC")
         IF(BUILD_64BIT)
             SET(OPENSSL_ARGS "darwin64-x86_64-cc ${LIB_CFLAGS}")
             SET(CONFIGURE_ARGS "--target=x86_64-apple-darwin11")
@@ -48,7 +48,7 @@ ELSEIF(UNIX)
             SET(CMAKE_OSX_ARCHITECTURES "i386")
         ENDIF()
     ELSE() # Linux
-    	SET(TARGET_OS "LINUX")
+        SET(TARGET_OS "LINUX")
         IF(BUILD_64BIT)
             SET(OPENSSL_ARGS "linux-x86_64 ${LIB_CFLAGS}")
             SET(CONFIGURE_ARGS "--target=x86_64-pc-linux-gnu")
@@ -69,9 +69,10 @@ ADD_CUSTOM_COMMAND(TARGET RecursiveBuild
         LIB_CFLAGS=${LIB_CFLAGS}
         OPENSSL_ARGS=${OPENSSL_ARGS} 
         CONFIGURE_ARGS=${CONFIGURE_ARGS} 
-	TARGET_OS=${TARGET_OS}
-	CMAKE_OSX_ARCHITECTURES=${CMAKE_OSX_ARCHITECTURES}
+        TARGET_OS=${TARGET_OS}
+        CMAKE_OSX_ARCHITECTURES=${CMAKE_OSX_ARCHITECTURES}
+        XPI_ARCH=${TARGET_ARCH}
 
-    OUTPUTS DanePatrol.xpi
+    #OUTPUTS DanePatrol.xpi
     )
 

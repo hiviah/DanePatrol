@@ -1,12 +1,5 @@
 ## Makefile for XPI separated, the file would clobber the main Makefile
 
-ADDON_DIR := addon
-
-# Few variables to control XPI filename based on platform and version
-OS_LOWERCASE := $(shell echo $(TARGET_OS) | tr '[:upper:]' '[:lower:]')
-VERSION := $(shell ./extract_version.py $(ADDON_DIR)/install.rdf)
-VERSION_OS_ARCH := $(VERSION)-$(OS_LOWERCASE)_$(XPI_ARCH)
-
 ADDON_XPI_FILE := DanePatrol-$(VERSION_OS_ARCH).xpi
 
 ## Addon files, explicitly enumerated to employ make's dependency tracking

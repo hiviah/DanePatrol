@@ -27,6 +27,12 @@ PLUGIN_SOURCE_DIR := $(BASEDIR)/plugin-source/TLSAfetcher
 PLUGIN_BUILD_DIR := $(FIREBREATH_DIR)/build
 PLUGIN_JSAPI_IDL_DIR := $(PLUGIN_SOURCE_DIR)/JSAPI_IDL
 
+# Few variables to control XPI filename based on platform and version
+ADDON_DIR := addon
+OS_LOWERCASE := $(shell echo $(TARGET_OS) | tr '[:upper:]' '[:lower:]')
+VERSION := $(shell ./extract_version.py $(ADDON_DIR)/install.rdf)
+VERSION_OS_ARCH := $(VERSION)-$(OS_LOWERCASE)_$(XPI_ARCH)
+
 # Different NPAPI plugin names based on OS
 ifeq ($(TARGET_OS),LINUX)
     PLUGIN_BINARY := $(PLUGIN_BUILD_DIR)/bin/TLSAfetcher/npTLSAfetcher.so
@@ -112,7 +118,7 @@ plugin-nodeps:
 	make $(PLUGIN_VERBOSE_BUILD) -C $(PLUGIN_BUILD_DIR)
 
 prepmake: $(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.cpp $(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.h
-	$(FIREBREATH_DIR)/prepmake.sh $(PLUGIN_SOURCE_DIR) -D CMAKE_BUILD_TYPE=$(PLUGIN_CONFIGURATION) $(FIREBREATH_CMAKE_FLAGS)
+	$(FIREBREATH_DIR)/prepmake.sh $(PLUGIN_SOURCE_DIR) -D CMAKE_BUILD_TYPE=$(PLUGIN_CONFIGURATION) $(FIREBREATH_CMAKE_FLAGS) -D XPI_VERSION=$(VERSION)
 
 $(PLUGIN_BUILD_DIR): $(PLUGIN_SOURCE_DIR)/CMakeLists.txt $(PLUGIN_SOURCE_DIR)/PluginConfig.cmake \
 		$(PLUGIN_SOURCE_DIR)/X11/projectDef.cmake $(PLUGIN_SOURCE_DIR)/Mac/projectDef.cmake $(PLUGIN_SOURCE_DIR)/Win/projectDef.cmake \

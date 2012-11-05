@@ -1,7 +1,13 @@
 ## Makefile for XPI separated, the file would clobber the main Makefile
 
-ADDON_XPI_FILE := DanePatrol.xpi
 ADDON_DIR := addon
+
+# Few variables to control XPI filename based on platform and version
+OS_LOWERCASE := $(shell echo $(TARGET_OS) | tr '[:upper:]' '[:lower:]')
+VERSION := $(shell ./extract_version.py $(ADDON_DIR)/install.rdf)
+VERSION_OS_ARCH := $(VERSION)-$(OS_LOWERCASE)_$(XPI_ARCH)
+
+ADDON_XPI_FILE := DanePatrol-$(VERSION_OS_ARCH).xpi
 
 ## Addon files, explicitly enumerated to employ make's dependency tracking
 ADDON_JS_SOURCES := \
@@ -80,6 +86,6 @@ $(ADDON_XPI_FILE): $(ADDON_ALL_SOURCES)
 	mkdir -p $(ADDON_DIR)/plugins
 	cp -fr $(PLUGIN_BINARY) $(ADDON_DIR)/plugins/
 	cp -fa $(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.js $(ADDON_DIR)/content/
-	(cd $(ADDON_DIR) && zip -9r ../DanePatrol.xpi . --exclude '*.swp' --exclude '*.kpf')
+	(cd $(ADDON_DIR) && zip -9r ../$(ADDON_XPI_FILE) . --exclude '*.swp' --exclude '*.kpf')
 
 

@@ -61,7 +61,7 @@ PLUGIN_IDL_COMPILER := $(PLUGIN_JSAPI_IDL_DIR)/JSAPI_IDL_compiler.py
 
 ## Configuration is one of Debug, Release, MinSizeRel and RelWithDebInfo.
 ## You need to run 'make prepmake' after changing.
-PLUGIN_CONFIGURATION ?= Debug
+PLUGIN_CONFIGURATION ?= RelWithDebInfo
 
 libs-build: submodules libs $(OPENSSL_LIB) $(LDNS_LIB) $(UNBOUND_LIB)
 

@@ -66,6 +66,7 @@ Known bugs and quirks
   around this without changing Firefox). Rarely you may stumble upon slow
   authoritative name server which may take several seconds to reply.
 - IDN domains are not yet supported
+- no autoupdate of addon yet
 
 Building
 --------

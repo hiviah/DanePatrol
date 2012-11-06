@@ -99,7 +99,7 @@ Thus in general the build is done by invoking CMake, then make (note the dot
 at the end of cmake invocation):
 
     cmake [-DTARGET_ARCH=(x86_64|i686)] .
-    make
+    make [VERBOSE=1]
 
 Do not mix builds for two architectures in one cloned repo tree (build system
 is not that far yet).

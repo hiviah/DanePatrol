@@ -8,8 +8,6 @@
 #include "ldns/packet.h"
 #include "ldns/wire2host.h"
 
-#define RR_TYPE_TLSA 52
-
 int main(void)
 {
 	struct ub_ctx* ctx;
@@ -35,7 +33,7 @@ int main(void)
 
 	/* query for TLSA */
 	retval = ub_resolve(ctx, "_443._tcp.www.torproject.org", //"_443._tcp.nohats.ca", 
-		RR_TYPE_TLSA, 
+		LDNS_RR_TYPE_TLSA, 
 		1 /* CLASS IN (internet) */, &result);
 	if(retval != 0) {
 		printf("resolve error: %s\n", ub_strerror(retval));
@@ -52,35 +50,47 @@ int main(void)
                         return 1;
                 }
                 
-                ldns_rr_list *rrs = ldns_pkt_rr_list_by_type(packet, RR_TYPE_TLSA, LDNS_SECTION_ANSWER);
+                ldns_rr_list *rrs = ldns_pkt_rr_list_by_type(packet, LDNS_RR_TYPE_TLSA, LDNS_SECTION_ANSWER);
                 for (i = 0; i < ldns_rr_list_rr_count(rrs); i++) {
                         /* extract first rdf, which is the whole TLSA record */
                         ldns_rr *rr = ldns_rr_list_rr(rrs, i);
-                        if (ldns_rr_rd_count(rr) < 1) {
-                                printf("RR %d does have no RDFs\n", i);
+                        
+                        // Since ldns 1.6.14, RR for TLSA is parsed into 4 RDFs 
+                        // instead of 1 RDF in ldns 1.6.13.
+                        if (ldns_rr_rd_count(rr) < 4) {
+                                printf("RR %d hasn't enough fields\n", i);
                                 return 1;
                         }
 
-                        ldns_rdf *rdf = ldns_rr_rdf(rr, 0);
+                        ldns_rdf *rdf_cert_usage    = ldns_rr_rdf(rr, 0),
+                                 *rdf_selector      = ldns_rr_rdf(rr, 1),
+                                 *rdf_matching_type = ldns_rr_rdf(rr, 2),
+                                 *rdf_association   = ldns_rr_rdf(rr, 3);
                         
-                        size_t rdf_size = ldns_rdf_size(rdf);
-                        if (rdf_size < 4) {
-                                printf("TLSA record in RR %d too short\n", i);
+                        if (ldns_rdf_size(rdf_cert_usage)       != 1 ||
+                            ldns_rdf_size(rdf_selector)         != 1 ||
+                            ldns_rdf_size(rdf_matching_type)    != 1 ||
+                            ldns_rdf_size(rdf_association)      < 0
+                            ) {
+                                printf("Improperly formatted TLSA RR %d\n", i);
                                 return 1;
                         }
 
                         uint8_t cert_usage, selector, matching_type;
-                        uint8_t *rdf_data = ldns_rdf_data(rdf);
+                        uint8_t *association;
+                        size_t association_size;
 
-                        cert_usage = rdf_data[0];
-                        selector = rdf_data[1];
-                        matching_type = rdf_data[2];
+                        cert_usage = ldns_rdf_data(rdf_cert_usage)[0];
+                        selector = ldns_rdf_data(rdf_selector)[0];
+                        matching_type = ldns_rdf_data(rdf_matching_type)[0];
+                        association = ldns_rdf_data(rdf_association);
+                        association_size = ldns_rdf_size(rdf_association);
                         
                         printf("RR %d: cert usage %d, selector %d, matching type %d, data ",
                                 i, cert_usage, selector, matching_type);
                         int n;
-                        for(n=3; n<rdf_size; n++) {
-                                printf("%02x", rdf_data[n]);
+                        for(n=0; n<association_size; n++) {
+                                printf("%02x", association[n]);
                         }
                         printf("\n");
 

@@ -15,7 +15,7 @@
     <em:optionsURL>chrome://danepatrol/content/prefs.xul</em:optionsURL>
     <!-- em:updateURL>http://www.foo.com/update.cgi?id=%ITEM_ID%&amp;version=%ITEM_VERSION%</em:updateURL -->
     <em:iconURL>chrome://danepatrol/content/icon.png</em:iconURL>
-    <em:aboutURL>http://labs.nic.cz</em:aboutURL>
+    <em:aboutURL>https://labs.nic.cz/page/1207/dane-patrol/</em:aboutURL>
 
     <em:description>Monitor and compare certificates your application adopts for encrypted HTTPS web sites.</em:description>
     <!--
@@ -34,11 +34,15 @@
     -->
 
     <!-- check https://addons.mozilla.org/en-US/firefox/pages/appversions -->
+    <!-- Thunderbird, Seamonkey and other non-Firefox XUL-based applications
+         are not really supported and tested. Allowed here only so that people
+         can check it out.
+    -->
     <em:targetApplication>
       <Description>
         <em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id> <!-- Firefox, Iceweasel, Flock -->
-        <em:minVersion>3.5</em:minVersion>
-        <em:maxVersion>10.0a1</em:maxVersion>
+        <em:minVersion>4.0</em:minVersion>
+        <em:maxVersion>18.*</em:maxVersion>
       </Description>
     </em:targetApplication>
 
@@ -53,8 +57,8 @@
     <em:targetApplication>
       <Description>
 	<em:id>{3550f703-e582-4d05-9a08-453d09bdfdc6}</em:id> <!-- Thunderbird -->
-	<em:minVersion>3.0</em:minVersion>
-	<em:maxVersion>10.0a1</em:maxVersion>
+	<em:minVersion>4.0</em:minVersion>
+	<em:maxVersion>18.*</em:maxVersion>
       </Description>
     </em:targetApplication>
 
@@ -72,7 +76,7 @@
       <Description>
         <em:id>{92650c4d-4b8e-4d2a-b7eb-24ecf4f6b63a}</em:id> <!-- SeaMonkey -->
         <em:minVersion>2.0</em:minVersion>
-        <em:maxVersion>2.7a1</em:maxVersion>
+        <em:maxVersion>2.14b3</em:maxVersion>
       </Description>
     </em:targetApplication>
 

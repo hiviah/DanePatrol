@@ -167,6 +167,7 @@ distclean:
 	rm -rf libs
 	rm -rf $(PLUGIN_BUILD_DIR)
 	rm -f $(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.h $(PLUGIN_JSAPI_IDL_DIR)/TLSAfetcherStructures.cpp
+	rm -rf CMakeCache.txt CMakeFiles/ cmake_install.cmake
 
 README.html: README.md
 	redcarpet $< > $@

@@ -117,27 +117,38 @@ TLSAList Resolver::parseResult(const ub_result* result) const
 
     rrs = ldns_pkt_rr_list_by_type(packet, RR_TYPE_TLSA, LDNS_SECTION_ANSWER);
     for (int i = 0; i < ldns_rr_list_rr_count(rrs); i++) {
-        /* extract first rdf, which is the whole TLSA record */
         ldns_rr *rr = ldns_rr_list_rr(rrs, i);
-        if (ldns_rr_rd_count(rr) < 1) {
-        ldns_rr_free(rr);
-        continue;
+
+        /* Since ldns 1.6.14, RR for TLSA is parsed into 4 RDFs 
+         * instead of 1 RDF in ldns 1.6.13.
+         */
+        if (ldns_rr_rd_count(rr) < 4) {
+            ldns_rr_free(rr);
+            continue;
         }
 
-        ldns_rdf *rdf = ldns_rr_rdf(rr, 0);
+        ldns_rdf *rdf_cert_usage    = ldns_rr_rdf(rr, 0),
+                 *rdf_selector      = ldns_rr_rdf(rr, 1),
+                 *rdf_matching_type = ldns_rr_rdf(rr, 2),
+                 *rdf_association   = ldns_rr_rdf(rr, 3);
+        
+        // Skip improperly formatted TLSA RRs
+        if (ldns_rdf_size(rdf_cert_usage)       != 1 ||
+            ldns_rdf_size(rdf_selector)         != 1 ||
+            ldns_rdf_size(rdf_matching_type)    != 1 ||
+            ldns_rdf_size(rdf_association)      < 0     ) {
 
-        size_t rdf_size = ldns_rdf_size(rdf);
-        if (rdf_size < 4) {
-        ldns_rr_free(rr);
-        continue;
+            ldns_rr_free(rr);
+            continue;
         }
 
-        uint8_t *rdf_data = ldns_rdf_data(rdf);
+        size_t association_size = ldns_rdf_size(rdf_association);
 
-        CertUsage cert_usage = CertUsage(rdf_data[0]);
-        Selector selector = Selector(rdf_data[1]);
-        MatchingType matching_type = MatchingType(rdf_data[2]);
-        std::string association((char *)(rdf_data+3), rdf_size-3);
+        CertUsage cert_usage        = CertUsage   ( ldns_rdf_data(rdf_cert_usage)[0]    );
+        Selector selector           = Selector    ( ldns_rdf_data(rdf_selector)[0]      );
+        MatchingType matching_type  = MatchingType( ldns_rdf_data(rdf_matching_type)[0] );
+
+        std::string association((char*)ldns_rdf_data(rdf_association), association_size);
 
         tlsaList.push_back(ResolvedTLSA(cert_usage, selector, matching_type,
             association, bin2hex(association)));

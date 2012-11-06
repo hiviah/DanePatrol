@@ -114,8 +114,12 @@ $(UNBOUND_DIR): $(UNBOUND_TARBALL)
 	tar xzf $< -C libs
 
 ## plugin
+
+# Makefile would complain about circular dependency here
+ifeq ($(TARGET_OS),MAC)
 $(PLUGIN_BINARY_TREE): $(PLUGIN_BINARY)
 	touch $@
+endif
 
 $(PLUGIN_BINARY): plugin
 
@@ -131,15 +135,15 @@ $(PLUGIN_BUILD_DIR): $(PLUGIN_SOURCE_DIR)/CMakeLists.txt $(PLUGIN_SOURCE_DIR)/Pl
 		CMAKE_OSX_ARCHITECTURES="$(CMAKE_OSX_ARCHITECTURES)" make -f Makefile.main prepmake
 
 # final 'touch' is to keep Makefile time depedencies
-$(PLUGIN_BINARY_DEBUG): $(PLUGIN_BINARY) $(PLUGIN_BINARY_TREE)
+$(PLUGIN_BINARY_DEBUG): $(PLUGIN_BINARY_TREE)
 ifeq ($(TARGET_OS),LINUX)
-	objcopy --only-keep-debug $< $@
+	objcopy --only-keep-debug $(PLUGIN_BINARY) $@
 	strip $<
-	objcopy --add-gnu-debuglink=$@ $<
+	objcopy --add-gnu-debuglink=$@ $(PLUGIN_BINARY)
 endif
 ifeq ($(TARGET_OS),MAC)
-	dsymutil $< -o $@
-	strip -S $<
+	dsymutil $(PLUGIN_BINARY) -o $@
+	strip -S $(PLUGIN_BINARY)
 endif
 	touch $@
 
